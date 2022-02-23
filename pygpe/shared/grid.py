@@ -25,6 +25,3 @@ class Grid2D(Grid):
         self.fourier_x_mesh, self.fourier_y_mesh = np.meshgrid(fourier_x, fourier_y)
         self.fourier_x_mesh = np.fft.fftshift(self.fourier_x_mesh)
         self.fourier_y_mesh = np.fft.fftshift(self.fourier_y_mesh)
-
-
-
