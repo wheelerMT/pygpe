@@ -19,3 +19,5 @@ class Wavefunction2D:
             self.plus_component = complex(0., 0.)
             self.zero_component = complex(1., 0.)
             self.minus_component = complex(0., 0.)
+        else:
+            raise ValueError(f"Argument \"{ground_state}\" is not a supported type")

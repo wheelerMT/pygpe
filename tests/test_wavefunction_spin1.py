@@ -13,3 +13,9 @@ class TestWavefunctionSpin1(unittest.TestCase):
         self.assertEqual(wavefunction.plus_component, complex(0., 0.))
         self.assertEqual(wavefunction.zero_component, complex(1., 0.))
         self.assertEqual(wavefunction.minus_component, complex(0., 0.))
+
+    def test_set_initial_state_raises_error(self):
+        grid = Grid2D((64, 64), (0.5, 0.5))
+        wavefunction = Wavefunction2D(grid)
+        with self.assertRaises(ValueError):
+            wavefunction.set_initial_state("garbage")
