@@ -4,7 +4,7 @@ from pygpe.shared.grid import Grid2D
 from pygpe.spin_1.wavefunction import Wavefunction2D
 
 
-class TestWavefunctionSpin1(unittest.TestCase):
+class TestWavefunction2D(unittest.TestCase):
 
     def test_polar_initial_state(self):
         """Tests whether the polar initial state is set correctly."""
