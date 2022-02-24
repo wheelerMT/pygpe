@@ -29,7 +29,7 @@ class Wavefunction2D:
             self.zero_component = cp.zeros((self.grid.num_points_x, self.grid.num_points_y), dtype='complex64')
             self.minus_component = cp.zeros((self.grid.num_points_x, self.grid.num_points_y), dtype='complex64')
         else:
-            raise ValueError(f"Argument \"{ground_state}\" is not a supported type")
+            raise ValueError(f"Argument \"{ground_state}\" is not a supported ground state")
 
     def add_noise_to_components(self, components: str, mean: float, std_dev: float) -> None:
         """Adds noise to the specified wavefunction components
