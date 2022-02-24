@@ -1,15 +1,25 @@
 import unittest
 import cupy as cp
+from typing import Tuple
 from pygpe.shared.grid import Grid2D
 from pygpe.spin_1.wavefunction import Wavefunction2D
+
+
+def generate_wavefunction2d(points: Tuple[int, int], grid_spacing: Tuple[float, float]) -> Wavefunction2D:
+    """Generates and returns a Wavefunction2D object specified
+
+    :param points: The number of grid points in the x and y dimension, respectively.
+    :param grid_spacing: The spacing of grid points in the x and y dimension, respectively.
+    :return: The Wavefunction2D object.
+    """
+    return Wavefunction2D(Grid2D(points, grid_spacing))
 
 
 class TestWavefunction2D(unittest.TestCase):
 
     def test_polar_initial_state(self):
         """Tests whether the polar initial state is set correctly."""
-        grid = Grid2D((64, 64), (0.5, 0.5))
-        wavefunction = Wavefunction2D(grid)
+        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
         wavefunction.set_initial_state("Polar")
 
         self.assertEqual(wavefunction.plus_component.all(), 0.)
@@ -18,9 +28,9 @@ class TestWavefunction2D(unittest.TestCase):
 
     def test_empty_initial_state(self):
         """Tests whether the empty initial state correctly sets
-        all wavefunction components to zero."""
-        grid = Grid2D((64, 64), (0.5, 0.5))
-        wavefunction = Wavefunction2D(grid)
+        all wavefunction components to zero.
+        """
+        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
         wavefunction.set_initial_state("empty")
 
         self.assertEqual(wavefunction.plus_component.all(), 0.)
@@ -29,8 +39,7 @@ class TestWavefunction2D(unittest.TestCase):
 
     def test_set_initial_state_raises_error(self):
         """Tests that an unsupported/invalid initial state returns an error."""
-        grid = Grid2D((64, 64), (0.5, 0.5))
-        wavefunction = Wavefunction2D(grid)
+        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
         with self.assertRaises(ValueError):
             wavefunction.set_initial_state("garbage")
 
@@ -38,10 +47,9 @@ class TestWavefunction2D(unittest.TestCase):
         """Tests whether performing a forward followed by a backwards
         fast Fourier transform on the wavefunction retains the same input.
         """
-        grid = Grid2D((64, 64), (0.5, 0.5))
-        wavefunction_1 = Wavefunction2D(grid)
+        wavefunction_1 = generate_wavefunction2d((64, 64), (0.5, 0.5))
         wavefunction_1.set_initial_state("polar")
-        wavefunction_2 = Wavefunction2D(grid)
+        wavefunction_2 = generate_wavefunction2d((64, 64), (0.5, 0.5))
         wavefunction_2.set_initial_state("polar")
 
         wavefunction_2.fft()
@@ -54,10 +62,9 @@ class TestWavefunction2D(unittest.TestCase):
 
     def test_adding_noise_outer(self):
         """Tests whether adding noise to empty outer components correctly
-        makes those components non-zero."""
-
-        grid = Grid2D((64, 64), (0.5, 0.5))
-        wavefunction = Wavefunction2D(grid)
+        makes those components non-zero.
+        """
+        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
         wavefunction.set_initial_state("empty")
         wavefunction.add_noise_to_components("outer", 0, 1e-2)
 
