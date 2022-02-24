@@ -24,6 +24,10 @@ class Wavefunction2D:
             self.plus_component = cp.zeros((self.grid.num_points_x, self.grid.num_points_y), dtype='complex64')
             self.zero_component = cp.ones((self.grid.num_points_x, self.grid.num_points_y), dtype='complex64')
             self.minus_component = cp.zeros((self.grid.num_points_x, self.grid.num_points_y), dtype='complex64')
+        elif ground_state.lower() == "empty":
+            self.plus_component = cp.zeros((self.grid.num_points_x, self.grid.num_points_y), dtype='complex64')
+            self.zero_component = cp.zeros((self.grid.num_points_x, self.grid.num_points_y), dtype='complex64')
+            self.minus_component = cp.zeros((self.grid.num_points_x, self.grid.num_points_y), dtype='complex64')
         else:
             raise ValueError(f"Argument \"{ground_state}\" is not a supported type")
 
