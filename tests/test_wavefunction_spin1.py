@@ -41,14 +41,14 @@ class TestWavefunctionSpin1(unittest.TestCase):
         self.assertIsNone(cp.testing.assert_array_equal(wavefunction_1.zero_component, wavefunction_2.zero_component))
         self.assertIsNone(cp.testing.assert_array_equal(wavefunction_1.minus_component, wavefunction_2.minus_component))
 
-    def test_adding_noise(self):
-        """Tests whether adding noise to components changes every element
-        of those components."""
+    def test_adding_noise_outer(self):
+        """Tests whether adding noise to empty outer components correctly
+        makes those components non-zero."""
+
         grid = Grid2D((64, 64), (0.5, 0.5))
         wavefunction = Wavefunction2D(grid)
-        wavefunction.set_initial_state("Polar")
+        wavefunction.set_initial_state("empty")
         wavefunction.add_noise_to_components("outer", 0, 1e-2)
 
-        self.assertNotEqual(wavefunction.plus_component.any(), 0.)
-        self.assertNotEqual(wavefunction.zero_component.any(), 0.)
-        self.assertNotEqual(wavefunction.minus_component.any(), 0.)
+        self.assertNotEqual(wavefunction.plus_component.all(), 0.)
+        self.assertNotEqual(wavefunction.minus_component.all(), 0.)
