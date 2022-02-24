@@ -16,6 +16,17 @@ class TestWavefunctionSpin1(unittest.TestCase):
         self.assertEqual(wavefunction.zero_component.all(), 1.)
         self.assertEqual(wavefunction.minus_component.all(), 0.)
 
+    def test_empty_initial_state(self):
+        """Tests whether the empty initial state correctly sets
+        all wavefunction components to zero."""
+        grid = Grid2D((64, 64), (0.5, 0.5))
+        wavefunction = Wavefunction2D(grid)
+        wavefunction.set_initial_state("empty")
+
+        self.assertEqual(wavefunction.plus_component.all(), 0.)
+        self.assertEqual(wavefunction.zero_component.all(), 0.)
+        self.assertEqual(wavefunction.minus_component.all(), 0.)
+
     def test_set_initial_state_raises_error(self):
         """Tests that an unsupported/invalid initial state returns an error."""
         grid = Grid2D((64, 64), (0.5, 0.5))
