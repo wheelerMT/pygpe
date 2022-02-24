@@ -7,6 +7,7 @@ from pygpe.spin_1.wavefunction import Wavefunction2D
 class TestWavefunctionSpin1(unittest.TestCase):
 
     def test_polar_initial_state(self):
+        """Tests whether the polar initial state is set correctly."""
         grid = Grid2D((64, 64), (0.5, 0.5))
         wavefunction = Wavefunction2D(grid)
         wavefunction.set_initial_state("Polar")
@@ -16,12 +17,16 @@ class TestWavefunctionSpin1(unittest.TestCase):
         self.assertEqual(wavefunction.minus_component.all(), 0.)
 
     def test_set_initial_state_raises_error(self):
+        """Tests that an unsupported/invalid initial state returns an error."""
         grid = Grid2D((64, 64), (0.5, 0.5))
         wavefunction = Wavefunction2D(grid)
         with self.assertRaises(ValueError):
             wavefunction.set_initial_state("garbage")
 
     def test_fft_normalised(self):
+        """Tests whether performing a forward followed by a backwards
+        fast Fourier transform on the wavefunction retains the same input.
+        """
         grid = Grid2D((64, 64), (0.5, 0.5))
         wavefunction_1 = Wavefunction2D(grid)
         wavefunction_1.set_initial_state("polar")
@@ -37,6 +42,8 @@ class TestWavefunctionSpin1(unittest.TestCase):
         self.assertIsNone(cp.testing.assert_array_equal(wavefunction_1.minus_component, wavefunction_2.minus_component))
 
     def test_adding_noise(self):
+        """Tests whether adding noise to components changes every element
+        of those components."""
         grid = Grid2D((64, 64), (0.5, 0.5))
         wavefunction = Wavefunction2D(grid)
         wavefunction.set_initial_state("Polar")
