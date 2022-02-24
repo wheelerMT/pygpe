@@ -62,4 +62,5 @@ class TestWavefunctionSpin1(unittest.TestCase):
         wavefunction.add_noise_to_components("outer", 0, 1e-2)
 
         self.assertNotEqual(wavefunction.plus_component.all(), 0.)
+        self.assertEqual(wavefunction.zero_component.all(), 0.)
         self.assertNotEqual(wavefunction.minus_component.all(), 0.)
