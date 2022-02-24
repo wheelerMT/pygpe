@@ -41,7 +41,6 @@ class Wavefunction2D:
         """
         if components.lower() == "outer":
             self.plus_component += self._generate_complex_normal_dist(mean, std_dev)
-            self.zero_component += self._generate_complex_normal_dist(mean, std_dev)
             self.minus_component += self._generate_complex_normal_dist(mean, std_dev)
         else:
             raise ValueError(f"Argument \"{components}\" is not a supported configuration")
