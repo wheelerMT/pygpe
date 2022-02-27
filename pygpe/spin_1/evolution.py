@@ -1,6 +1,5 @@
 import cupy as cp
-from wavefunction import Wavefunction2D
-import wavefunction as wfn
+from pygpe.spin_1.wavefunction import Wavefunction2D
 
 
 def fft2(wavefunction: Wavefunction2D) -> None:
