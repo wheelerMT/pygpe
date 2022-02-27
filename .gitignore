@@ -133,3 +133,4 @@ dmypy.json
 tests/throwaway.py
 tests/_trial_temp
 tests/shared/_trial_temp
+tests/spin_1/_trial_temp
