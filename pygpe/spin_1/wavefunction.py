@@ -51,15 +51,3 @@ class Wavefunction2D:
         """
         return cp.random.normal(mean, std_dev, size=(self.grid.num_points_x, self.grid.num_points_y)) \
                + 1j * cp.random.normal(mean, std_dev, size=(self.grid.num_points_x, self.grid.num_points_y))
-
-    def fft(self) -> None:
-        """Performs a fast Fourier transform on each wavefunction component."""
-        self.fourier_plus_component = cp.fft.fft2(self.plus_component)
-        self.fourier_zero_component = cp.fft.fft2(self.zero_component)
-        self.fourier_minus_component = cp.fft.fft2(self.minus_component)
-
-    def ifft(self) -> None:
-        """Performs an inverse Fourier transform on each wavefunction component."""
-        self.plus_component = cp.fft.ifft2(self.fourier_plus_component)
-        self.zero_component = cp.fft.ifft2(self.fourier_zero_component)
-        self.minus_component = cp.fft.ifft2(self.fourier_minus_component)
