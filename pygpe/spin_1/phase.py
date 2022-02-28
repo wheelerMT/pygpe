@@ -21,7 +21,7 @@ class Phase2D:
         """
         vortex_positions_iter = self._generate_positions(num_vortices, threshold)
 
-        phase = np.empty((self.grid.num_points_x, self.grid.num_points_y), dtype='float32')
+        phase = np.zeros((self.grid.num_points_x, self.grid.num_points_y), dtype='float32')
 
         for _ in range(num_vortices // 2):
             phase_temp = np.zeros((self.grid.num_points_x, self.grid.num_points_y), dtype='float32')
@@ -71,8 +71,8 @@ class Phase2D:
                 vortex_positions.append(position)
 
             iterations += 1
-            
-        print(f"Successfully found {num_vortices} positions!")
+
+        print(f"Successfully found {num_vortices} positions in {iterations} iterations!")
         return iter(vortex_positions)
 
     @staticmethod
@@ -80,10 +80,16 @@ class Phase2D:
         """Tests that the given `position` is at least `threshold` away from all the positions
         currently in `accepted_positions`.
         """
+        # Special case where accepted_positions is empty
+        if not accepted_positions:
+            return True
+
         for accepted_pos in accepted_positions:
             if abs(position[0] - accepted_pos[0]) > threshold:
                 if abs(position[1] - accepted_pos[1]) > threshold:
                     return True
+                break
+            break
         return False
 
     @staticmethod
