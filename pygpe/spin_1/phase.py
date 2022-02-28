@@ -62,7 +62,7 @@ class Phase2D:
         self.phase_minus = np.empty((grid.num_points_x, grid.num_points_y), dtype='float32')
 
     def add_singly_quantised_vortices(self, num_vortices: int, threshold: float) -> None:
-        """Constructs a phase profile containing a number of vortices of singly quantised vortices,
+        """Constructs a phase profile containing a number of singly quantised vortices,
         which is then applied to each spinor component.
 
         :param num_vortices: The total number of vortices.
