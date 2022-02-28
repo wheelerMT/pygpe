@@ -1,4 +1,4 @@
-import cupy as cp
+import numpy as np
 from pygpe.shared.grid import Grid2D
 from typing import List, Tuple
 
@@ -8,9 +8,9 @@ class Phase2D:
     def __init__(self, grid: Grid2D):
         self.grid = grid
 
-        self.phase_plus = cp.empty((grid.num_points_x, grid.num_points_y), dtype='float32')
-        self.phase_zero = cp.empty((grid.num_points_x, grid.num_points_y), dtype='float32')
-        self.phase_minus = cp.empty((grid.num_points_x, grid.num_points_y), dtype='float32')
+        self.phase_plus = np.empty((grid.num_points_x, grid.num_points_y), dtype='float32')
+        self.phase_zero = np.empty((grid.num_points_x, grid.num_points_y), dtype='float32')
+        self.phase_minus = np.empty((grid.num_points_x, grid.num_points_y), dtype='float32')
 
     def add_singly_quantised_vortices(self, num_vortices: int, threshold: float) -> None:
         """Constructs a phase profile containing a number of vortices of singly quantised vortices,
@@ -21,27 +21,27 @@ class Phase2D:
         """
         vortex_positions_iter = self._generate_positions(num_vortices, threshold)
 
-        phase = cp.empty((self.grid.num_points_x, self.grid.num_points_y), dtype='float32')
+        phase = np.empty((self.grid.num_points_x, self.grid.num_points_y), dtype='float32')
 
         for _ in range(num_vortices // 2):
-            phase_temp = cp.zeros((self.grid.num_points_x, self.grid.num_points_y), dtype='float32')
+            phase_temp = np.zeros((self.grid.num_points_x, self.grid.num_points_y), dtype='float32')
             x_pos_minus, y_pos_minus = next(vortex_positions_iter)  # Negative circulation vortex
             x_pos_plus, y_pos_plus = next(vortex_positions_iter)  # Positive circulation vortex
 
             # Aux variables
-            y_minus = 2 * cp.pi / self.grid.length_y * (self.grid.y_mesh - y_pos_minus)
-            x_minus = 2 * cp.pi / self.grid.length_x * (self.grid.x_mesh - x_pos_minus)
-            y_plus = 2 * cp.pi / self.grid.length_y * (self.grid.y_mesh - y_pos_plus)
-            x_plus = 2 * cp.pi / self.grid.length_x * (self.grid.x_mesh - x_pos_plus)
+            y_minus = 2 * np.pi / self.grid.length_y * (self.grid.y_mesh - y_pos_minus)
+            x_minus = 2 * np.pi / self.grid.length_x * (self.grid.x_mesh - x_pos_minus)
+            y_plus = 2 * np.pi / self.grid.length_y * (self.grid.y_mesh - y_pos_plus)
+            x_plus = 2 * np.pi / self.grid.length_x * (self.grid.x_mesh - x_pos_plus)
 
             heaviside_x_plus = self._heaviside(x_plus)
             heaviside_x_minus = self._heaviside(x_minus)
 
-            for nn in cp.arange(-5, 6):
-                phase_temp += cp.arctan(cp.tanh((y_minus + 2 * cp.pi * nn) / 2) * cp.tan((x_minus - cp.pi) / 2)) \
-                              - cp.arctan(cp.tanh((y_plus + 2 * cp.pi * nn) / 2) * cp.tan((x_plus - cp.pi) / 2)) \
-                              + cp.pi * (heaviside_x_plus - heaviside_x_minus)
-            phase_temp -= 2 * cp.pi * (self.grid.y_mesh - self.grid.y_mesh.min()) \
+            for nn in np.arange(-5, 6):
+                phase_temp += np.arctan(np.tanh((y_minus + 2 * np.pi * nn) / 2) * np.tan((x_minus - np.pi) / 2)) \
+                              - np.arctan(np.tanh((y_plus + 2 * np.pi * nn) / 2) * np.tan((x_plus - np.pi) / 2)) \
+                              + np.pi * (heaviside_x_plus - heaviside_x_minus)
+            phase_temp -= 2 * np.pi * (self.grid.y_mesh - self.grid.y_mesh.min()) \
                           * (x_pos_plus - x_pos_minus) / (self.grid.length_y * self.grid.length_x)
             phase += phase_temp
 
@@ -64,8 +64,8 @@ class Phase2D:
                       f"returning with only {len(vortex_positions)} positions\n")
                 return vortex_positions
 
-            position = cp.random.uniform(-self.grid.length_x / 2, self.grid.length_x / 2), \
-                       cp.random.uniform(-self.grid.length_y / 2, self.grid.length_y / 2)
+            position = np.random.uniform(-self.grid.length_x / 2, self.grid.length_x / 2), \
+                       np.random.uniform(-self.grid.length_y / 2, self.grid.length_y / 2)
 
             if self._position_sufficiently_far(position, vortex_positions, threshold):
                 vortex_positions.append(position)
@@ -87,6 +87,6 @@ class Phase2D:
         return False
 
     @staticmethod
-    def _heaviside(array: cp.ndarray) -> cp.ndarray:
+    def _heaviside(array: np.ndarray) -> np.ndarray:
         """Computes the heaviside function on a given array and returns the result."""
-        return cp.where(array < 0, cp.zeros(array.shape), cp.ones(array.shape))
+        return np.where(array < 0, np.zeros(array.shape), np.ones(array.shape))
