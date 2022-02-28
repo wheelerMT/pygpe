@@ -45,7 +45,9 @@ class Phase2D:
                           * (x_pos_plus - x_pos_minus) / (self.grid.length_y * self.grid.length_x)
             phase += phase_temp
 
-        return phase
+        self.phase_plus = phase
+        self.phase_zero = phase
+        self.phase_minus = phase
 
     def _generate_positions(self, num_vortices: int, threshold: float) -> iter:
         """Generates and returns a list of positions that are separated by at least
