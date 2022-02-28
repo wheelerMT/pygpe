@@ -59,6 +59,11 @@ class Phase2D:
 
         iterations = 0
         while len(vortex_positions) < num_vortices:
+            if iterations > max_iter:
+                print(f"WARNING: Number of iterations exceeded maximum, "
+                      f"returning with only {len(vortex_positions)} positions\n")
+                return vortex_positions
+
             position = cp.random.uniform(-self.grid.length_x / 2, self.grid.length_x / 2), \
                        cp.random.uniform(-self.grid.length_y / 2, self.grid.length_y / 2)
 
@@ -66,11 +71,7 @@ class Phase2D:
                 vortex_positions.append(position)
 
             iterations += 1
-            if iterations > max_iter:
-                print(f"WARNING: Number of iterations exceeded maximum, "
-                      f"returning with only {len(vortex_positions)} positions\n")
-                return vortex_positions
-
+            
         print(f"Successfully found {num_vortices} positions!")
         return iter(vortex_positions)
 
