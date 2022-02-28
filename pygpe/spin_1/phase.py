@@ -86,5 +86,6 @@ class Phase2D:
         return False
 
     @staticmethod
-    def _heaviside(array: cp.ndarray):
+    def _heaviside(array: cp.ndarray) -> cp.ndarray:
+        """Computes the heaviside function on a given array and returns the result."""
         return cp.where(array < 0, cp.zeros(array.shape), cp.ones(array.shape))
