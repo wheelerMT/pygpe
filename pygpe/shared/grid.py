@@ -1,14 +1,28 @@
 import numpy as np
-from abc import ABC, abstractmethod
 from typing import Tuple
 
 
-class Grid(ABC):
-    pass
+class Grid:
+    def __init__(self, points: int | Tuple[int, ...], grid_spacings: float | Tuple[float, ...]):
 
+        self.ndim = len(points)
+        self.shape = points
 
-class Grid2D(Grid):
-    def __init__(self, points: Tuple[int, int], grid_spacings: Tuple[float, float]):
+        # TODO: implement error checking to check dimensions of grid_spacings match points
+
+        if self.ndim == 1:
+            self._generate_1d_grids(points, grid_spacings)
+        elif self.ndim == 2:
+            self._generate_2d_grids(points, grid_spacings)
+        elif self.ndim == 3:
+            self._generate_3d_grids(points, grid_spacings)
+        else:
+            raise ValueError(f"{points} is not a valid dimensionality")
+
+    def _generate_1d_grids(self, points: int, grid_spacing: float):
+        raise NotImplementedError
+
+    def _generate_2d_grids(self, points: Tuple[int, ...], grid_spacings: Tuple[float, ...]):
         self.num_points_x, self.num_points_y = points
         self.grid_spacing_x, self.grid_spacing_y = grid_spacings
         self.length_x = self.num_points_x * self.grid_spacing_x
@@ -27,3 +41,6 @@ class Grid2D(Grid):
         self.fourier_x_mesh, self.fourier_y_mesh = np.meshgrid(fourier_x, fourier_y)
         self.fourier_x_mesh = np.fft.fftshift(self.fourier_x_mesh)
         self.fourier_y_mesh = np.fft.fftshift(self.fourier_y_mesh)
+
+    def _generate_3d_grids(self, points: Tuple[int, ...], grid_spacings: Tuple[float, ...]):
+        raise NotImplementedError
