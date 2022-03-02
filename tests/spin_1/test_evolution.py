@@ -1,7 +1,7 @@
 import unittest
 import cupy as cp
-from pygpe.shared.grid import Grid2D
-from pygpe.spin_1.wavefunction import Wavefunction2D
+from pygpe.shared.grid import Grid
+from pygpe.spin_1.wavefunction import Wavefunction
 import pygpe.spin_1.evolution as evo
 
 
@@ -10,9 +10,9 @@ class TestEvolution2D(unittest.TestCase):
         """Tests whether performing a forward followed by a backwards
         fast Fourier transform on the wavefunction retains the same input.
         """
-        wavefunction_1 = Wavefunction2D(Grid2D((64, 64), (0.5, 0.5)))
+        wavefunction_1 = Wavefunction(Grid((64, 64), (0.5, 0.5)))
         wavefunction_1.set_initial_state("polar")
-        wavefunction_2 = Wavefunction2D(Grid2D((64, 64), (0.5, 0.5)))
+        wavefunction_2 = Wavefunction(Grid((64, 64), (0.5, 0.5)))
         wavefunction_2.set_initial_state("polar")
 
         evo.fft2(wavefunction_2)

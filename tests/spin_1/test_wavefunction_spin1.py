@@ -1,18 +1,17 @@
 import unittest
-import cupy as cp
 from typing import Tuple
-from pygpe.shared.grid import Grid2D
-from pygpe.spin_1.wavefunction import Wavefunction2D
+from pygpe.shared.grid import Grid
+from pygpe.spin_1.wavefunction import Wavefunction
 
 
-def generate_wavefunction2d(points: Tuple[int, int], grid_spacing: Tuple[float, float]) -> Wavefunction2D:
+def generate_wavefunction2d(points: Tuple[int, int], grid_spacing: Tuple[float, float]) -> Wavefunction:
     """Generates and returns a Wavefunction2D object specified
 
     :param points: The number of grid points in the x and y dimension, respectively.
     :param grid_spacing: The spacing of grid points in the x and y dimension, respectively.
     :return: The Wavefunction2D object.
     """
-    return Wavefunction2D(Grid2D(points, grid_spacing))
+    return Wavefunction(Grid(points, grid_spacing))
 
 
 class TestWavefunction2D(unittest.TestCase):
