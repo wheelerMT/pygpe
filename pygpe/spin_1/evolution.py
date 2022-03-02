@@ -1,5 +1,6 @@
 import cupy as cp
 from pygpe.spin_1.wavefunction import Wavefunction
+from pygpe.spin_1.parameters import Parameters
 
 
 def fft(wavefunction: Wavefunction) -> None:
@@ -14,3 +15,18 @@ def ifft(wavefunction: Wavefunction) -> None:
     wavefunction.plus_component = cp.fft.ifftn(wavefunction.fourier_plus_component)
     wavefunction.zero_component = cp.fft.ifftn(wavefunction.fourier_zero_component)
     wavefunction.minus_component = cp.fft.ifftn(wavefunction.fourier_minus_component)
+
+
+def kinetic_zeeman_step(wfn: Wavefunction, params: Parameters) -> None:
+    """Computes the kinetic-zeeman subsystem for half a time step.
+
+    :param wfn: The wavefunction of the system.
+    :param params: The parameter class of the system.
+    """
+    wfn.fourier_plus_component *= cp.exp(-0.25 * 1j * params.dt * (wfn.grid.wave_number + 2 * params.q))
+    wfn.fourier_zero_component *= cp.exp(-0.25 * 1j * params.dt * wfn.grid.wave_number)
+    wfn.fourier_minus_component *= cp.exp(-0.25 * 1j * params.dt * (wfn.grid.wave_number + 2 * params.q))
+
+
+class Evolution:
+    pass
