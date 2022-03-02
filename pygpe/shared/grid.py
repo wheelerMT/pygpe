@@ -1,4 +1,5 @@
 import numpy as np
+import cupy as cp
 from typing import Tuple
 
 
@@ -41,6 +42,9 @@ class Grid:
         self.fourier_x_mesh, self.fourier_y_mesh = np.meshgrid(fourier_x, fourier_y)
         self.fourier_x_mesh = np.fft.fftshift(self.fourier_x_mesh)
         self.fourier_y_mesh = np.fft.fftshift(self.fourier_y_mesh)
+
+        # Defined on device for use in evolution
+        self.wave_number = cp.asarray(self.fourier_x_mesh ** 2 + self.fourier_y_mesh ** 2)
 
     def _generate_3d_grids(self, points: Tuple[int, ...], grid_spacings: Tuple[float, ...]):
         raise NotImplementedError
