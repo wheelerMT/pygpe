@@ -11,7 +11,7 @@ class TestGrid(unittest.TestCase):
         """
 
         shape = (64, 64)
-        grid2d = grid.Grid2D(shape, (0.5, 0.5))
+        grid2d = grid.Grid(shape, (0.5, 0.5))
 
         self.assertEqual(grid2d.x_mesh.shape, shape)
         self.assertEqual(grid2d.y_mesh.shape, shape)
@@ -23,7 +23,7 @@ class TestGrid(unittest.TestCase):
         dimension gives the expected length.
         """
 
-        grid2d = grid.Grid2D((64, 64), (0.5, 0.5))
+        grid2d = grid.Grid((64, 64), (0.5, 0.5))
         self.assertEqual(grid2d.length_x, 32.)
         self.assertEqual(grid2d.length_y, 32.)
 
@@ -33,7 +33,7 @@ class TestGrid(unittest.TestCase):
         the spectrum.
         """
 
-        grid2d = grid.Grid2D((64, 64), (0.5, 0.5))
+        grid2d = grid.Grid((64, 64), (0.5, 0.5))
         for element in grid2d.fourier_x_mesh[:, 0]:
             self.assertEqual(element, 0)
         for element in grid2d.fourier_y_mesh[0, :]:
