@@ -1,5 +1,4 @@
 from pygpe.shared.grid import Grid2D
-from pygpe.spin_1.phase import Phase2D
 import cupy as cp
 
 
@@ -52,12 +51,3 @@ class Wavefunction2D:
         """
         return cp.random.normal(mean, std_dev, size=(self.grid.num_points_x, self.grid.num_points_y)) \
                + 1j * cp.random.normal(mean, std_dev, size=(self.grid.num_points_x, self.grid.num_points_y))
-
-    def apply_phase(self, phase: Phase2D) -> None:
-        """Applies a given phase to each wavefunction component.
-
-        :param phase: The phase of the wavefunction.
-        """
-        self.plus_component *= cp.exp(1j * cp.asarray(phase.phase_plus))
-        self.zero_component *= cp.exp(1j * cp.asarray(phase.phase_zero))
-        self.minus_component *= cp.exp(1j * cp.asarray(phase.phase_minus))
