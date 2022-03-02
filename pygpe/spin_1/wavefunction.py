@@ -29,7 +29,7 @@ class Wavefunction:
             self.zero_component = cp.zeros(self.grid.shape, dtype='complex64')
             self.minus_component = cp.zeros(self.grid.shape, dtype='complex64')
         else:
-            raise ValueError(f"Argument \"{ground_state}\" is not a supported ground state")
+            raise ValueError(f"{ground_state} is not a supported ground state")
 
     def add_noise_to_components(self, components: str, mean: float, std_dev: float) -> None:
         """Adds noise to the specified wavefunction components
@@ -43,7 +43,7 @@ class Wavefunction:
             self.plus_component += self._generate_complex_normal_dist(mean, std_dev)
             self.minus_component += self._generate_complex_normal_dist(mean, std_dev)
         else:
-            raise ValueError(f"Argument \"{components}\" is not a supported configuration")
+            raise ValueError(f"{components} is not a supported configuration")
 
     def _generate_complex_normal_dist(self, mean: float, std_dev: float) -> cp.ndarray:
         """Returns a ndarray of complex values containing results from
