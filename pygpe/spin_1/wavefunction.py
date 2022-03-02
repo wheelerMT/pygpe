@@ -1,18 +1,18 @@
-from pygpe.shared.grid import Grid2D
+from pygpe.shared.grid import Grid
 import cupy as cp
 
 
-class Wavefunction2D:
+class Wavefunction:
 
-    def __init__(self, grid: Grid2D):
+    def __init__(self, grid: Grid):
         self.grid = grid
 
-        self.plus_component = cp.empty((grid.num_points_x, grid.num_points_y), dtype='complex64')
-        self.zero_component = cp.empty((grid.num_points_x, grid.num_points_y), dtype='complex64')
-        self.minus_component = cp.empty((grid.num_points_x, grid.num_points_y), dtype='complex64')
-        self.fourier_plus_component = cp.empty((grid.num_points_x, grid.num_points_y), dtype='complex64')
-        self.fourier_zero_component = cp.empty((grid.num_points_x, grid.num_points_y), dtype='complex64')
-        self.fourier_minus_component = cp.empty((grid.num_points_x, grid.num_points_y), dtype='complex64')
+        self.plus_component = cp.empty(grid.shape, dtype='complex64')
+        self.zero_component = cp.empty(grid.shape, dtype='complex64')
+        self.minus_component = cp.empty(grid.shape, dtype='complex64')
+        self.fourier_plus_component = cp.empty(grid.shape, dtype='complex64')
+        self.fourier_zero_component = cp.empty(grid.shape, dtype='complex64')
+        self.fourier_minus_component = cp.empty(grid.shape, dtype='complex64')
 
     def set_initial_state(self, ground_state: str) -> None:
         """Sets the components of the wavefunction according to
@@ -21,13 +21,13 @@ class Wavefunction2D:
         :param ground_state: The ground state of the wavefunction.
         """
         if ground_state.lower() == "polar":
-            self.plus_component = cp.zeros((self.grid.num_points_x, self.grid.num_points_y), dtype='complex64')
-            self.zero_component = cp.ones((self.grid.num_points_x, self.grid.num_points_y), dtype='complex64')
-            self.minus_component = cp.zeros((self.grid.num_points_x, self.grid.num_points_y), dtype='complex64')
+            self.plus_component = cp.zeros(self.grid.shape, dtype='complex64')
+            self.zero_component = cp.ones(self.grid.shape, dtype='complex64')
+            self.minus_component = cp.zeros(self.grid.shape, dtype='complex64')
         elif ground_state.lower() == "empty":
-            self.plus_component = cp.zeros((self.grid.num_points_x, self.grid.num_points_y), dtype='complex64')
-            self.zero_component = cp.zeros((self.grid.num_points_x, self.grid.num_points_y), dtype='complex64')
-            self.minus_component = cp.zeros((self.grid.num_points_x, self.grid.num_points_y), dtype='complex64')
+            self.plus_component = cp.zeros(self.grid.shape, dtype='complex64')
+            self.zero_component = cp.zeros(self.grid.shape, dtype='complex64')
+            self.minus_component = cp.zeros(self.grid.shape, dtype='complex64')
         else:
             raise ValueError(f"Argument \"{ground_state}\" is not a supported ground state")
 
@@ -49,5 +49,5 @@ class Wavefunction2D:
         """Returns a ndarray of complex values containing results from
         a normal distribution.
         """
-        return cp.random.normal(mean, std_dev, size=(self.grid.num_points_x, self.grid.num_points_y)) \
-               + 1j * cp.random.normal(mean, std_dev, size=(self.grid.num_points_x, self.grid.num_points_y))
+        return cp.random.normal(mean, std_dev, size=self.grid.shape) \
+               + 1j * cp.random.normal(mean, std_dev, size=self.grid.shape)
