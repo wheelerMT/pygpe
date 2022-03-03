@@ -14,6 +14,10 @@ class Wavefunction:
         self.fourier_zero_component = cp.empty(grid.shape, dtype='complex64')
         self.fourier_minus_component = cp.empty(grid.shape, dtype='complex64')
 
+        self.atom_num_plus = 0
+        self.atom_num_zero = 0
+        self.atom_num_minus = 0
+
     def set_initial_state(self, ground_state: str) -> None:
         """Sets the components of the wavefunction according to
         the ground state we wish to be in.
@@ -51,8 +55,8 @@ class Wavefunction:
         """Returns a ndarray of complex values containing results from
         a normal distribution.
         """
-        return cp.random.normal(mean, std_dev, size=self.grid.shape) \
-               + 1j * cp.random.normal(mean, std_dev, size=self.grid.shape)
+        return cp.random.normal(mean, std_dev, size=self.grid.shape) + 1j * cp.random.normal(mean, std_dev,
+                                                                                             size=self.grid.shape)
 
     def _update_atom_numbers(self, k_space: bool = True):
         if k_space:
@@ -64,11 +68,11 @@ class Wavefunction:
                 cp.abs(self.fourier_minus_component) ** 2) / self.grid.total_num_points
         else:
             self.atom_num_plus = self.grid.grid_spacing_product * cp.sum(
-                cp.abs(self.fourier_plus_component) ** 2)
+                cp.abs(self.plus_component) ** 2)
             self.atom_num_zero = self.grid.grid_spacing_product * cp.sum(
-                cp.abs(self.fourier_zero_component) ** 2)
+                cp.abs(self.zero_component) ** 2)
             self.atom_num_minus = self.grid.grid_spacing_product * cp.sum(
-                cp.abs(self.fourier_minus_component) ** 2)
+                cp.abs(self.minus_component) ** 2)
 
     def atom_numbers(self) -> tuple[int, int, int]:
         return self.atom_num_plus, self.atom_num_zero, self.atom_num_minus
