@@ -70,6 +70,5 @@ class Wavefunction:
             self.atom_num_minus = self.grid.grid_spacing_product * cp.sum(
                 cp.abs(self.fourier_minus_component) ** 2)
 
-    def atom_numbers(self):
+    def atom_numbers(self) -> tuple[int, int, int]:
         return self.atom_num_plus, self.atom_num_zero, self.atom_num_minus
-   
