@@ -6,8 +6,14 @@ from typing import Tuple
 class Grid:
     def __init__(self, points: int | Tuple[int, ...], grid_spacings: float | Tuple[float, ...]):
 
-        self.ndim = len(points)
         self.shape = points
+        if isinstance(points, tuple):
+            self.ndim = len(points)
+            self.total_num_points = sum(points)
+
+        else:
+            self.ndim = 1
+            self.total_num_points = points
 
         # TODO: implement error checking to check dimensions of grid_spacings match points
 
@@ -26,6 +32,8 @@ class Grid:
     def _generate_2d_grids(self, points: Tuple[int, ...], grid_spacings: Tuple[float, ...]):
         self.num_points_x, self.num_points_y = points
         self.grid_spacing_x, self.grid_spacing_y = grid_spacings
+        self.grid_spacing_product = self.grid_spacing_x * self.grid_spacing_y
+
         self.length_x = self.num_points_x * self.grid_spacing_x
         self.length_y = self.num_points_y * self.grid_spacing_y
 
