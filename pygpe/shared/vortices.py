@@ -1,13 +1,13 @@
 import numpy as np
 import cupy as cp
-from pygpe.shared.grid import Grid2D
-from pygpe.spin_1.wavefunction import Wavefunction2D
+from pygpe.shared.grid import Grid
+from pygpe.spin_1.wavefunction import Wavefunction
 from typing import List, Tuple
 
 """Contains set of functions that can add various types of vortices to the wavefunction."""
 
 
-def _generate_positions(grid: Grid2D, num_vortices: int, threshold: float) -> iter:
+def _generate_positions(grid: Grid, num_vortices: int, threshold: float) -> iter:
     """Generates and returns a list of positions that are separated by at least
     `threshold`.
     """
@@ -56,7 +56,7 @@ def _heaviside(array: np.ndarray) -> np.ndarray:
     return np.where(array < 0, np.zeros(array.shape), np.ones(array.shape))
 
 
-def add_singly_quantised_vortices(wavefunction: Wavefunction2D, num_vortices: int, threshold: float) -> None:
+def add_singly_quantised_vortices(wavefunction: Wavefunction, num_vortices: int, threshold: float) -> None:
     """Constructs a 2D phase profile containing a number of singly quantised vortices,
     which is then applied to each wavefunction component.
 
