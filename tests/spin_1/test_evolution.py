@@ -15,8 +15,8 @@ class TestEvolution2D(unittest.TestCase):
         wavefunction_2 = Wavefunction(Grid((64, 64), (0.5, 0.5)))
         wavefunction_2.set_initial_state("polar")
 
-        evo.fft(wavefunction_2)
-        evo.ifft(wavefunction_2)
+        evo._fft(wavefunction_2)
+        evo._ifft(wavefunction_2)
 
         # assert_array_equal returns None if arrays are equal
         self.assertIsNone(cp.testing.assert_array_equal(wavefunction_1.plus_component, wavefunction_2.plus_component))
