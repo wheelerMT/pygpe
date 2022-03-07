@@ -35,7 +35,7 @@ class Wavefunction:
         else:
             raise ValueError(f"{ground_state} is not a supported ground state")
 
-        self._update_atom_numbers(k_space=False)
+        self._update_atom_numbers()
 
     def add_noise_to_components(self, components: str, mean: float, std_dev: float) -> None:
         """Adds noise to the specified wavefunction components
@@ -51,6 +51,8 @@ class Wavefunction:
         else:
             raise ValueError(f"{components} is not a supported configuration")
 
+        self._update_atom_numbers()
+
     def _generate_complex_normal_dist(self, mean: float, std_dev: float) -> cp.ndarray:
         """Returns a ndarray of complex values containing results from
         a normal distribution.
@@ -58,21 +60,7 @@ class Wavefunction:
         return cp.random.normal(mean, std_dev, size=self.grid.shape) + 1j * cp.random.normal(mean, std_dev,
                                                                                              size=self.grid.shape)
 
-    def _update_atom_numbers(self, k_space: bool = True):
-        if k_space:
-            self.atom_num_plus = self.grid.grid_spacing_product * cp.sum(
-                cp.abs(self.fourier_plus_component) ** 2) / self.grid.total_num_points
-            self.atom_num_zero = self.grid.grid_spacing_product * cp.sum(
-                cp.abs(self.fourier_zero_component) ** 2) / self.grid.total_num_points
-            self.atom_num_minus = self.grid.grid_spacing_product * cp.sum(
-                cp.abs(self.fourier_minus_component) ** 2) / self.grid.total_num_points
-        else:
-            self.atom_num_plus = self.grid.grid_spacing_product * cp.sum(
-                cp.abs(self.plus_component) ** 2)
-            self.atom_num_zero = self.grid.grid_spacing_product * cp.sum(
-                cp.abs(self.zero_component) ** 2)
-            self.atom_num_minus = self.grid.grid_spacing_product * cp.sum(
-                cp.abs(self.minus_component) ** 2)
-
-    def atom_numbers(self) -> tuple[int, int, int]:
-        return self.atom_num_plus, self.atom_num_zero, self.atom_num_minus
+    def _update_atom_numbers(self):
+        self.atom_num_plus = self.grid.grid_spacing_product * cp.sum(cp.abs(self.plus_component) ** 2)
+        self.atom_num_zero = self.grid.grid_spacing_product * cp.sum(cp.abs(self.zero_component) ** 2)
+        self.atom_num_minus = self.grid.grid_spacing_product * cp.sum(cp.abs(self.minus_component) ** 2)
