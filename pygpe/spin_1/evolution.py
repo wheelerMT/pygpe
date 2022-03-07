@@ -3,21 +3,29 @@ from pygpe.spin_1.wavefunction import Wavefunction
 from pygpe.spin_1.parameters import Parameters
 
 
-def fft(wavefunction: Wavefunction) -> None:
+def imaginary_time(wfn: Wavefunction, params: Parameters):
+    _fft(wfn)
+    for i in range(params.nt):
+        _propagate_wavefunction(wfn, params)
+        _renormalise_wavefunction(wfn)
+    _ifft(wfn)
+
+
+def _fft(wavefunction: Wavefunction) -> None:
     """Performs a fast Fourier transform on each wavefunction component."""
     wavefunction.fourier_plus_component = cp.fft.fftn(wavefunction.plus_component)
     wavefunction.fourier_zero_component = cp.fft.fftn(wavefunction.zero_component)
     wavefunction.fourier_minus_component = cp.fft.fftn(wavefunction.minus_component)
 
 
-def ifft(wavefunction: Wavefunction) -> None:
+def _ifft(wavefunction: Wavefunction) -> None:
     """Performs an inverse Fourier transform on each wavefunction component."""
     wavefunction.plus_component = cp.fft.ifftn(wavefunction.fourier_plus_component)
     wavefunction.zero_component = cp.fft.ifftn(wavefunction.fourier_zero_component)
     wavefunction.minus_component = cp.fft.ifftn(wavefunction.fourier_minus_component)
 
 
-def kinetic_zeeman_step(wfn: Wavefunction, params: Parameters) -> None:
+def _kinetic_zeeman_step(wfn: Wavefunction, params: Parameters) -> None:
     """Computes the kinetic-zeeman subsystem for half a time step.
 
     :param wfn: The wavefunction of the system.
@@ -28,7 +36,7 @@ def kinetic_zeeman_step(wfn: Wavefunction, params: Parameters) -> None:
     wfn.fourier_minus_component *= cp.exp(-0.25 * 1j * params.dt * (wfn.grid.wave_number + 2 * params.q))
 
 
-def interaction_step(wfn: Wavefunction, params: Parameters) -> None:
+def _interaction_step(wfn: Wavefunction, params: Parameters) -> None:
     """Computes the interaction subsystem for a full time step.
 
     :param wfn: The wavefunction of the system.
@@ -76,18 +84,31 @@ def _calculate_density(wfn: Wavefunction) -> cp.ndarray:
     return cp.abs(wfn.plus_component) ** 2 + cp.abs(wfn.zero_component) ** 2 + cp.abs(wfn.minus_component) ** 2
 
 
-def renormalise_wavefunction(wfn: Wavefunction) -> None:
+def _propagate_wavefunction(wfn: Wavefunction, params: Parameters) -> None:
+    """Propagates the wavefunction forward in time by a time step.
+
+    :param wfn: The wavefunction of the system.
+    :param params: The parameter class of the system.
+    """
+    _kinetic_zeeman_step(wfn, params)
+    _ifft(wfn)
+    _interaction_step(wfn, params)
+    _fft(wfn)
+    _kinetic_zeeman_step(wfn, params)
+
+
+def _renormalise_wavefunction(wfn: Wavefunction) -> None:
     """Re-normalises the wavefunction to the correct atom number.
 
     :param wfn: The wavefunction of the system.
     """
-    ifft(wfn)
+    _ifft(wfn)
     correct_atom_plus, correct_atom_zero, correct_atom_minus = wfn.atom_num_plus, wfn.atom_num_zero, wfn.atom_num_minus
     current_atom_plus, current_atom_zero, current_atom_minus = _calculate_atom_num(wfn)
     wfn.plus_component *= cp.sqrt(correct_atom_plus / current_atom_plus)
     wfn.zero_component *= cp.sqrt(correct_atom_zero / current_atom_zero)
     wfn.minus_component *= cp.sqrt(correct_atom_minus / current_atom_minus)
-    fft(wfn)
+    _fft(wfn)
 
 
 def _calculate_atom_num(wfn: Wavefunction) -> tuple[int, int, int]:
@@ -101,7 +122,3 @@ def _calculate_atom_num(wfn: Wavefunction) -> tuple[int, int, int]:
     atom_num_minus = wfn.grid.grid_spacing_product * cp.sum(cp.abs(wfn.minus_component) ** 2)
 
     return atom_num_plus, atom_num_zero, atom_num_minus
-
-
-class Evolution:
-    pass
