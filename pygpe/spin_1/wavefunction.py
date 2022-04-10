@@ -7,12 +7,12 @@ class Wavefunction:
     def __init__(self, grid: Grid):
         self.grid = grid
 
-        self.plus_component = cp.empty(grid.shape, dtype='complex64')
-        self.zero_component = cp.empty(grid.shape, dtype='complex64')
-        self.minus_component = cp.empty(grid.shape, dtype='complex64')
-        self.fourier_plus_component = cp.empty(grid.shape, dtype='complex64')
-        self.fourier_zero_component = cp.empty(grid.shape, dtype='complex64')
-        self.fourier_minus_component = cp.empty(grid.shape, dtype='complex64')
+        self.plus_component = cp.empty(grid.shape, dtype='complex128')
+        self.zero_component = cp.empty(grid.shape, dtype='complex128')
+        self.minus_component = cp.empty(grid.shape, dtype='complex128')
+        self.fourier_plus_component = cp.empty(grid.shape, dtype='complex128')
+        self.fourier_zero_component = cp.empty(grid.shape, dtype='complex128')
+        self.fourier_minus_component = cp.empty(grid.shape, dtype='complex128')
 
         self.atom_num_plus = 0
         self.atom_num_zero = 0
@@ -25,13 +25,13 @@ class Wavefunction:
         :param ground_state: The ground state of the wavefunction.
         """
         if ground_state.lower() == "polar":
-            self.plus_component = cp.zeros(self.grid.shape, dtype='complex64')
-            self.zero_component = cp.ones(self.grid.shape, dtype='complex64')
-            self.minus_component = cp.zeros(self.grid.shape, dtype='complex64')
+            self.plus_component = cp.zeros(self.grid.shape, dtype='complex128')
+            self.zero_component = cp.ones(self.grid.shape, dtype='complex128')
+            self.minus_component = cp.zeros(self.grid.shape, dtype='complex128')
         elif ground_state.lower() == "empty":
-            self.plus_component = cp.zeros(self.grid.shape, dtype='complex64')
-            self.zero_component = cp.zeros(self.grid.shape, dtype='complex64')
-            self.minus_component = cp.zeros(self.grid.shape, dtype='complex64')
+            self.plus_component = cp.zeros(self.grid.shape, dtype='complex128')
+            self.zero_component = cp.zeros(self.grid.shape, dtype='complex128')
+            self.minus_component = cp.zeros(self.grid.shape, dtype='complex128')
         else:
             raise ValueError(f"{ground_state} is not a supported ground state")
 
