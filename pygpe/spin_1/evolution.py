@@ -62,7 +62,7 @@ def _calculate_density(wfn: Wavefunction) -> cp.ndarray:
     return cp.abs(wfn.plus_component) ** 2 + cp.abs(wfn.zero_component) ** 2 + cp.abs(wfn.minus_component) ** 2
 
 
-def _renormalise_wavefunction(wfn: Wavefunction) -> None:
+def renormalise_wavefunction(wfn: Wavefunction) -> None:
     """Re-normalises the wavefunction to the correct atom number.
 
     :param wfn: The wavefunction of the system.
