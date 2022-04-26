@@ -8,6 +8,7 @@ class DataManager:
     def __init__(self, filename: str, data_path: str):
         self.filename = filename
         self.data_path = data_path
+        self.time_index = 0
 
         # Create file
         h5py.File(f'{self.data_path}/{self.filename}', 'w')
@@ -79,3 +80,35 @@ class DataManager:
             # Time-related parameters
             file.create_dataset('parameters/dt', data=params.dt)
             file.create_dataset('parameters/nt', data=params.nt)
+
+    def save_wfn(self, wfn: Wavefunction):
+        wfn.ifft()  # Update real-space wavefunction before saving
+        if wfn.grid.ndim == 1:
+            with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as data:
+                new_psi_plus = data['wavefunction/psi_plus']
+                new_psi_plus.resize((wfn.grid.shape, self.time_index + 1))
+                new_psi_plus[:, self.time_index] = wfn.plus_component
+
+                new_psi_zero = data['wavefunction/psi_zero']
+                new_psi_zero.resize((wfn.grid.shape, self.time_index + 1))
+                new_psi_zero[:, self.time_index] = wfn.zero_component
+
+                new_psi_minus = data['wavefunction/psi_minus']
+                new_psi_minus.resize((wfn.grid.shape, self.time_index + 1))
+                new_psi_minus[:, self.time_index] = wfn.minus_component
+        elif wfn.grid.ndim == 2:
+            with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as data:
+                new_psi_plus = data['wavefunction/psi_plus']
+                new_psi_plus.resize((wfn.grid.shape, self.time_index + 1))
+                new_psi_plus[:, :, self.time_index] = wfn.plus_component
+
+                new_psi_zero = data['wavefunction/psi_zero']
+                new_psi_zero.resize((wfn.grid.shape, self.time_index + 1))
+                new_psi_zero[:, :, self.time_index] = wfn.zero_component
+
+                new_psi_minus = data['wavefunction/psi_minus']
+                new_psi_minus.resize((wfn.grid.shape, self.time_index + 1))
+                new_psi_minus[:, :, self.time_index] = wfn.minus_component
+
+        elif wfn.grid.ndim == 3:
+            raise NotImplementedError
