@@ -4,25 +4,11 @@ from pygpe.spin_1.parameters import Parameters
 
 
 def imaginary_time(wfn: Wavefunction, params: Parameters):
-    _fft(wfn)
+    wfn.fft()
     for i in range(params.nt):
         _propagate_wavefunction(wfn, params)
         _renormalise_wavefunction(wfn)
-    _ifft(wfn)
-
-
-def _fft(wavefunction: Wavefunction) -> None:
-    """Performs a fast Fourier transform on each wavefunction component."""
-    wavefunction.fourier_plus_component = cp.fft.fftn(wavefunction.plus_component)
-    wavefunction.fourier_zero_component = cp.fft.fftn(wavefunction.zero_component)
-    wavefunction.fourier_minus_component = cp.fft.fftn(wavefunction.minus_component)
-
-
-def _ifft(wavefunction: Wavefunction) -> None:
-    """Performs an inverse Fourier transform on each wavefunction component."""
-    wavefunction.plus_component = cp.fft.ifftn(wavefunction.fourier_plus_component)
-    wavefunction.zero_component = cp.fft.ifftn(wavefunction.fourier_zero_component)
-    wavefunction.minus_component = cp.fft.ifftn(wavefunction.fourier_minus_component)
+    wfn.ifft()
 
 
 def _kinetic_zeeman_step(wfn: Wavefunction, params: Parameters) -> None:
@@ -91,9 +77,9 @@ def _propagate_wavefunction(wfn: Wavefunction, params: Parameters) -> None:
     :param params: The parameter class of the system.
     """
     _kinetic_zeeman_step(wfn, params)
-    _ifft(wfn)
+    wfn.ifft()
     _interaction_step(wfn, params)
-    _fft(wfn)
+    wfn.fft()
     _kinetic_zeeman_step(wfn, params)
 
 
@@ -102,13 +88,13 @@ def _renormalise_wavefunction(wfn: Wavefunction) -> None:
 
     :param wfn: The wavefunction of the system.
     """
-    _ifft(wfn)
+    wfn.ifft()
     correct_atom_plus, correct_atom_zero, correct_atom_minus = wfn.atom_num_plus, wfn.atom_num_zero, wfn.atom_num_minus
     current_atom_plus, current_atom_zero, current_atom_minus = _calculate_atom_num(wfn)
     wfn.plus_component *= cp.sqrt(correct_atom_plus / current_atom_plus)
     wfn.zero_component *= cp.sqrt(correct_atom_zero / current_atom_zero)
     wfn.minus_component *= cp.sqrt(correct_atom_minus / current_atom_minus)
-    _fft(wfn)
+    wfn.fft()
 
 
 def _calculate_atom_num(wfn: Wavefunction) -> tuple[int, int, int]:
