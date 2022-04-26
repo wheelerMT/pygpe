@@ -71,6 +71,6 @@ class Wavefunction:
         self.fourier_minus_component = cp.fft.fftn(self.minus_component)
     
     def ifft(self):
-        self.plus_component = cp.fft.fftn(self.fourier_plus_component)
-        self.zero_component = cp.fft.fftn(self.fourier_zero_component)
-        self.minus_component = cp.fft.fftn(self.fourier_minus_component)
+        self.plus_component = cp.fft.ifftn(self.fourier_plus_component)
+        self.zero_component = cp.fft.ifftn(self.fourier_zero_component)
+        self.minus_component = cp.fft.ifftn(self.fourier_minus_component)
