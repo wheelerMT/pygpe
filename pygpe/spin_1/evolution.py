@@ -3,15 +3,7 @@ from pygpe.spin_1.wavefunction import Wavefunction
 from pygpe.spin_1.parameters import Parameters
 
 
-def imaginary_time(wfn: Wavefunction, params: Parameters):
-    wfn.fft()
-    for i in range(params.nt):
-        _propagate_wavefunction(wfn, params)
-        _renormalise_wavefunction(wfn)
-    wfn.ifft()
-
-
-def _kinetic_zeeman_step(wfn: Wavefunction, params: Parameters) -> None:
+def kinetic_zeeman_step(wfn: Wavefunction, params: Parameters) -> None:
     """Computes the kinetic-zeeman subsystem for half a time step.
 
     :param wfn: The wavefunction of the system.
@@ -22,7 +14,7 @@ def _kinetic_zeeman_step(wfn: Wavefunction, params: Parameters) -> None:
     wfn.fourier_minus_component *= cp.exp(-0.25 * 1j * params.dt * (wfn.grid.wave_number + 2 * params.q))
 
 
-def _interaction_step(wfn: Wavefunction, params: Parameters) -> None:
+def interaction_step(wfn: Wavefunction, params: Parameters) -> None:
     """Computes the interaction subsystem for a full time step.
 
     :param wfn: The wavefunction of the system.
@@ -68,19 +60,6 @@ def _calculate_density(wfn: Wavefunction) -> cp.ndarray:
     :return: The total atomic density.
     """
     return cp.abs(wfn.plus_component) ** 2 + cp.abs(wfn.zero_component) ** 2 + cp.abs(wfn.minus_component) ** 2
-
-
-def _propagate_wavefunction(wfn: Wavefunction, params: Parameters) -> None:
-    """Propagates the wavefunction forward in time by a time step.
-
-    :param wfn: The wavefunction of the system.
-    :param params: The parameter class of the system.
-    """
-    _kinetic_zeeman_step(wfn, params)
-    wfn.ifft()
-    _interaction_step(wfn, params)
-    wfn.fft()
-    _kinetic_zeeman_step(wfn, params)
 
 
 def _renormalise_wavefunction(wfn: Wavefunction) -> None:
