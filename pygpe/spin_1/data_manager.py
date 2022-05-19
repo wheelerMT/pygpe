@@ -81,7 +81,11 @@ class DataManager:
             file.create_dataset('parameters/dt', data=parameters["dt"])
             file.create_dataset('parameters/nt', data=parameters["nt"])
 
-    def save_wfn(self, wfn: Wavefunction):
+    def save_wfn(self, wfn: Wavefunction) -> None:
+        """Saves the current wavefunction data to the dataset.
+
+        :param wfn: The wavefunction of the system.
+        """
         wfn.ifft()  # Update real-space wavefunction before saving
         if wfn.grid.ndim == 1:
             with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as data:
