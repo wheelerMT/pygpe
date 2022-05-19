@@ -6,19 +6,26 @@ import pygpe.spin_1.evolution as evo
 
 
 class TestEvolution2D(unittest.TestCase):
-    def test_fft_normalised(self):
-        """Tests whether performing a forward followed by a backwards
-        fast Fourier transform on the wavefunction retains the same input.
+    def test_spin_vectors_polar(self):
+        """Tests whether the perpendicular and z-component spin vectors are
+        correct for a polar wavefunction.
         """
-        wavefunction_1 = Wavefunction(Grid((64, 64), (0.5, 0.5)))
-        wavefunction_1.set_initial_state("polar")
-        wavefunction_2 = Wavefunction(Grid((64, 64), (0.5, 0.5)))
-        wavefunction_2.set_initial_state("polar")
+        wavefunction_polar = Wavefunction(Grid((64, 64), (0.5, 0.5)))
+        wavefunction_polar.set_initial_state("polar")
 
-        evo._fft(wavefunction_2)
-        evo._ifft(wavefunction_2)
+        f_perp, fz = evo._calculate_spins(wavefunction_polar)
 
-        # assert_array_equal returns None if arrays are equal
-        self.assertIsNone(cp.testing.assert_array_equal(wavefunction_1.plus_component, wavefunction_2.plus_component))
-        self.assertIsNone(cp.testing.assert_array_equal(wavefunction_1.zero_component, wavefunction_2.zero_component))
-        self.assertIsNone(cp.testing.assert_array_equal(wavefunction_1.minus_component, wavefunction_2.minus_component))
+        self.assertEqual(f_perp.all(), 0.)
+        self.assertEqual(fz.all(), 0.)
+
+    def test_density(self):
+        """Tests to see if density is one given a normalised spinor."""
+        wavefunction = Wavefunction(Grid((64, 64), (0.5, 0.5)))
+        wavefunction.set_initial_state("polar")
+
+        self.assertEqual(evo._calculate_density(wavefunction).all(), 1.)
+
+    def test_renormalise(self):
+        """Tests whether wavefunction correctly gets re-normalised after being
+        modified.
+        """
