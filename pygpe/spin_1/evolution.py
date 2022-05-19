@@ -1,32 +1,31 @@
 import cupy as cp
 from pygpe.spin_1.wavefunction import Wavefunction
-from pygpe.spin_1.parameters import Parameters
 
 
-def kinetic_zeeman_step(wfn: Wavefunction, params: Parameters) -> None:
+def kinetic_zeeman_step(wfn: Wavefunction, pm: dict) -> None:
     """Computes the kinetic-zeeman subsystem for half a time step.
 
     :param wfn: The wavefunction of the system.
-    :param params: The parameter class of the system.
+    :param pm: The parameter class of the system.
     """
-    wfn.fourier_plus_component *= cp.exp(-0.25 * 1j * params.dt * (wfn.grid.wave_number + 2 * params.q))
-    wfn.fourier_zero_component *= cp.exp(-0.25 * 1j * params.dt * wfn.grid.wave_number)
-    wfn.fourier_minus_component *= cp.exp(-0.25 * 1j * params.dt * (wfn.grid.wave_number + 2 * params.q))
+    wfn.fourier_plus_component *= cp.exp(-0.25 * 1j * pm["dt"] * (wfn.grid.wave_number + 2 * pm["q"]))
+    wfn.fourier_zero_component *= cp.exp(-0.25 * 1j * pm["dt"] * wfn.grid.wave_number)
+    wfn.fourier_minus_component *= cp.exp(-0.25 * 1j * pm["dt"] * (wfn.grid.wave_number + 2 * pm["q"]))
 
 
-def interaction_step(wfn: Wavefunction, params: Parameters) -> None:
+def interaction_step(wfn: Wavefunction, pm: dict) -> None:
     """Computes the interaction subsystem for a full time step.
 
     :param wfn: The wavefunction of the system.
-    :param params: The parameter class of the system.
+    :param pm: The parameter class of the system.
     """
     spin_perp, spin_z = _calculate_spins(wfn)
     spin_mag = cp.sqrt(abs(spin_perp) ** 2 + spin_z ** 2)
     dens = _calculate_density(wfn)
 
     # Trig terms needed in solution
-    cos_term = cp.cos(params.c2 * spin_mag * params.dt)
-    sin_term = cp.nan_to_num(1j * cp.sin(params.c2 * spin_mag * params.dt))
+    cos_term = cp.cos(pm["c2"] * spin_mag * pm["dt"])
+    sin_term = cp.nan_to_num(1j * cp.sin(pm["c2"] * spin_mag * pm["dt"]))
 
     plus_comp_temp = cos_term * wfn.plus_component - sin_term * (
             spin_z * wfn.plus_component + cp.conj(spin_perp) / cp.sqrt(2) * wfn.zero_component)
@@ -35,9 +34,9 @@ def interaction_step(wfn: Wavefunction, params: Parameters) -> None:
     minus_comp_temp = cos_term * wfn.minus_component - sin_term * (
             spin_perp / cp.sqrt(2) * wfn.zero_component - spin_z * wfn.minus_component)
 
-    wfn.plus_component = plus_comp_temp * cp.exp(-1j * params.dt * (params.trap - params.p + params.c0 * dens))
-    wfn.zero_component = zero_comp_temp * cp.exp(-1j * params.dt * (params.trap + params.c0 * dens))
-    wfn.minus_component = minus_comp_temp * cp.exp(-1j * params.dt * (params.trap + params.p + params.c0 * dens))
+    wfn.plus_component = plus_comp_temp * cp.exp(-1j * pm["dt"] * (pm["trap"] - pm["p"] + pm["c0"] * dens))
+    wfn.zero_component = zero_comp_temp * cp.exp(-1j * pm["dt"] * (pm["trap"] + pm["c0"] * dens))
+    wfn.minus_component = minus_comp_temp * cp.exp(-1j * pm["dt"] * (pm["trap"] + pm["p"] + pm["c0"] * dens))
 
 
 def _calculate_spins(wfn: Wavefunction) -> tuple[cp.ndarray, cp.ndarray]:

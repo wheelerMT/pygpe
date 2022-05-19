@@ -2,7 +2,6 @@ import h5py
 import cupy as cp
 from pygpe.shared.grid import Grid
 from pygpe.spin_1.wavefunction import Wavefunction
-from pygpe.spin_1.parameters import Parameters
 
 
 class DataManager:
@@ -14,7 +13,7 @@ class DataManager:
         # Create file
         h5py.File(f'{self.data_path}/{self.filename}', 'w')
 
-    def save_initial_parameters(self, grid: Grid, wfn: Wavefunction, parameters: Parameters) -> None:
+    def save_initial_parameters(self, grid: Grid, wfn: Wavefunction, parameters: dict) -> None:
         """Saves the initial grid, wavefunction and parameters to a HDF5 file.
 
         :param grid: The grid object of the system.
@@ -66,21 +65,21 @@ class DataManager:
         elif wfn.grid.ndim == 3:
             raise NotImplementedError
 
-    def _save_params(self, params: Parameters) -> None:
+    def _save_params(self, parameters: dict) -> None:
         """Creates new datasets in file for condensate & time parameters
         and saves initial values.
         """
         with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as file:
             # Condensate and trap parameters
-            file.create_dataset('parameters/c0', data=params.c0)
-            file.create_dataset('parameters/c2', data=params.c2)
-            file.create_dataset('parameters/p', data=params.p)
-            file.create_dataset('parameters/q', data=params.q)
-            file.create_dataset('parameters/trap', data=params.trap)
+            file.create_dataset('parameters/c0', data=parameters["c0"])
+            file.create_dataset('parameters/c2', data=parameters["c2"])
+            file.create_dataset('parameters/p', data=parameters["p"])
+            file.create_dataset('parameters/q', data=parameters["q"])
+            file.create_dataset('parameters/trap', data=parameters["trap"])
 
             # Time-related parameters
-            file.create_dataset('parameters/dt', data=params.dt)
-            file.create_dataset('parameters/nt', data=params.nt)
+            file.create_dataset('parameters/dt', data=parameters["dt"])
+            file.create_dataset('parameters/nt', data=parameters["nt"])
 
     def save_wfn(self, wfn: Wavefunction):
         wfn.ifft()  # Update real-space wavefunction before saving
