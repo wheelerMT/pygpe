@@ -43,3 +43,10 @@ class TestEvolution2D(unittest.TestCase):
         cp.testing.assert_array_equal(wavefunction_2.plus_component, wavefunction_1.plus_component)
         cp.testing.assert_array_equal(wavefunction_2.zero_component, wavefunction_1.zero_component)
         cp.testing.assert_array_equal(wavefunction_2.minus_component, wavefunction_1.minus_component)
+
+    def test_atom_number(self):
+        """Tests to see if atom number of wavefunction is calculated correctly."""
+        wavefunction = Wavefunction(Grid((64, 64), (0.5, 0.5)))
+        wavefunction.set_initial_state("polar")
+
+        self.assertEqual(sum(evo._calculate_atom_num(wavefunction)), 1024)
