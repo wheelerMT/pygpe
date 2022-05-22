@@ -29,3 +29,17 @@ class TestEvolution2D(unittest.TestCase):
         """Tests whether wavefunction correctly gets re-normalised after being
         modified.
         """
+        wavefunction_1 = Wavefunction(Grid((64, 64), (0.5, 0.5)))
+        wavefunction_1.set_initial_state("polar")
+        wavefunction_1.add_noise_to_components("outer", 0., 1e-2)
+        wavefunction_1.fft()
+
+        wavefunction_2 = wavefunction_1
+        wavefunction_2.plus_component += cp.random.uniform(size=(64, 64))
+        wavefunction_2.zero_component += cp.random.uniform(size=(64, 64))
+        wavefunction_2.minus_component += cp.random.uniform(size=(64, 64))
+        evo.renormalise_wavefunction(wavefunction_2)
+
+        cp.testing.assert_array_equal(wavefunction_2.plus_component, wavefunction_1.plus_component)
+        cp.testing.assert_array_equal(wavefunction_2.zero_component, wavefunction_1.zero_component)
+        cp.testing.assert_array_equal(wavefunction_2.minus_component, wavefunction_1.minus_component)
