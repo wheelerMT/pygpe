@@ -28,7 +28,19 @@ class Grid:
             raise ValueError(f"{points} is not a valid dimensionality")
 
     def _generate_1d_grids(self, points: int, grid_spacing: float):
-        raise NotImplementedError
+        self.num_points_x = points
+        self.grid_spacing_x = grid_spacing
+        self.grid_spacing_product = self.grid_spacing_x
+
+        self.length_x = self.num_points_x * self.grid_spacing_x
+        self.x_mesh = np.arange(-self.num_points_x // 2, self.num_points_x // 2) * self.grid_spacing_x
+
+        self.fourier_spacing_x = np.pi / (self.num_points_x // 2 * self.grid_spacing_x)
+        self.fourier_x_mesh = np.fft.fftshift(
+            np.arange(-self.num_points_x // 2, self.num_points_x // 2) * self.fourier_spacing_x)
+
+        # Defined on device for use in evolution
+        self.wave_number = cp.asarray(self.fourier_x_mesh ** 2)
 
     def _generate_2d_grids(self, points: Tuple[int, ...], grid_spacings: Tuple[float, ...]):
         self.num_points_x, self.num_points_y = points
