@@ -9,8 +9,9 @@ class Grid:
         self.shape = points
         if isinstance(points, tuple):
             self.ndim = len(points)
-            self.total_num_points = sum(points)
-
+            self.total_num_points = 1
+            for point in points:
+                self.total_num_points *= point
         else:
             self.ndim = 1
             self.total_num_points = points
