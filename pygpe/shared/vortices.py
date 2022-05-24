@@ -46,8 +46,6 @@ def _position_sufficiently_far(position: Tuple, accepted_positions: List[Tuple],
         if abs(position[0] - accepted_pos[0]) > threshold:
             if abs(position[1] - accepted_pos[1]) > threshold:
                 return True
-            break
-        break
     return False
 
 
