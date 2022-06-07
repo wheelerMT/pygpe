@@ -4,6 +4,26 @@ import pygpe.shared.grid as grid
 
 class TestGrid(unittest.TestCase):
 
+    def test_correct_mesh_shape_1d(self):
+        """
+        Tests to see whether meshgrids match the
+        shape of points passed in for a 1D grid.
+        """
+
+        shape = 64
+        grid1d = grid.Grid(shape, 0.5)
+
+        self.assertEqual(grid1d.x_mesh.shape[0], shape)
+        self.assertEqual(grid1d.fourier_x_mesh.shape[0], shape)
+
+    def test_correct_lengths_1d(self):
+        """Tests to see whether the length of each grid
+        dimension gives the expected length for a 1D grid.
+        """
+
+        grid1d = grid.Grid(64, 0.5)
+        self.assertEqual(grid1d.length_x, 32.)
+
     def test_correct_mesh_shape_2d(self):
         """
         Tests to see whether meshgrids match the
