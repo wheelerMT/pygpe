@@ -10,6 +10,8 @@ class Grid:
         if isinstance(points, tuple):
             if len(points) != len(grid_spacings):
                 raise ValueError(f"{points} and {grid_spacings} are not of same length")
+            if len(points) > 3:
+                raise ValueError(f"{points} is not a valid dimensionality")
             self.ndim = len(points)
             self.total_num_points = 1
             for point in points:
@@ -24,8 +26,6 @@ class Grid:
             self._generate_2d_grids(points, grid_spacings)
         elif self.ndim == 3:
             self._generate_3d_grids(points, grid_spacings)
-        else:
-            raise ValueError(f"{points} is not a valid dimensionality")
 
     def _generate_1d_grids(self, points: int, grid_spacing: float):
         self.num_points_x = points
