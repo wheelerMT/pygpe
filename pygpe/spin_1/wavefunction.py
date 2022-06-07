@@ -66,11 +66,13 @@ class Wavefunction:
         self.atom_num_minus = self.grid.grid_spacing_product * cp.sum(cp.abs(self.minus_component) ** 2)
 
     def fft(self):
+        """Fourier transforms real-space components and updates Fourier-space components."""
         self.fourier_plus_component = cp.fft.fftn(self.plus_component)
         self.fourier_zero_component = cp.fft.fftn(self.zero_component)
         self.fourier_minus_component = cp.fft.fftn(self.minus_component)
     
     def ifft(self):
+        """Inverse Fourier transforms Fourier-space components and updates real-space components."""
         self.plus_component = cp.fft.ifftn(self.fourier_plus_component)
         self.zero_component = cp.fft.ifftn(self.fourier_zero_component)
         self.minus_component = cp.fft.ifftn(self.fourier_minus_component)
