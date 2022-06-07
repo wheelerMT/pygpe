@@ -8,6 +8,8 @@ class Grid:
 
         self.shape = points
         if isinstance(points, tuple):
+            if len(points) != len(grid_spacings):
+                raise ValueError(f"{points} and {grid_spacings} are not of same length")
             self.ndim = len(points)
             self.total_num_points = 1
             for point in points:
@@ -15,8 +17,6 @@ class Grid:
         else:
             self.ndim = 1
             self.total_num_points = points
-
-        # TODO: implement error checking to check dimensions of grid_spacings match points
 
         if self.ndim == 1:
             self._generate_1d_grids(points, grid_spacings)
