@@ -40,7 +40,13 @@ class DataManager:
                 file.create_dataset('grid/dx', data=grid.grid_spacing_x)
                 file.create_dataset('grid/dy', data=grid.grid_spacing_y)
         elif grid.ndim == 3:
-            raise NotImplementedError
+            with h5py.File(f'{self.data_path}/{self.filename}', 'w') as file:
+                file.create_dataset('grid/nx', data=grid.num_points_x)
+                file.create_dataset('grid/ny', data=grid.num_points_y)
+                file.create_dataset('grid/nz', data=grid.num_points_z)
+                file.create_dataset('grid/dx', data=grid.grid_spacing_x)
+                file.create_dataset('grid/dy', data=grid.grid_spacing_y)
+                file.create_dataset('grid/dz', data=grid.grid_spacing_z)
 
     def _save_initial_wfn(self, wfn: Wavefunction) -> None:
         """Creates new datasets in file for the wavefunction and saves
@@ -48,22 +54,20 @@ class DataManager:
         """
         if wfn.grid.ndim == 1:
             with h5py.File(f'{self.data_path}/{self.filename}', 'w') as file:
-                file.create_dataset('wavefunction/psi_plus', (wfn.grid.num_points_x, 1),
-                                    maxshape=(wfn.grid.num_points_x, None), dtype='complex128')
-                file.create_dataset('wavefunction/psi_zero', (wfn.grid.num_points_x, 1),
-                                    maxshape=(wfn.grid.num_points_x, None), dtype='complex128')
-                file.create_dataset('wavefunction/psi_minus', (wfn.grid.num_points_x, 1),
-                                    maxshape=(wfn.grid.num_points_x, None), dtype='complex128')
-        elif wfn.grid.ndim == 2:
+                file.create_dataset('wavefunction/psi_plus', (wfn.grid.shape, 1), maxshape=(wfn.grid.shape, None),
+                                    dtype='complex128')
+                file.create_dataset('wavefunction/psi_zero', (wfn.grid.shape, 1), maxshape=(wfn.grid.shape, None),
+                                    dtype='complex128')
+                file.create_dataset('wavefunction/psi_minus', (wfn.grid.shape, 1), maxshape=(wfn.grid.shape, None),
+                                    dtype='complex128')
+        else:
             with h5py.File(f'{self.data_path}/{self.filename}', 'w') as file:
-                file.create_dataset('wavefunction/psi_plus', (wfn.grid.num_points_x, wfn.grid.num_points_y, 1),
-                                    maxshape=(wfn.grid.num_points_x, wfn.grid.num_points_y, None), dtype='complex128')
-                file.create_dataset('wavefunction/psi_zero', (wfn.grid.num_points_x, wfn.grid.num_points_y, 1),
-                                    maxshape=(wfn.grid.num_points_x, wfn.grid.num_points_y, None), dtype='complex128')
-                file.create_dataset('wavefunction/psi_minus', (wfn.grid.num_points_x, wfn.grid.num_points_y, 1),
-                                    maxshape=(wfn.grid.num_points_x, wfn.grid.num_points_y, None), dtype='complex128')
-        elif wfn.grid.ndim == 3:
-            raise NotImplementedError
+                file.create_dataset('wavefunction/psi_plus', (*wfn.grid.shape, 1), maxshape=(*wfn.grid.shape, None),
+                                    dtype='complex128')
+                file.create_dataset('wavefunction/psi_zero', (*wfn.grid.shape, 1), maxshape=(*wfn.grid.shape, None),
+                                    dtype='complex128')
+                file.create_dataset('wavefunction/psi_minus', (*wfn.grid.shape, 1), maxshape=(*wfn.grid.shape, None),
+                                    dtype='complex128')
 
     def _save_params(self, parameters: dict) -> None:
         """Creates new datasets in file for condensate & time parameters
@@ -100,19 +104,16 @@ class DataManager:
                 new_psi_minus = data['wavefunction/psi_minus']
                 new_psi_minus.resize((wfn.grid.num_points_x, self.time_index + 1))
                 new_psi_minus[:, self.time_index] = wfn.minus_component
-        elif wfn.grid.ndim == 2:
+        else:
             with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as data:
                 new_psi_plus = data['wavefunction/psi_plus']
-                new_psi_plus.resize((wfn.grid.num_points_x, wfn.grid.num_points_y, self.time_index + 1))
-                new_psi_plus[:, :, self.time_index] = cp.asnumpy(wfn.plus_component)
+                new_psi_plus.resize((*wfn.grid.shape, self.time_index + 1))
+                new_psi_plus[..., self.time_index] = cp.asnumpy(wfn.plus_component)
 
                 new_psi_zero = data['wavefunction/psi_zero']
-                new_psi_zero.resize((wfn.grid.num_points_x, wfn.grid.num_points_y, self.time_index + 1))
-                new_psi_zero[:, :, self.time_index] = cp.asnumpy(wfn.zero_component)
+                new_psi_zero.resize((*wfn.grid.shape, self.time_index + 1))
+                new_psi_zero[..., self.time_index] = cp.asnumpy(wfn.zero_component)
 
                 new_psi_minus = data['wavefunction/psi_minus']
-                new_psi_minus.resize((wfn.grid.num_points_x, wfn.grid.num_points_y, self.time_index + 1))
-                new_psi_minus[:, :, self.time_index] = cp.asnumpy(wfn.minus_component)
-
-        elif wfn.grid.ndim == 3:
-            raise NotImplementedError
+                new_psi_minus.resize((*wfn.grid.shape, self.time_index + 1))
+                new_psi_minus[..., self.time_index] = cp.asnumpy(wfn.minus_component)
