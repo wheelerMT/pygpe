@@ -28,6 +28,7 @@ class Grid:
             self._generate_3d_grids(points, grid_spacings)
 
     def _generate_1d_grids(self, points: int, grid_spacing: float):
+        """Generates meshgrids for a 1D grid."""
         self.num_points_x = points
         self.grid_spacing_x = grid_spacing
         self.grid_spacing_product = self.grid_spacing_x
@@ -43,6 +44,7 @@ class Grid:
         self.wave_number = cp.asarray(self.fourier_x_mesh ** 2)
 
     def _generate_2d_grids(self, points: Tuple[int, ...], grid_spacings: Tuple[float, ...]):
+        """Generates meshgrids for a 2D grid."""
         self.num_points_x, self.num_points_y = points
         self.grid_spacing_x, self.grid_spacing_y = grid_spacings
         self.grid_spacing_product = self.grid_spacing_x * self.grid_spacing_y
@@ -69,6 +71,7 @@ class Grid:
         self.wave_number = cp.asarray(self.fourier_x_mesh ** 2 + self.fourier_y_mesh ** 2)
 
     def _generate_3d_grids(self, points: Tuple[int, ...], grid_spacings: Tuple[float, ...]):
+        """Generates meshgrids for a 3D grid."""
         self.num_points_x, self.num_points_y, self.num_points_z = points
         self.grid_spacing_x, self.grid_spacing_y, self.grid_spacing_z = grid_spacings
         self.grid_spacing_product = self.grid_spacing_x * self.grid_spacing_y * self.grid_spacing_z
