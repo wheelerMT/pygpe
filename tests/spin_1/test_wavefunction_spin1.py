@@ -25,6 +25,15 @@ class TestWavefunction2D(unittest.TestCase):
         self.assertEqual(wavefunction.zero_component.all(), 1.)
         self.assertEqual(wavefunction.minus_component.all(), 0.)
 
+    def test_ferromagnetic_initial_state(self):
+        """Tests whether the polar initial state is set correctly."""
+        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+        wavefunction.set_ground_state("ferromagnetic")
+
+        self.assertEqual(wavefunction.plus_component.all(), 1.)
+        self.assertEqual(wavefunction.zero_component.all(), 0.)
+        self.assertEqual(wavefunction.minus_component.all(), 0.)
+
     def test_empty_initial_state(self):
         """Tests whether the empty initial state correctly sets
         all wavefunction components to zero.

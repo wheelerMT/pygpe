@@ -25,7 +25,8 @@ class Wavefunction:
         :param ground_state: The ground state of the wavefunction.
         """
         ground_states = {
-            "polar": _polar_initial_state
+            "polar": _polar_initial_state,
+            "ferromagnetic": _ferromagnetic_initial_state
         }
 
         ground_states[ground_state.lower()](self)
@@ -76,4 +77,10 @@ class Wavefunction:
 def _polar_initial_state(wfn: Wavefunction):
     wfn.plus_component = cp.zeros(wfn.grid.shape, dtype='complex128')
     wfn.zero_component = cp.ones(wfn.grid.shape, dtype='complex128')
+    wfn.minus_component = cp.zeros(wfn.grid.shape, dtype='complex128')
+
+
+def _ferromagnetic_initial_state(wfn: Wavefunction):
+    wfn.plus_component = cp.ones(wfn.grid.shape, dtype='complex128')
+    wfn.zero_component = cp.zeros(wfn.grid.shape, dtype='complex128')
     wfn.minus_component = cp.zeros(wfn.grid.shape, dtype='complex128')
