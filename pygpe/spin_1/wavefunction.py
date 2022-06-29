@@ -24,12 +24,11 @@ class Wavefunction:
 
         :param ground_state: The ground state of the wavefunction.
         """
-        if ground_state.lower() == "polar":
-            self.plus_component = cp.zeros(self.grid.shape, dtype='complex128')
-            self.zero_component = cp.ones(self.grid.shape, dtype='complex128')
-            self.minus_component = cp.zeros(self.grid.shape, dtype='complex128')
-        else:
-            raise ValueError(f"{ground_state} is not a supported ground state")
+        ground_states = {
+            "polar": _polar_initial_state
+        }
+
+        ground_states[ground_state.lower()](self)
 
         self._update_atom_numbers()
 
@@ -66,9 +65,15 @@ class Wavefunction:
         self.fourier_plus_component = cp.fft.fftn(self.plus_component)
         self.fourier_zero_component = cp.fft.fftn(self.zero_component)
         self.fourier_minus_component = cp.fft.fftn(self.minus_component)
-    
+
     def ifft(self):
         """Inverse Fourier transforms Fourier-space components and updates real-space components."""
         self.plus_component = cp.fft.ifftn(self.fourier_plus_component)
         self.zero_component = cp.fft.ifftn(self.fourier_zero_component)
         self.minus_component = cp.fft.ifftn(self.fourier_minus_component)
+
+
+def _polar_initial_state(wfn: Wavefunction):
+    wfn.plus_component = cp.zeros(wfn.grid.shape, dtype='complex128')
+    wfn.zero_component = cp.ones(wfn.grid.shape, dtype='complex128')
+    wfn.minus_component = cp.zeros(wfn.grid.shape, dtype='complex128')
