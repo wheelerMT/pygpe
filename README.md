@@ -4,8 +4,8 @@
 
 ## Description
 
-PyGPE is a Python framework for solving the Gross-Pitaevskii equations for use in simulating Bose-Einstein condensate 
-systems.
+PyGPE is a Python framework for solving the Gross-Pitaevskii equations for use in simulating Bose-Einstein condensate
+systems accelerated using CUDA.
 
 ### Planned supported features
 - Scalar, spin-1/2, spin-1, and spin-2 systems.
@@ -15,9 +15,11 @@ systems.
 - A suite of diagnostics functions for calculating/using useful quantities.
 
 ### Requirements
-- To be listed.
-### Current development
-- 2D spin-1 system.
+
+- Python (3.9+),
+- [h5py](https://github.com/h5py/h5py) (3.6.0+),
+- [CuPy](https://github.com/cupy/cupy) (10.2.0+).
 
 ## Examples
-- Reserved for the future
+
+See [examples](examples) folder for various examples on the usage of the library.
