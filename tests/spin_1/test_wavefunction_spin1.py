@@ -19,7 +19,7 @@ class TestWavefunction2D(unittest.TestCase):
     def test_polar_initial_state(self):
         """Tests whether the polar initial state is set correctly."""
         wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-        wavefunction.set_initial_state("Polar")
+        wavefunction.set_ground_state("Polar")
 
         self.assertEqual(wavefunction.plus_component.all(), 0.)
         self.assertEqual(wavefunction.zero_component.all(), 1.)
@@ -30,7 +30,7 @@ class TestWavefunction2D(unittest.TestCase):
         all wavefunction components to zero.
         """
         wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-        wavefunction.set_initial_state("empty")
+        wavefunction.set_ground_state("empty")
 
         self.assertEqual(wavefunction.plus_component.all(), 0.)
         self.assertEqual(wavefunction.zero_component.all(), 0.)
@@ -40,14 +40,14 @@ class TestWavefunction2D(unittest.TestCase):
         """Tests that an unsupported/invalid initial state returns an error."""
         wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
         with self.assertRaises(ValueError):
-            wavefunction.set_initial_state("garbage")
+            wavefunction.set_ground_state("garbage")
 
     def test_adding_noise_outer(self):
         """Tests whether adding noise to empty outer components correctly
         makes those components non-zero.
         """
         wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-        wavefunction.set_initial_state("empty")
+        wavefunction.set_ground_state("empty")
         wavefunction.add_noise_to_components("outer", 0, 1e-2)
 
         self.assertNotEqual(wavefunction.plus_component.all(), 0.)

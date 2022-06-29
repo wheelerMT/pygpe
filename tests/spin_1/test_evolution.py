@@ -11,7 +11,7 @@ class TestEvolution2D(unittest.TestCase):
         correct for a polar wavefunction.
         """
         wavefunction_polar = Wavefunction(Grid((64, 64), (0.5, 0.5)))
-        wavefunction_polar.set_initial_state("polar")
+        wavefunction_polar.set_ground_state("polar")
 
         f_perp, fz = evo._calculate_spins(wavefunction_polar)
 
@@ -21,7 +21,7 @@ class TestEvolution2D(unittest.TestCase):
     def test_density(self):
         """Tests to see if density is one given a normalised spinor."""
         wavefunction = Wavefunction(Grid((64, 64), (0.5, 0.5)))
-        wavefunction.set_initial_state("polar")
+        wavefunction.set_ground_state("polar")
 
         self.assertEqual(evo._calculate_density(wavefunction).all(), 1.)
 
@@ -30,7 +30,7 @@ class TestEvolution2D(unittest.TestCase):
         modified.
         """
         wavefunction_1 = Wavefunction(Grid((64, 64), (0.5, 0.5)))
-        wavefunction_1.set_initial_state("polar")
+        wavefunction_1.set_ground_state("polar")
         wavefunction_1.add_noise_to_components("outer", 0., 1e-2)
         wavefunction_1.fft()
 
@@ -47,6 +47,6 @@ class TestEvolution2D(unittest.TestCase):
     def test_atom_number(self):
         """Tests to see if atom number of wavefunction is calculated correctly."""
         wavefunction = Wavefunction(Grid((64, 64), (0.5, 0.5)))
-        wavefunction.set_initial_state("polar")
+        wavefunction.set_ground_state("polar")
 
         self.assertEqual(sum(evo._calculate_atom_num(wavefunction)), 1024)

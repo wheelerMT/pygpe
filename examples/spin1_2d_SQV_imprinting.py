@@ -22,7 +22,7 @@ params = {
 
 # Generate wavefunction object, set initial state and add noise
 psi = gpe.Wavefunction(grid)
-psi.set_initial_state("polar")
+psi.set_ground_state("polar")
 psi.add_noise_to_components("outer", 0., 1e-2)
 
 vort.add_singly_quantised_vortices(psi, 100, 1)  # Add SQVs to phase profile of wavefunction

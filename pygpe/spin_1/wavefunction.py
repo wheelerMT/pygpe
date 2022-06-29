@@ -18,7 +18,7 @@ class Wavefunction:
         self.atom_num_zero = 0
         self.atom_num_minus = 0
 
-    def set_initial_state(self, ground_state: str) -> None:
+    def set_ground_state(self, ground_state: str) -> None:
         """Sets the components of the wavefunction according to
         the ground state we wish to be in.
 
@@ -27,10 +27,6 @@ class Wavefunction:
         if ground_state.lower() == "polar":
             self.plus_component = cp.zeros(self.grid.shape, dtype='complex128')
             self.zero_component = cp.ones(self.grid.shape, dtype='complex128')
-            self.minus_component = cp.zeros(self.grid.shape, dtype='complex128')
-        elif ground_state.lower() == "empty":
-            self.plus_component = cp.zeros(self.grid.shape, dtype='complex128')
-            self.zero_component = cp.zeros(self.grid.shape, dtype='complex128')
             self.minus_component = cp.zeros(self.grid.shape, dtype='complex128')
         else:
             raise ValueError(f"{ground_state} is not a supported ground state")
