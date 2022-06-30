@@ -48,31 +48,18 @@ class TestWavefunction2D(unittest.TestCase):
         self.assertEqual(wavefunction.zero_component.all(), 0.)
         self.assertEqual(wavefunction.minus_component.all(), 1.)
 
-    def test_empty_initial_state(self):
-        """Tests whether the empty initial state correctly sets
-        all wavefunction components to zero.
-        """
-        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-        wavefunction.set_ground_state("empty")
-
-        self.assertEqual(wavefunction.plus_component.all(), 0.)
-        self.assertEqual(wavefunction.zero_component.all(), 0.)
-        self.assertEqual(wavefunction.minus_component.all(), 0.)
-
     def test_set_initial_state_raises_error(self):
         """Tests that an unsupported/invalid initial state returns an error."""
         wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-        with self.assertRaises(ValueError):
-            wavefunction.set_ground_state("garbage")
+        with self.assertRaises(KeyError):
+            wavefunction.set_ground_state("garbage", params={})
 
     def test_adding_noise_outer(self):
         """Tests whether adding noise to empty outer components correctly
         makes those components non-zero.
         """
         wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-        wavefunction.set_ground_state("empty")
         wavefunction.add_noise_to_components("outer", 0, 1e-2)
 
         self.assertNotEqual(wavefunction.plus_component.all(), 0.)
-        self.assertEqual(wavefunction.zero_component.all(), 0.)
         self.assertNotEqual(wavefunction.minus_component.all(), 0.)
