@@ -77,18 +77,21 @@ class Wavefunction:
 
 
 def _polar_initial_state(wfn: Wavefunction, params: dict):
+    """Sets wavefunction components to (easy-axis) polar state."""
     wfn.plus_component = cp.zeros(wfn.grid.shape, dtype='complex128')
     wfn.zero_component = cp.sqrt(params["n0"]) * cp.ones(wfn.grid.shape, dtype='complex128')
     wfn.minus_component = cp.zeros(wfn.grid.shape, dtype='complex128')
 
 
 def _ferromagnetic_initial_state(wfn: Wavefunction, params: dict):
+    """Sets wavefunction components to ferromagnetic state."""
     wfn.plus_component = cp.sqrt(params["n0"]) * cp.ones(wfn.grid.shape, dtype='complex128')
     wfn.zero_component = cp.zeros(wfn.grid.shape, dtype='complex128')
     wfn.minus_component = cp.zeros(wfn.grid.shape, dtype='complex128')
 
 
 def _antiferromagnetic_initial_state(wfn: Wavefunction, params: dict):
+    """Sets wavefunction components to antiferromagnetic state."""
     p = params["p"]  # Linear Zeeman
     c2 = params["c2"]  # Spin-dependent interaction strength
     n = params["n0"]
