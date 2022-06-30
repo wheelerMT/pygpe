@@ -18,18 +18,20 @@ class Wavefunction:
         self.atom_num_zero = 0
         self.atom_num_minus = 0
 
-    def set_ground_state(self, ground_state: str) -> None:
+    def set_ground_state(self, ground_state: str, params: dict) -> None:
         """Sets the components of the wavefunction according to
         the ground state we wish to be in.
 
         :param ground_state: The ground state of the wavefunction.
+        :param params: Dictionary containing condensate parameters.
         """
         ground_states = {
             "polar": _polar_initial_state,
-            "ferromagnetic": _ferromagnetic_initial_state
+            "ferromagnetic": _ferromagnetic_initial_state,
+            "antiferromagnetic": _antiferromagnetic_initial_state
         }
 
-        ground_states[ground_state.lower()](self)
+        ground_states[ground_state.lower()](self, params)
 
         self._update_atom_numbers()
 
@@ -74,13 +76,23 @@ class Wavefunction:
         self.minus_component = cp.fft.ifftn(self.fourier_minus_component)
 
 
-def _polar_initial_state(wfn: Wavefunction):
+def _polar_initial_state(wfn: Wavefunction, params: dict):
     wfn.plus_component = cp.zeros(wfn.grid.shape, dtype='complex128')
-    wfn.zero_component = cp.ones(wfn.grid.shape, dtype='complex128')
+    wfn.zero_component = cp.sqrt(params["n0"]) * cp.ones(wfn.grid.shape, dtype='complex128')
     wfn.minus_component = cp.zeros(wfn.grid.shape, dtype='complex128')
 
 
-def _ferromagnetic_initial_state(wfn: Wavefunction):
-    wfn.plus_component = cp.ones(wfn.grid.shape, dtype='complex128')
+def _ferromagnetic_initial_state(wfn: Wavefunction, params: dict):
+    wfn.plus_component = cp.sqrt(params["n0"]) * cp.ones(wfn.grid.shape, dtype='complex128')
     wfn.zero_component = cp.zeros(wfn.grid.shape, dtype='complex128')
     wfn.minus_component = cp.zeros(wfn.grid.shape, dtype='complex128')
+
+
+def _antiferromagnetic_initial_state(wfn: Wavefunction, params: dict):
+    p = params["p"]  # Linear Zeeman
+    c2 = params["c2"]  # Spin-dependent interaction strength
+    n = params["n0"]
+
+    wfn.plus_component = cp.sqrt(n) * cp.sqrt((1 + p / c2) / 2) * cp.ones(wfn.grid.shape, dtype='complex128')
+    wfn.zero_component = cp.zeros(wfn.grid.shape, dtype='complex128')
+    wfn.minus_component = cp.sqrt(n) * cp.sqrt((1 + p / c2) / 2) * cp.ones(wfn.grid.shape, dtype='complex128')
