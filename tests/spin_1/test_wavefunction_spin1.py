@@ -1,4 +1,5 @@
 import unittest
+import cupy as cp
 from typing import Tuple
 from pygpe.shared.grid import Grid
 from pygpe.spin_1.wavefunction import Wavefunction
@@ -48,6 +49,19 @@ class TestWavefunction2D(unittest.TestCase):
         self.assertEqual(wavefunction.zero_component.all(), 0.)
         self.assertEqual(wavefunction.minus_component.all(), 1.)
 
+    def test_custom_wavefunction_components(self):
+        """Tests whether a custom wavefunction is set correctly."""
+        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+        plus_component = 1.67 * cp.ones((64, 64))
+        zero_component = 1e4 * cp.ones((64, 64))
+        minus_component = cp.zeros((64, 64))
+
+        wavefunction.set_custom_components(plus_component, zero_component, minus_component)
+
+        cp.testing.assert_array_equal(wavefunction.plus_component, plus_component)
+        cp.testing.assert_array_equal(wavefunction.zero_component, zero_component)
+        cp.testing.assert_array_equal(wavefunction.minus_component, minus_component)
+        
     def test_set_initial_state_raises_error(self):
         """Tests that an unsupported/invalid initial state returns an error."""
         wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))

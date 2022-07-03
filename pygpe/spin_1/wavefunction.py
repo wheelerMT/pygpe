@@ -35,6 +35,21 @@ class Wavefunction:
 
         self._update_atom_numbers()
 
+    def set_custom_components(self, plus_component: cp.ndarray = None, zero_component: cp.ndarray = None,
+                              minus_component: cp.ndarray = None) -> None:
+        """Sets the wavefunction components to the specified arrays.
+
+        :param plus_component: Plus component of the wavefunction.
+        :param zero_component: Zero component of the wavefunction.
+        :param minus_component: Minus component of the wavefunction.
+        """
+        if plus_component is not None:
+            self.plus_component = plus_component
+        if zero_component is not None:
+            self.zero_component = zero_component
+        if minus_component is not None:
+            self.minus_component = minus_component
+
     def add_noise_to_components(self, components: str, mean: float, std_dev: float) -> None:
         """Adds noise to the specified wavefunction components
         using a normal distribution.
