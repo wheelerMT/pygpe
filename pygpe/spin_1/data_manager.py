@@ -95,15 +95,15 @@ class DataManager:
             with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as data:
                 new_psi_plus = data['wavefunction/psi_plus']
                 new_psi_plus.resize((wfn.grid.num_points_x, self.time_index + 1))
-                new_psi_plus[:, self.time_index] = wfn.plus_component
+                new_psi_plus[:, self.time_index] = cp.asnumpy(wfn.plus_component)
 
                 new_psi_zero = data['wavefunction/psi_zero']
                 new_psi_zero.resize((wfn.grid.num_points_x, self.time_index + 1))
-                new_psi_zero[:, self.time_index] = wfn.zero_component
+                new_psi_zero[:, self.time_index] = cp.asnumpy(wfn.zero_component)
 
                 new_psi_minus = data['wavefunction/psi_minus']
                 new_psi_minus.resize((wfn.grid.num_points_x, self.time_index + 1))
-                new_psi_minus[:, self.time_index] = wfn.minus_component
+                new_psi_minus[:, self.time_index] = cp.asnumpy(wfn.minus_component)
         else:
             with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as data:
                 new_psi_plus = data['wavefunction/psi_plus']
