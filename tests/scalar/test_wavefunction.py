@@ -25,4 +25,12 @@ class TestWavefunction2D(unittest.TestCase):
         wavefunction.set_wavefunction(array)
 
         self.assertEqual(wavefunction.wavefunction.all(), 1.)
-       
+
+    def test_adding_noise(self):
+        """Tests whether adding noise to empty wavefunction correctly
+        makes the wavefunction non-zero.
+        """
+        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+        wavefunction.add_noise(0, 1e-2)
+
+        self.assertNotEqual(wavefunction.wavefunction.all(), 0.)

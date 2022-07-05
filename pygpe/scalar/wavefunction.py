@@ -17,4 +17,18 @@ class Wavefunction:
         :param wavefunction:  The array to set the wavefunction as.
         """
         self.wavefunction = wavefunction
-       
+
+    def add_noise(self, mean: float, std_dev: float) -> None:
+        """Adds noise to the wavefunction using a normal distribution.
+
+        :param mean: The mean of the normal distribution.
+        :param std_dev: The standard deviation of the normal distribution.
+        """
+        self.wavefunction += self._generate_complex_normal_dist(mean, std_dev)
+
+    def _generate_complex_normal_dist(self, mean: float, std_dev: float) -> cp.ndarray:
+        """Returns a ndarray of complex values containing results from
+        a normal distribution.
+        """
+        return cp.random.normal(mean, std_dev, size=self.grid.shape) + 1j * cp.random.normal(mean, std_dev,
+                                                                                             size=self.grid.shape)
