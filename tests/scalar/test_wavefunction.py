@@ -34,3 +34,16 @@ class TestWavefunction2D(unittest.TestCase):
         wavefunction.add_noise(0, 1e-2)
 
         self.assertNotEqual(wavefunction.wavefunction.all(), 0.)
+
+    def test_fft(self):
+        """Tests whether performing a forward fft followed by an inverse
+        fft returns the same result (up to numerical error).
+        """
+        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+        wavefunction.add_noise(0, 1e-2)
+
+        before_fft = wavefunction.wavefunction
+        wavefunction.fft()
+        wavefunction.ifft()
+
+        cp.testing.assert_allclose(wavefunction.wavefunction, before_fft)

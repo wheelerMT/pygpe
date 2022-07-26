@@ -38,3 +38,9 @@ class Wavefunction:
 
     def _update_atom_number(self):
         self.atom_num = self.grid.grid_spacing_product * cp.sum(cp.abs(self.wavefunction) ** 2)
+
+    def fft(self):
+        self.fourier_wavefunction = cp.fft.fftn(self.wavefunction)
+
+    def ifft(self):
+        self.wavefunction = cp.fft.ifftn(self.fourier_wavefunction)
