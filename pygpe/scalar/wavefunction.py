@@ -8,6 +8,7 @@ class Wavefunction:
         self.grid = grid
 
         self.wavefunction = cp.empty(grid.shape, dtype='complex128')
+        self.fourier_wavefunction = cp.empty(grid.shape, dtype='complex128')  # Fourier component
 
         self.atom_num = 0
 
