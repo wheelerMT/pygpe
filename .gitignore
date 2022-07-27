@@ -132,7 +132,6 @@ dmypy.json
 .idea/
 data/
 tests/throwaway_spin1.py
-tests/throwaway_scalar.py
 tests/_trial_temp
 tests/shared/_trial_temp
 tests/spin_1/_trial_temp
