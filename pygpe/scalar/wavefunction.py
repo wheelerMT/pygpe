@@ -40,7 +40,9 @@ class Wavefunction:
         self.atom_num = self.grid.grid_spacing_product * cp.sum(cp.abs(self.wavefunction) ** 2)
 
     def fft(self):
+        """Fourier transforms real-space component and updates Fourier-space component."""
         self.fourier_wavefunction = cp.fft.fftn(self.wavefunction)
 
     def ifft(self):
+        """Inverse Fourier transforms Fourier-space component and updates real-space component."""
         self.wavefunction = cp.fft.ifftn(self.fourier_wavefunction)
