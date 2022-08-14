@@ -36,14 +36,14 @@ class Wavefunction:
         return cp.random.normal(mean, std_dev, size=self.grid.shape) + 1j * cp.random.normal(mean, std_dev,
                                                                                              size=self.grid.shape)
 
-    def _update_atom_number(self):
+    def _update_atom_number(self) -> None:
         self.atom_num = self.grid.grid_spacing_product * cp.sum(cp.abs(self.wavefunction) ** 2)
 
-    def fft(self):
+    def fft(self) -> None:
         """Fourier transforms real-space component and updates Fourier-space component."""
         self.fourier_wavefunction = cp.fft.fftn(self.wavefunction)
 
-    def ifft(self):
+    def ifft(self) -> None:
         """Inverse Fourier transforms Fourier-space component and updates real-space component."""
         self.wavefunction = cp.fft.ifftn(self.fourier_wavefunction)
 
