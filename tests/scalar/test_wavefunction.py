@@ -47,3 +47,10 @@ class TestWavefunction2D(unittest.TestCase):
         wavefunction.ifft()
 
         cp.testing.assert_allclose(wavefunction.wavefunction, before_fft)
+
+    def test_density(self):
+        """Tests whether the atomic density is calculated correctly."""
+        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+        wavefunction.set_wavefunction(5 * cp.ones((64, 64)))
+
+        cp.testing.assert_array_equal(wavefunction.density(), 25 * cp.ones((64, 64)))

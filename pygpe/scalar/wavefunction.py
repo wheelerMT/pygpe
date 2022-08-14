@@ -46,3 +46,7 @@ class Wavefunction:
     def ifft(self):
         """Inverse Fourier transforms Fourier-space component and updates real-space component."""
         self.wavefunction = cp.fft.ifftn(self.fourier_wavefunction)
+
+    def density(self) -> cp.ndarray:
+        """Returns the density of the system."""
+        return cp.abs(self.wavefunction) ** 2
