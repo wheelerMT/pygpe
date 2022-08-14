@@ -1,5 +1,5 @@
 import cupy as cp
-from pygpe.spin_1.wavefunction import Wavefunction
+from pygpe.spinone.wavefunction import Wavefunction
 
 
 def kinetic_zeeman_step(wfn: Wavefunction, pm: dict) -> None:

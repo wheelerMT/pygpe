@@ -2,7 +2,7 @@ import unittest
 import cupy as cp
 from typing import Tuple
 from pygpe.shared.grid import Grid
-from pygpe.spin_1.wavefunction import Wavefunction
+from pygpe.spinone.wavefunction import Wavefunction
 
 
 def generate_wavefunction2d(points: Tuple[int, int], grid_spacing: Tuple[float, float]) -> Wavefunction:

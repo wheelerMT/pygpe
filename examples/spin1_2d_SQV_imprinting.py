@@ -1,4 +1,4 @@
-import pygpe.spin_1 as gpe
+import pygpe.spinone as gpe
 import pygpe.shared.vortices as vort
 import matplotlib.pyplot as plt
 import cupy as cp
