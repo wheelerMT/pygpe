@@ -32,7 +32,7 @@ phase = cp.asarray(vort.vortex_phase_profile(grid, 100, 1))  # Get 100 phase win
 psi.apply_phase(phase)  # Apply phase to all spinor components
 
 # Generate DataManager to store data for simulation
-data = gpe.DataManager(filename='test.hdf5', data_path='../data/')
+data = gpe.DataManager(filename='test.hdf5', data_path='../../data/')
 data.save_initial_parameters(grid, psi, params)
 
 psi.fft()  # Ensures k-space wavefunction components are up-to-date before evolution
