@@ -73,6 +73,32 @@ class Wavefunction:
         return cp.random.normal(mean, std_dev, size=self.grid.shape) + 1j * cp.random.normal(mean, std_dev,
                                                                                              size=self.grid.shape)
 
+    def apply_phase(self, phase: cp.ndarray, components: str | list[str] = 'all') -> None:
+        """
+
+        :param phase:
+        :param components:
+        :return:
+        """
+        if isinstance(components, list):
+            for component in components:
+                self._apply_phase_to_component(phase, component)
+        elif components == 'all':
+            for component in ['plus', 'zero', 'minus']:
+                self._apply_phase_to_component(phase, component)
+        elif isinstance(components, str):
+            self._apply_phase_to_component(phase, components)
+
+    def _apply_phase_to_component(self, phase: cp.ndarray, component: str):
+        if component == 'plus':
+            self.plus_component *= cp.exp(1j * phase)
+        elif component == 'zero':
+            self.zero_component *= cp.exp(1j * phase)
+        elif component == 'minus':
+            self.minus_component *= cp.exp(1j * phase)
+        else:
+            raise ValueError(f'Component type {component} is unsupported')
+
     def _update_atom_numbers(self):
         self.atom_num_plus = self.grid.grid_spacing_product * cp.sum(cp.abs(self.plus_component) ** 2)
         self.atom_num_zero = self.grid.grid_spacing_product * cp.sum(cp.abs(self.zero_component) ** 2)
