@@ -36,6 +36,13 @@ class Wavefunction:
         return cp.random.normal(mean, std_dev, size=self.grid.shape) + 1j * cp.random.normal(mean, std_dev,
                                                                                              size=self.grid.shape)
 
+    def apply_phase(self, phase: cp.ndarry) -> None:
+        """Applies a phase to the wavefunction.
+
+        :param phase: The phase to apply.
+        """
+        self.wavefunction *= cp.exp(1j * phase)
+
     def _update_atom_number(self) -> None:
         self.atom_num = self.grid.grid_spacing_product * cp.sum(cp.abs(self.wavefunction) ** 2)
 
