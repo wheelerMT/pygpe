@@ -74,11 +74,10 @@ class Wavefunction:
                                                                                              size=self.grid.shape)
 
     def apply_phase(self, phase: cp.ndarray, components: str | list[str] = 'all') -> None:
-        """
+        """Applies a phase to specified components.
 
-        :param phase:
-        :param components:
-        :return:
+        :param phase: The phase to be applied.
+        :param components: The components of which to apply the phase to.
         """
         if isinstance(components, list):
             for component in components:
@@ -88,6 +87,8 @@ class Wavefunction:
                 self._apply_phase_to_component(phase, component)
         elif isinstance(components, str):
             self._apply_phase_to_component(phase, components)
+        else:
+            raise ValueError(f'Components type {components} is unsupported')
 
     def _apply_phase_to_component(self, phase: cp.ndarray, component: str):
         if component == 'plus':
