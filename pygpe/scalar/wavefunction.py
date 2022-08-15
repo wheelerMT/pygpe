@@ -36,7 +36,7 @@ class Wavefunction:
         return cp.random.normal(mean, std_dev, size=self.grid.shape) + 1j * cp.random.normal(mean, std_dev,
                                                                                              size=self.grid.shape)
 
-    def apply_phase(self, phase: cp.ndarry) -> None:
+    def apply_phase(self, phase: cp.ndarray) -> None:
         """Applies a phase to the wavefunction.
 
         :param phase: The phase to apply.
