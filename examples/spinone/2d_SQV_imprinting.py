@@ -2,6 +2,7 @@ import pygpe.spinone as gpe
 import pygpe.shared.vortices as vort
 import matplotlib.pyplot as plt
 import cupy as cp
+import time
 
 # Generate grid object
 points = (512, 512)
@@ -19,7 +20,7 @@ params = {
 
     # Time params
     "dt": -1j * 1e-2,
-    "nt": 100,
+    "nt": 1000,
     "t": 0
 }
 
@@ -36,6 +37,7 @@ data = gpe.DataManager(filename='test.hdf5', data_path='../../data/')
 data.save_initial_parameters(grid, psi, params)
 
 psi.fft()  # Ensures k-space wavefunction components are up-to-date before evolution
+start_time = time.time()
 for i in range(params["nt"]):
     # Perform the evolution
     gpe.kinetic_zeeman_step(psi, params)
@@ -46,6 +48,7 @@ for i in range(params["nt"]):
     gpe.renormalise_wavefunction(psi)
 
     data.save_wfn(psi)  # Save data
+print(f'Evolution of {params["nt"]} steps took {time.time() - start_time}!')
 
 # Plot density and phase of zero component
 fig, ax = plt.subplots(1, 2, figsize=(10, 6))
