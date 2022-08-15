@@ -28,8 +28,7 @@ psi = gpe.Wavefunction(grid)
 psi.set_ground_state("polar", params)
 psi.add_noise_to_components("outer", 0., 1e-2)
 
-phase = cp.asarray(
-    vort.vortex_phase_profile(grid, 100, 1))  # Add 100 phase windings with a min distance of 1 to phase profile
+phase = cp.asarray(vort.vortex_phase_profile(grid, 100, 1))  # Get 100 phase windings with a min distance of 1
 psi.apply_phase(phase)  # Apply phase to all spinor components
 
 # Generate DataManager to store data for simulation
