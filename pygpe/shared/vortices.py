@@ -4,7 +4,7 @@ from pygpe.shared.grid import Grid
 from pygpe.spinone.wavefunction import Wavefunction
 from typing import List, Tuple
 
-"""Contains set of functions that can add various types of vortices to the wavefunction."""
+"""Contains set of functions that can add various types of vortices to the """
 
 
 def _generate_positions(grid: Grid, num_vortices: int, threshold: float) -> iter:
@@ -54,28 +54,27 @@ def _heaviside(array: np.ndarray) -> np.ndarray:
     return np.where(array < 0, np.zeros(array.shape), np.ones(array.shape))
 
 
-def add_singly_quantised_vortices(wavefunction: Wavefunction, num_vortices: int, threshold: float) -> None:
-    """Constructs a 2D phase profile containing a number of singly quantised vortices,
-    which is then applied to each wavefunction component.
+def vortex_phase_profile(grid: Grid, num_vortices: int, threshold: float) -> np.ndarray:
+    """Constructs a 2D phase profile consisting of 2pi phase windings.
 
-    :param wavefunction: The 2D wavefunction of the system.
-    :param num_vortices: The total number of vortices.
+    :param grid: The 2D grid of the system.
+    :param num_vortices: The total number of vortices to be included in the phase profile.
     :param threshold: The minimum distance allowed between any two vortices.
     """
-    vortex_positions_iter = _generate_positions(wavefunction.grid, num_vortices, threshold)
+    vortex_positions_iter = _generate_positions(grid, num_vortices, threshold)
 
-    phase = np.zeros((wavefunction.grid.num_points_x, wavefunction.grid.num_points_y), dtype='float32')
+    phase = np.zeros((grid.num_points_x, grid.num_points_y), dtype='float32')
 
     for _ in range(num_vortices // 2):
-        phase_temp = np.zeros((wavefunction.grid.num_points_x, wavefunction.grid.num_points_y), dtype='float32')
+        phase_temp = np.zeros((grid.num_points_x, grid.num_points_y), dtype='float32')
         x_pos_minus, y_pos_minus = next(vortex_positions_iter)  # Negative circulation vortex
         x_pos_plus, y_pos_plus = next(vortex_positions_iter)  # Positive circulation vortex
 
         # Aux variables
-        y_minus = 2 * np.pi / wavefunction.grid.length_y * (wavefunction.grid.y_mesh - y_pos_minus)
-        x_minus = 2 * np.pi / wavefunction.grid.length_x * (wavefunction.grid.x_mesh - x_pos_minus)
-        y_plus = 2 * np.pi / wavefunction.grid.length_y * (wavefunction.grid.y_mesh - y_pos_plus)
-        x_plus = 2 * np.pi / wavefunction.grid.length_x * (wavefunction.grid.x_mesh - x_pos_plus)
+        y_minus = 2 * np.pi / grid.length_y * (grid.y_mesh - y_pos_minus)
+        x_minus = 2 * np.pi / grid.length_x * (grid.x_mesh - x_pos_minus)
+        y_plus = 2 * np.pi / grid.length_y * (grid.y_mesh - y_pos_plus)
+        x_plus = 2 * np.pi / grid.length_x * (grid.x_mesh - x_pos_plus)
 
         heaviside_x_plus = _heaviside(x_plus)
         heaviside_x_minus = _heaviside(x_minus)
@@ -84,10 +83,8 @@ def add_singly_quantised_vortices(wavefunction: Wavefunction, num_vortices: int,
             phase_temp += np.arctan(np.tanh((y_minus + 2 * np.pi * nn) / 2) * np.tan((x_minus - np.pi) / 2)) \
                           - np.arctan(np.tanh((y_plus + 2 * np.pi * nn) / 2) * np.tan((x_plus - np.pi) / 2)) \
                           + np.pi * (heaviside_x_plus - heaviside_x_minus)
-        phase_temp -= 2 * np.pi * (wavefunction.grid.y_mesh - wavefunction.grid.y_mesh.min()) \
-                      * (x_pos_plus - x_pos_minus) / (wavefunction.grid.length_y * wavefunction.grid.length_x)
+        phase_temp -= 2 * np.pi * (grid.y_mesh - grid.y_mesh.min()) \
+                      * (x_pos_plus - x_pos_minus) / (grid.length_y * grid.length_x)
         phase += phase_temp
 
-    wavefunction.plus_component *= cp.exp(1j * cp.asarray(phase))
-    wavefunction.zero_component *= cp.exp(1j * cp.asarray(phase))
-    wavefunction.minus_component *= cp.exp(1j * cp.asarray(phase))
+    return phase
