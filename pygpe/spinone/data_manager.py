@@ -30,17 +30,17 @@ class DataManager:
         initial values.
         """
         if grid.ndim == 1:
-            with h5py.File(f'{self.data_path}/{self.filename}', 'w') as file:
+            with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as file:
                 file.create_dataset('grid/nx', data=grid.num_points_x)
                 file.create_dataset('grid/dx', data=grid.grid_spacing_x)
         elif grid.ndim == 2:
-            with h5py.File(f'{self.data_path}/{self.filename}', 'w') as file:
+            with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as file:
                 file.create_dataset('grid/nx', data=grid.num_points_x)
                 file.create_dataset('grid/ny', data=grid.num_points_y)
                 file.create_dataset('grid/dx', data=grid.grid_spacing_x)
                 file.create_dataset('grid/dy', data=grid.grid_spacing_y)
         elif grid.ndim == 3:
-            with h5py.File(f'{self.data_path}/{self.filename}', 'w') as file:
+            with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as file:
                 file.create_dataset('grid/nx', data=grid.num_points_x)
                 file.create_dataset('grid/ny', data=grid.num_points_y)
                 file.create_dataset('grid/nz', data=grid.num_points_z)
@@ -53,7 +53,7 @@ class DataManager:
         initial values.
         """
         if wfn.grid.ndim == 1:
-            with h5py.File(f'{self.data_path}/{self.filename}', 'w') as file:
+            with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as file:
                 file.create_dataset('wavefunction/psi_plus', (wfn.grid.shape, 1), maxshape=(wfn.grid.shape, None),
                                     dtype='complex128')
                 file.create_dataset('wavefunction/psi_zero', (wfn.grid.shape, 1), maxshape=(wfn.grid.shape, None),
@@ -61,7 +61,7 @@ class DataManager:
                 file.create_dataset('wavefunction/psi_minus', (wfn.grid.shape, 1), maxshape=(wfn.grid.shape, None),
                                     dtype='complex128')
         else:
-            with h5py.File(f'{self.data_path}/{self.filename}', 'w') as file:
+            with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as file:
                 file.create_dataset('wavefunction/psi_plus', (*wfn.grid.shape, 1), maxshape=(*wfn.grid.shape, None),
                                     dtype='complex128')
                 file.create_dataset('wavefunction/psi_zero', (*wfn.grid.shape, 1), maxshape=(*wfn.grid.shape, None),
