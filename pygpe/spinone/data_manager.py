@@ -18,7 +18,7 @@ class DataManager:
 
         :param grid: The grid object of the system.
         :param wfn: The wavefunction of the system.
-        :param parameters: The parameter object of the system.
+        :param parameters: The parameter dictionary.
         """
 
         self._save_initial_grid_params(grid)
@@ -74,16 +74,8 @@ class DataManager:
         and saves initial values.
         """
         with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as file:
-            # Condensate and trap parameters
-            file.create_dataset('parameters/c0', data=parameters["c0"])
-            file.create_dataset('parameters/c2', data=parameters["c2"])
-            file.create_dataset('parameters/p', data=parameters["p"])
-            file.create_dataset('parameters/q', data=parameters["q"])
-            file.create_dataset('parameters/trap', data=parameters["trap"])
-
-            # Time-related parameters
-            file.create_dataset('parameters/dt', data=parameters["dt"])
-            file.create_dataset('parameters/nt', data=parameters["nt"])
+            for key in parameters:
+                file.create_dataset(f'parameters/{key}', data=parameters[key])
 
     def save_wfn(self, wfn: Wavefunction) -> None:
         """Saves the current wavefunction data to the dataset.
