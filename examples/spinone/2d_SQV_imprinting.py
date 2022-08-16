@@ -47,7 +47,8 @@ for i in range(params["nt"]):
     gpe.kinetic_zeeman_step(psi, params)
     gpe.renormalise_wavefunction(psi)
 
-    data.save_wfn(psi)  # Save data
+    if i % 10 == 0:  # Save data every 10 time steps
+        data.save_wfn(psi)
 print(f'Evolution of {params["nt"]} steps took {time.time() - start_time}!')
 
 # Plot density and phase of zero component
