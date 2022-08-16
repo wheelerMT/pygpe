@@ -49,6 +49,8 @@ for i in range(params["nt"]):
 
     if i % 10 == 0:  # Save data every 10 time steps
         data.save_wfn(psi)
+        print(params["t"])
+    params["t"] += params["dt"]
 print(f'Evolution of {params["nt"]} steps took {time.time() - start_time}!')
 
 # Plot density and phase of zero component

@@ -21,7 +21,8 @@ psi.apply_phase(cp.asarray(phase))  # Apply phase to wavefunction
 # Define condensate parameters
 params = {"g": 1,
           "nt": 1000,
-          "dt": -1j * 1e-2}
+          "dt": -1j * 1e-2,
+          "t": 0}
 
 psi.fft()  # FFT to ensure k-space wavefunction is up-to-date
 start_time = time.time()  # Start timer
@@ -34,6 +35,8 @@ for i in range(params["nt"]):
     kinetic_step(psi, params)
 
     renormalise_wavefunction(psi)  # Re-normalise since we are using imaginary time
+
+    params["t"] += params["dt"]  # Increment time count
 print(f'Evolution of {params["nt"]} steps took {time.time() - start_time}!')
 
 # Plot the density
