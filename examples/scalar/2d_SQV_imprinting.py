@@ -24,6 +24,10 @@ params = {"g": 1,
           "dt": -1j * 1e-2,
           "t": 0}
 
+# Create DataManager
+data = gpe.DataManager('scalar_data.hdf5', '../../data/')
+data.save_initial_parameters(grid, psi, params)
+
 psi.fft()  # FFT to ensure k-space wavefunction is up-to-date
 start_time = time.time()  # Start timer
 for i in range(params["nt"]):
@@ -36,6 +40,9 @@ for i in range(params["nt"]):
 
     renormalise_wavefunction(psi)  # Re-normalise since we are using imaginary time
 
+    if i % 10 == 0:  # Save wavefunction data and print current time
+        data.save_wfn(psi)
+        print(f't = {params["t"]}')
     params["t"] += params["dt"]  # Increment time count
 print(f'Evolution of {params["nt"]} steps took {time.time() - start_time}!')
 
