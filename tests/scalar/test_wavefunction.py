@@ -54,3 +54,13 @@ class TestWavefunction2D(unittest.TestCase):
         wavefunction.set_wavefunction(5 * cp.ones((64, 64)))
 
         cp.testing.assert_array_equal(wavefunction.density(), 25 * cp.ones((64, 64)))
+
+    def test_phase(self):
+        """Tests whether the specified phase gets applied correctly."""
+        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+        wavefunction.set_wavefunction(5 * cp.ones((64, 64), dtype='complex128'))
+
+        phase = cp.random.uniform(0, 1, size=(64, 64))
+        wavefunction.apply_phase(phase)
+
+        cp.testing.assert_allclose(phase, cp.angle(wavefunction.wavefunction))
