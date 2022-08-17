@@ -54,12 +54,16 @@ class Wavefunction:
         """Adds noise to the specified wavefunction components
         using a normal distribution.
 
-        :param components: The components to add noise to.
+        :param components: "outer" or "all": The components to add noise to.
         :param mean: The mean of the normal distribution.
         :param std_dev: The standard deviation of the normal distribution.
         """
         if components.lower() == "outer":
             self.plus_component += self._generate_complex_normal_dist(mean, std_dev)
+            self.minus_component += self._generate_complex_normal_dist(mean, std_dev)
+        elif components.lower() == "all":
+            self.plus_component += self._generate_complex_normal_dist(mean, std_dev)
+            self.zero_component += self._generate_complex_normal_dist(mean, std_dev)
             self.minus_component += self._generate_complex_normal_dist(mean, std_dev)
         else:
             raise ValueError(f"{components} is not a supported configuration")

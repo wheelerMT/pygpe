@@ -77,3 +77,14 @@ class TestWavefunction2D(unittest.TestCase):
 
         self.assertNotEqual(wavefunction.plus_component.all(), 0.)
         self.assertNotEqual(wavefunction.minus_component.all(), 0.)
+
+    def test_adding_noise_all(self):
+        """Tests whether adding noise to all components correctly
+        makes them non-zero.
+        """
+        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+        wavefunction.add_noise_to_components("all", 0, 1e-2)
+
+        self.assertNotEqual(wavefunction.plus_component.all(), 0.)
+        self.assertNotEqual(wavefunction.zero_component.all(), 0.)
+        self.assertNotEqual(wavefunction.minus_component.all(), 0.)
