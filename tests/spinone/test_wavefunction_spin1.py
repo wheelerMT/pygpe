@@ -88,3 +88,40 @@ class TestWavefunction2D(unittest.TestCase):
         self.assertNotEqual(wavefunction.plus_component.all(), 0.)
         self.assertNotEqual(wavefunction.zero_component.all(), 0.)
         self.assertNotEqual(wavefunction.minus_component.all(), 0.)
+
+    def test_phase_all(self):
+        """Tests that a phase applied to all components is applied correctly."""
+        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+        wavefunction.set_custom_components(cp.ones((64, 64), dtype='complex128'), cp.ones((64, 64), dtype='complex128'),
+                                           cp.ones((64, 64), dtype='complex128'))
+
+        phase = cp.random.uniform(size=(64, 64), dtype=cp.float64)
+        wavefunction.apply_phase(phase, 'all')
+
+        cp.testing.assert_allclose(cp.angle(wavefunction.plus_component), phase)
+        cp.testing.assert_allclose(cp.angle(wavefunction.zero_component), phase)
+        cp.testing.assert_allclose(cp.angle(wavefunction.minus_component), phase)
+
+    def test_phase_multiple_components(self):
+        """Tests that a phase is applied correctly to multiple components."""
+        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+        wavefunction.set_custom_components(cp.ones((64, 64), dtype='complex128'), cp.ones((64, 64), dtype='complex128'),
+                                           cp.ones((64, 64), dtype='complex128'))
+
+        phase = cp.random.uniform(size=(64, 64), dtype=cp.float64)
+        wavefunction.apply_phase(phase, ['plus', 'minus'])
+
+        cp.testing.assert_allclose(cp.angle(wavefunction.plus_component), phase)
+        cp.testing.assert_allclose(cp.angle(wavefunction.minus_component), phase)
+
+    def test_phase_single(self):
+        """Tests that a phase is applied correctly to a single component."""
+        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+        wavefunction.set_custom_components(cp.ones((64, 64), dtype='complex128'), cp.ones((64, 64), dtype='complex128'),
+                                           cp.ones((64, 64), dtype='complex128'))
+
+        phase = cp.random.uniform(size=(64, 64), dtype=cp.float64)
+        wavefunction.apply_phase(phase, 'zero')
+
+        cp.testing.assert_allclose(cp.angle(wavefunction.zero_component), phase)
+       
