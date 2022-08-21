@@ -6,7 +6,7 @@ def kinetic_zeeman_step(wfn: Wavefunction, pm: dict) -> None:
     """Computes the kinetic-zeeman subsystem for half a time step.
 
     :param wfn: The wavefunction of the system.
-    :param pm: The parameter class of the system.
+    :param pm: The parameter. dictionary.
     """
     wfn.fourier_plus_component *= cp.exp(-0.25 * 1j * pm["dt"] * (wfn.grid.wave_number + 2 * pm["q"]))
     wfn.fourier_zero_component *= cp.exp(-0.25 * 1j * pm["dt"] * wfn.grid.wave_number)
@@ -17,7 +17,7 @@ def interaction_step(wfn: Wavefunction, pm: dict) -> None:
     """Computes the interaction subsystem for a full time step.
 
     :param wfn: The wavefunction of the system.
-    :param pm: The parameter class of the system.
+    :param pm: The parameters dictionary.
     """
     spin_perp, spin_z = _calculate_spins(wfn)
     spin_mag = cp.sqrt(abs(spin_perp) ** 2 + spin_z ** 2)
