@@ -133,6 +133,7 @@ dmypy.json
 data/
 tests/throwaway_spin1.py
 tests/throwaway_scalar.py
+tests/throwaway_spin2.py
 tests/_trial_temp
 tests/shared/_trial_temp
 tests/spinone/_trial_temp
