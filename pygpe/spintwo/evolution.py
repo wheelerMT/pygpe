@@ -111,3 +111,42 @@ def _calc_qpsi(fz, fp, wfn):
             cp.conj(fp) * wfn[3] - 2 * fz * wfn[4]]
 
     return qpsi
+
+
+def renormalise_wavefunction(wfn: Wavefunction) -> None:
+    """Re-normalises the wavefunction to the correct atom number.
+
+    :param wfn: The wavefunction of the system.
+    """
+    wfn.ifft()
+    correct_atom_plus2 = wfn.atom_num_plus2
+    correct_atom_plus1 = wfn.atom_num_plus1
+    correct_atom_zero = wfn.atom_num_zero
+    correct_atom_minus1 = wfn.atom_num_minus1
+    correct_atom_minus2 = wfn.atom_num_minus2
+
+    current_atom_plus2, current_atom_plus1, current_atom_zero, current_atom_minus1, current_atom_minus2 \
+        = _calculate_atom_num(wfn)
+
+    wfn.plus2_component *= cp.sqrt(correct_atom_plus2 / current_atom_plus2)
+    wfn.plus1_component *= cp.sqrt(correct_atom_plus1 / current_atom_plus1)
+    wfn.zero_component *= cp.sqrt(correct_atom_zero / current_atom_zero)
+    wfn.minus1_component *= cp.sqrt(correct_atom_minus1 / current_atom_minus1)
+    wfn.minus2_component *= cp.sqrt(correct_atom_minus2 / current_atom_minus2)
+    wfn.fft()
+
+
+def _calculate_atom_num(wfn: Wavefunction) -> tuple[int, int, int, int, int]:
+    """Calculates the atom number of each wavefunction component.
+
+    :param wfn: The wavefunction of the system.
+    :return: The atom numbers of the plus two, plus one, zero, minus one, and minus two
+    components, respectively.
+    """
+    atom_num_plus2 = wfn.grid.grid_spacing_product * cp.sum(cp.abs(wfn.plus2_component) ** 2)
+    atom_num_plus1 = wfn.grid.grid_spacing_product * cp.sum(cp.abs(wfn.plus1_component) ** 2)
+    atom_num_zero = wfn.grid.grid_spacing_product * cp.sum(cp.abs(wfn.zero_component) ** 2)
+    atom_num_minus1 = wfn.grid.grid_spacing_product * cp.sum(cp.abs(wfn.minus1_component) ** 2)
+    atom_num_minus2 = wfn.grid.grid_spacing_product * cp.sum(cp.abs(wfn.minus2_component) ** 2)
+
+    return atom_num_plus2, atom_num_plus1, atom_num_zero, atom_num_minus1, atom_num_minus2
