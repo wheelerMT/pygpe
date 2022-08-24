@@ -41,7 +41,7 @@ class Wavefunction:
             "cyclic": _cyclic_initial_state
         }
 
-        ground_states[ground_state.lower()](self, params)
+        ground_states[ground_state](self, params)
 
         self._update_atom_numbers()
 
