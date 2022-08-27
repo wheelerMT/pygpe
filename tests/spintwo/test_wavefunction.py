@@ -106,3 +106,19 @@ class TestWavefunction2D(unittest.TestCase):
         cp.testing.assert_array_equal(wavefunction.minus1_component,
                                       cp.sqrt(2 / 3) * cp.ones((64, 64), dtype='complex128'))
         cp.testing.assert_array_equal(wavefunction.minus2_component, cp.zeros((64, 64), dtype='complex128'))
+
+    def test_custom_components(self):
+        """Tests whether custom wavefunction components are set correctly."""
+        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+        plus2_comp = cp.ones(wavefunction.grid.shape, dtype='complex128')
+        plus1_comp = cp.zeros(wavefunction.grid.shape, dtype='complex128')
+        zero_comp = cp.zeros(wavefunction.grid.shape, dtype='complex128')
+        minus1_comp = cp.sqrt(1 / 3) * cp.ones(wavefunction.grid.shape, dtype='complex128')
+        minus2_comp = 5 * cp.ones(wavefunction.grid.shape, dtype='complex128')
+        wavefunction.set_custom_components(plus2_comp, plus1_comp, zero_comp, minus1_comp, minus2_comp)
+
+        cp.testing.assert_array_equal(wavefunction.plus2_component, plus2_comp)
+        cp.testing.assert_array_equal(wavefunction.plus1_component, plus1_comp)
+        cp.testing.assert_array_equal(wavefunction.zero_component, zero_comp)
+        cp.testing.assert_array_equal(wavefunction.minus1_component, minus1_comp)
+        cp.testing.assert_array_equal(wavefunction.minus2_component, minus2_comp)
