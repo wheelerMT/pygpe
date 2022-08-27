@@ -17,7 +17,7 @@ def generate_wavefunction2d(points: Tuple[int, int], grid_spacing: Tuple[float, 
 
 class TestWavefunction2D(unittest.TestCase):
     def test_uniaxial_initial_state(self):
-        """Tests whether the polar initial state is set correctly."""
+        """Tests whether the uniaxial nematic initial state is set correctly."""
         wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
         params = {"n0": 1}
         wavefunction.set_ground_state("UN", params)
@@ -26,4 +26,83 @@ class TestWavefunction2D(unittest.TestCase):
         cp.testing.assert_array_equal(wavefunction.plus1_component, cp.zeros((64, 64), dtype='complex128'))
         cp.testing.assert_array_equal(wavefunction.zero_component, cp.ones((64, 64), dtype='complex128'))
         cp.testing.assert_array_equal(wavefunction.minus1_component, cp.zeros((64, 64), dtype='complex128'))
+        cp.testing.assert_array_equal(wavefunction.minus2_component, cp.zeros((64, 64), dtype='complex128'))
+
+    def test_biaxial_initial_state(self):
+        """Tests whether the biaxial nematic initial state is set correctly."""
+        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+        params = {"n0": 1}
+        wavefunction.set_ground_state("BN", params)
+
+        cp.testing.assert_array_equal(wavefunction.plus2_component,
+                                      1 / cp.sqrt(2.) * cp.ones((64, 64), dtype='complex128'))
+        cp.testing.assert_array_equal(wavefunction.plus1_component, cp.zeros((64, 64), dtype='complex128'))
+        cp.testing.assert_array_equal(wavefunction.zero_component, cp.zeros((64, 64), dtype='complex128'))
+        cp.testing.assert_array_equal(wavefunction.minus1_component, cp.zeros((64, 64), dtype='complex128'))
+        cp.testing.assert_array_equal(wavefunction.minus2_component,
+                                      1 / cp.sqrt(2.) * cp.ones((64, 64), dtype='complex128'))
+
+    def test_f2p_initial_state(self):
+        """Tests whether the ferromagnetic-2 (with spin up) initial state is set correctly."""
+        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+        params = {"n0": 1}
+        wavefunction.set_ground_state("F2p", params)
+
+        cp.testing.assert_array_equal(wavefunction.plus2_component, cp.ones((64, 64), dtype='complex128'))
+        cp.testing.assert_array_equal(wavefunction.plus1_component, cp.zeros((64, 64), dtype='complex128'))
+        cp.testing.assert_array_equal(wavefunction.zero_component, cp.zeros((64, 64), dtype='complex128'))
+        cp.testing.assert_array_equal(wavefunction.minus1_component, cp.zeros((64, 64), dtype='complex128'))
+        cp.testing.assert_array_equal(wavefunction.minus2_component, cp.zeros((64, 64), dtype='complex128'))
+
+    def test_f2m_initial_state(self):
+        """Tests whether the ferromagnetic-2 (with spin down) initial state is set correctly."""
+        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+        params = {"n0": 1}
+        wavefunction.set_ground_state("F2m", params)
+
+        cp.testing.assert_array_equal(wavefunction.plus2_component, cp.zeros((64, 64), dtype='complex128'))
+        cp.testing.assert_array_equal(wavefunction.plus1_component, cp.zeros((64, 64), dtype='complex128'))
+        cp.testing.assert_array_equal(wavefunction.zero_component, cp.zeros((64, 64), dtype='complex128'))
+        cp.testing.assert_array_equal(wavefunction.minus1_component, cp.zeros((64, 64), dtype='complex128'))
+        cp.testing.assert_array_equal(wavefunction.minus2_component, cp.ones((64, 64), dtype='complex128'))
+
+    def test_f1p_initial_state(self):
+        """Tests whether the ferromagnetic-1 (with spin up) initial state is set correctly."""
+        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+        params = {"n0": 1}
+        wavefunction.set_ground_state("F1p", params)
+
+        cp.testing.assert_array_equal(wavefunction.plus2_component, cp.zeros((64, 64), dtype='complex128'))
+        cp.testing.assert_array_equal(wavefunction.plus1_component, cp.ones((64, 64), dtype='complex128'))
+        cp.testing.assert_array_equal(wavefunction.zero_component, cp.zeros((64, 64), dtype='complex128'))
+        cp.testing.assert_array_equal(wavefunction.minus1_component, cp.zeros((64, 64), dtype='complex128'))
+        cp.testing.assert_array_equal(wavefunction.minus2_component, cp.zeros((64, 64), dtype='complex128'))
+
+    def test_f1m_initial_state(self):
+        """Tests whether the ferromagnetic-1 (with spin down) initial state is set correctly."""
+        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+        params = {"n0": 1}
+        wavefunction.set_ground_state("F1m", params)
+
+        cp.testing.assert_array_equal(wavefunction.plus2_component, cp.zeros((64, 64), dtype='complex128'))
+        cp.testing.assert_array_equal(wavefunction.plus1_component, cp.zeros((64, 64), dtype='complex128'))
+        cp.testing.assert_array_equal(wavefunction.zero_component, cp.zeros((64, 64), dtype='complex128'))
+        cp.testing.assert_array_equal(wavefunction.minus1_component, cp.ones((64, 64), dtype='complex128'))
+        cp.testing.assert_array_equal(wavefunction.minus2_component, cp.zeros((64, 64), dtype='complex128'))
+
+    def test_cyclic_initial_state(self):
+        """Tests whether the cyclic initial state is set correctly."""
+        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+        params = {"n0": 1,
+                  "c2": 0.5,
+                  "p": 0.,
+                  "q": 0}
+        wavefunction.set_ground_state("cyclic", params)
+
+        cp.testing.assert_array_equal(wavefunction.plus2_component,
+                                      cp.sqrt(1 / 3) * cp.ones((64, 64), dtype='complex128'))
+        cp.testing.assert_array_equal(wavefunction.plus1_component, cp.zeros((64, 64), dtype='complex128'))
+        cp.testing.assert_array_equal(wavefunction.zero_component, cp.zeros((64, 64), dtype='complex128'))
+        cp.testing.assert_array_equal(wavefunction.minus1_component,
+                                      cp.sqrt(2 / 3) * cp.ones((64, 64), dtype='complex128'))
         cp.testing.assert_array_equal(wavefunction.minus2_component, cp.zeros((64, 64), dtype='complex128'))
