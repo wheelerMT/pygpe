@@ -109,3 +109,5 @@ class DataManager:
                 new_psi_minus = data['wavefunction/psi_minus']
                 new_psi_minus.resize((*wfn.grid.shape, self.time_index + 1))
                 new_psi_minus[..., self.time_index] = cp.asnumpy(wfn.minus_component)
+
+        self.time_index += 1
