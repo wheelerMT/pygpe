@@ -2,9 +2,10 @@
 
 <h4 align="center">A fast and easy to use Gross-Pitaevskii equation solver.</h4>
 
+
 ## Description
 
-PyGPE is a Python framework for solving the Gross-Pitaevskii equations for use in simulating Bose-Einstein condensate
+PyGPE is a CUDA-accelerated Python library for solving the Gross-Pitaevskii equations for use in simulating Bose-Einstein condensate
 systems accelerated using CUDA.
 
 ### Planned supported features
@@ -23,3 +24,6 @@ systems accelerated using CUDA.
 ## Examples
 
 See [examples](examples) folder for various examples on the usage of the library.
+Below is an animation of superfluid turbulence in a scalar BEC simulated using PyGPE taking **~60 seconds** on an RTX 2060.
+
+<p align="center"><img src="docs/animation.gif" alt="logo" > </p>
