@@ -64,15 +64,15 @@ class DataManager:
                                     dtype='complex128')
         else:
             with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as file:
-                file.create_dataset('wavefunction/psi_plus2', (*wfn.grid.shape, 1), maxshape=(wfn.grid.shape, None),
+                file.create_dataset('wavefunction/psi_plus2', (*wfn.grid.shape, 1), maxshape=(*wfn.grid.shape, None),
                                     dtype='complex128')
-                file.create_dataset('wavefunction/psi_plus1', (*wfn.grid.shape, 1), maxshape=(wfn.grid.shape, None),
+                file.create_dataset('wavefunction/psi_plus1', (*wfn.grid.shape, 1), maxshape=(*wfn.grid.shape, None),
                                     dtype='complex128')
-                file.create_dataset('wavefunction/psi_zero', (*wfn.grid.shape, 1), maxshape=(wfn.grid.shape, None),
+                file.create_dataset('wavefunction/psi_zero', (*wfn.grid.shape, 1), maxshape=(*wfn.grid.shape, None),
                                     dtype='complex128')
-                file.create_dataset('wavefunction/psi_minus1', (*wfn.grid.shape, 1), maxshape=(wfn.grid.shape, None),
+                file.create_dataset('wavefunction/psi_minus1', (*wfn.grid.shape, 1), maxshape=(*wfn.grid.shape, None),
                                     dtype='complex128')
-                file.create_dataset('wavefunction/psi_minus2', (*wfn.grid.shape, 1), maxshape=(wfn.grid.shape, None),
+                file.create_dataset('wavefunction/psi_minus2', (*wfn.grid.shape, 1), maxshape=(*wfn.grid.shape, None),
                                     dtype='complex128')
 
     def _save_params(self, parameters: dict) -> None:
@@ -113,23 +113,23 @@ class DataManager:
         else:
             with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as data:
                 new_psi_plus2 = data['wavefunction/psi_plus2']
-                new_psi_plus2.resize((*wfn.grid.num_points_x, self.time_index + 1))
-                new_psi_plus2[:, self.time_index] = cp.asnumpy(wfn.plus2_component)
+                new_psi_plus2.resize((*wfn.grid.shape, self.time_index + 1))
+                new_psi_plus2[..., self.time_index] = cp.asnumpy(wfn.plus2_component)
 
                 new_psi_plus1 = data['wavefunction/psi_plus1']
-                new_psi_plus1.resize((*wfn.grid.num_points_x, self.time_index + 1))
-                new_psi_plus1[:, self.time_index] = cp.asnumpy(wfn.plus1_component)
+                new_psi_plus1.resize((*wfn.grid.shape, self.time_index + 1))
+                new_psi_plus1[..., self.time_index] = cp.asnumpy(wfn.plus1_component)
 
                 new_psi_zero = data['wavefunction/psi_zero']
-                new_psi_zero.resize((*wfn.grid.num_points_x, self.time_index + 1))
-                new_psi_zero[:, self.time_index] = cp.asnumpy(wfn.zero_component)
+                new_psi_zero.resize((*wfn.grid.shape, self.time_index + 1))
+                new_psi_zero[..., self.time_index] = cp.asnumpy(wfn.zero_component)
 
                 new_psi_minus1 = data['wavefunction/psi_minus1']
-                new_psi_minus1.resize((*wfn.grid.num_points_x, self.time_index + 1))
-                new_psi_minus1[:, self.time_index] = cp.asnumpy(wfn.minus1_component)
+                new_psi_minus1.resize((*wfn.grid.shape, self.time_index + 1))
+                new_psi_minus1[..., self.time_index] = cp.asnumpy(wfn.minus1_component)
 
                 new_psi_minus2 = data['wavefunction/psi_minus2']
-                new_psi_minus2.resize((*wfn.grid.num_points_x, self.time_index + 1))
-                new_psi_minus2[:, self.time_index] = cp.asnumpy(wfn.minus2_component)
+                new_psi_minus2.resize((*wfn.grid.shape, self.time_index + 1))
+                new_psi_minus2[..., self.time_index] = cp.asnumpy(wfn.minus2_component)
 
         self.time_index += 1
