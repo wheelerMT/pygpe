@@ -38,7 +38,7 @@ class TestEvolution2D(unittest.TestCase):
         wavefunction_2.plus_component += cp.random.uniform(size=(64, 64))
         wavefunction_2.zero_component += cp.random.uniform(size=(64, 64))
         wavefunction_2.minus_component += cp.random.uniform(size=(64, 64))
-        evo.renormalise_wavefunction(wavefunction_2)
+        evo._renormalise_wavefunction(wavefunction_2)
 
         cp.testing.assert_array_equal(wavefunction_2.plus_component, wavefunction_1.plus_component)
         cp.testing.assert_array_equal(wavefunction_2.zero_component, wavefunction_1.zero_component)

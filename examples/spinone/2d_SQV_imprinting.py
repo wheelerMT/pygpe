@@ -41,7 +41,6 @@ start_time = time.time()
 for i in range(params["nt"]):
     # Perform the evolution
     gpe.step_wavefunction(psi, params)
-    gpe.renormalise_wavefunction(psi)
 
     if i % 10 == 0:  # Save data every 10 time steps
         data.save_wfn(psi)

@@ -13,6 +13,8 @@ def step_wavefunction(wfn: Wavefunction, params: dict) -> None:
     _interaction_step(wfn, params)
     wfn.fft()
     _kinetic_zeeman_step(wfn, params)
+    if isinstance(params["dt"], complex):
+        _renormalise_wavefunction(wfn)
 
 
 def _kinetic_zeeman_step(wfn: Wavefunction, pm: dict) -> None:
@@ -74,7 +76,7 @@ def _calculate_density(wfn: Wavefunction) -> cp.ndarray:
     return cp.abs(wfn.plus_component) ** 2 + cp.abs(wfn.zero_component) ** 2 + cp.abs(wfn.minus_component) ** 2
 
 
-def renormalise_wavefunction(wfn: Wavefunction) -> None:
+def _renormalise_wavefunction(wfn: Wavefunction) -> None:
     """Re-normalises the wavefunction to the correct atom number.
 
     :param wfn: The wavefunction of the system.

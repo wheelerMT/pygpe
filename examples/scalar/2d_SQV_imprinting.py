@@ -33,7 +33,6 @@ start_time = time.time()  # Start timer
 for i in range(params["nt"]):
     # Evolve wavefunction
     gpe.step_wavefunction(psi, params)
-    gpe.renormalise_wavefunction(psi)  # Re-normalise since we are using imaginary time
 
     if i % 10 == 0:  # Save wavefunction data and print current time
         data.save_wfn(psi)

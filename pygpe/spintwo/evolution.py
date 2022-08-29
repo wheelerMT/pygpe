@@ -13,6 +13,8 @@ def step_wavefunction(wfn: Wavefunction, params: dict) -> None:
     _interaction_step(wfn, params)
     wfn.fft()
     _kinetic_step(wfn, params)
+    if isinstance(params["dt"], complex):
+        _renormalise_wavefunction(wfn)
 
 
 def _kinetic_step(wfn: Wavefunction, pm: dict) -> None:
@@ -126,7 +128,7 @@ def _calc_qpsi(fz, fp, wfn):
     return qpsi
 
 
-def renormalise_wavefunction(wfn: Wavefunction) -> None:
+def _renormalise_wavefunction(wfn: Wavefunction) -> None:
     """Re-normalises the wavefunction to the correct atom number.
 
     :param wfn: The wavefunction of the system.
