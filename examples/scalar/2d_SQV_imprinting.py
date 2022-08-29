@@ -1,6 +1,6 @@
 import pygpe.scalar as gpe
+import cupy as cp
 import matplotlib.pyplot as plt
-from pygpe.scalar.evolution import *
 from pygpe.shared.vortices import vortex_phase_profile
 import time
 
@@ -32,13 +32,8 @@ psi.fft()  # FFT to ensure k-space wavefunction is up-to-date
 start_time = time.time()  # Start timer
 for i in range(params["nt"]):
     # Evolve wavefunction
-    kinetic_step(psi, params)
-    psi.ifft()
-    potential_step(psi, params)
-    psi.fft()
-    kinetic_step(psi, params)
-
-    renormalise_wavefunction(psi)  # Re-normalise since we are using imaginary time
+    gpe.step_wavefunction(psi, params)
+    gpe.renormalise_wavefunction(psi)  # Re-normalise since we are using imaginary time
 
     if i % 10 == 0:  # Save wavefunction data and print current time
         data.save_wfn(psi)

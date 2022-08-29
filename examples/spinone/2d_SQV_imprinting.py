@@ -40,11 +40,7 @@ psi.fft()  # Ensures k-space wavefunction components are up-to-date before evolu
 start_time = time.time()
 for i in range(params["nt"]):
     # Perform the evolution
-    gpe.kinetic_zeeman_step(psi, params)
-    psi.ifft()
-    gpe.interaction_step(psi, params)
-    psi.fft()
-    gpe.kinetic_zeeman_step(psi, params)
+    gpe.step_wavefunction(psi, params)
     gpe.renormalise_wavefunction(psi)
 
     if i % 10 == 0:  # Save data every 10 time steps
