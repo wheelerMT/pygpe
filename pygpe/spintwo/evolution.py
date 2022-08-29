@@ -2,7 +2,20 @@ import cupy as cp
 from pygpe.spintwo.wavefunction import Wavefunction
 
 
-def kinetic_step(wfn: Wavefunction, pm: dict) -> None:
+def step_wavefunction(wfn: Wavefunction, params: dict) -> None:
+    """Propagates the wavefunction forward one time step.
+
+    :param wfn: The wavefunction of the system.
+    :param params: The parameters of the system.
+    """
+    _kinetic_step(wfn, params)
+    wfn.ifft()
+    _interaction_step(wfn, params)
+    wfn.fft()
+    _kinetic_step(wfn, params)
+
+
+def _kinetic_step(wfn: Wavefunction, pm: dict) -> None:
     """Computes the kinetic energy subsystem for half a time step.
 
     :param wfn: The wavefunction of the system.
@@ -15,7 +28,7 @@ def kinetic_step(wfn: Wavefunction, pm: dict) -> None:
     wfn.fourier_minus2_component *= cp.exp(-0.25 * 1j * pm["dt"] * wfn.grid.wave_number)
 
 
-def interaction_step(wfn: Wavefunction, pm: dict) -> None:
+def _interaction_step(wfn: Wavefunction, pm: dict) -> None:
     # Calculate density and singlets
     n = _density(wfn)
     a20 = _singlet_duo(wfn)

@@ -2,7 +2,20 @@ import cupy as cp
 from pygpe.scalar.wavefunction import Wavefunction
 
 
-def kinetic_step(wfn: Wavefunction, pm: dict) -> None:
+def step_wavefunction(wfn: Wavefunction, params: dict) -> None:
+    """Propagates the wavefunction forward one time step.
+
+    :param wfn: The wavefunction of the system.
+    :param params: The parameters of the system.
+    """
+    _kinetic_step(wfn, params)
+    wfn.ifft()
+    _potential_step(wfn, params)
+    wfn.fft()
+    _kinetic_step(wfn, params)
+
+
+def _kinetic_step(wfn: Wavefunction, pm: dict) -> None:
     """Computes the kinetic energy subsystem for half a time step.
 
     :param wfn: The wavefunction of the system.
@@ -11,7 +24,7 @@ def kinetic_step(wfn: Wavefunction, pm: dict) -> None:
     wfn.fourier_wavefunction *= cp.exp(-0.25 * 1j * pm["dt"] * wfn.grid.wave_number)
 
 
-def potential_step(wfn: Wavefunction, pm: dict) -> None:
+def _potential_step(wfn: Wavefunction, pm: dict) -> None:
     """Computes the potential subsystem for a full time step.
 
     :param wfn: The wavefunction of the system.
