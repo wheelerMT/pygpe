@@ -43,7 +43,7 @@ for i in range(params["nt"]):
     gpe.step_wavefunction(psi, params)
 
     if i % 10 == 0:  # Save data every 10 time steps
-        data.save_wfn(psi)
+        data.save_wavefunction(psi)
         print(params["t"])
     params["t"] += params["dt"]
 print(f'Evolution of {params["nt"]} steps took {time.time() - start_time}!')

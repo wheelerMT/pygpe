@@ -77,7 +77,7 @@ class DataManager:
             for key in parameters:
                 file.create_dataset(f'parameters/{key}', data=parameters[key])
 
-    def save_wfn(self, wfn: Wavefunction) -> None:
+    def save_wavefunction(self, wfn: Wavefunction) -> None:
         """Saves the current wavefunction data to the dataset.
 
         :param wfn: The wavefunction of the system.
