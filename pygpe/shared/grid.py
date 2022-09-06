@@ -1,10 +1,16 @@
 import numpy as np
 import cupy as cp
-from typing import Tuple
 
 
 class Grid:
-    def __init__(self, points: int | Tuple[int, ...], grid_spacings: float | Tuple[float, ...]):
+    """An object representing the numerical grid."""
+
+    def __init__(self, points: int | tuple[int, ...], grid_spacings: float | tuple[float, ...]):
+        """Constructs the grid object.
+
+        :param points: The number of points in each spatial dimension.
+        :param grid_spacings: The numerical spacing between grid points in each spatial dimension.
+        """
 
         self.shape = points
         if isinstance(points, tuple):
@@ -43,7 +49,7 @@ class Grid:
         # Defined on device for use in evolution
         self.wave_number = cp.asarray(self.fourier_x_mesh ** 2)
 
-    def _generate_2d_grids(self, points: Tuple[int, ...], grid_spacings: Tuple[float, ...]):
+    def _generate_2d_grids(self, points: tuple[int, ...], grid_spacings: tuple[float, ...]):
         """Generates meshgrids for a 2D grid."""
         self.num_points_x, self.num_points_y = points
         self.grid_spacing_x, self.grid_spacing_y = grid_spacings
@@ -70,7 +76,7 @@ class Grid:
         # Defined on device for use in evolution
         self.wave_number = cp.asarray(self.fourier_x_mesh ** 2 + self.fourier_y_mesh ** 2)
 
-    def _generate_3d_grids(self, points: Tuple[int, ...], grid_spacings: Tuple[float, ...]):
+    def _generate_3d_grids(self, points: tuple[int, ...], grid_spacings: tuple[float, ...]):
         """Generates meshgrids for a 3D grid."""
         self.num_points_x, self.num_points_y, self.num_points_z = points
         self.grid_spacing_x, self.grid_spacing_y, self.grid_spacing_z = grid_spacings
