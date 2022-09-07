@@ -3,8 +3,15 @@ import cupy as cp
 
 
 class Wavefunction:
+    """Represents the scalar BEC wavefunction.
+    This class contains the wavefunction array, in addition to various useful functions for manipulating and using the
+    wavefunction.
+
+    :param grid: The numerical grid.
+    :type grid: :class:`Grid`"""
 
     def __init__(self, grid: Grid):
+        """Constructs the wavefunction object."""
         self.grid = grid
 
         self.wavefunction = cp.empty(grid.shape, dtype='complex128')
@@ -16,6 +23,7 @@ class Wavefunction:
         """Sets the wavefunction to the specified state.
 
         :param wavefunction:  The array to set the wavefunction as.
+        :type wavefunction: `cupy.ndarray`
         """
         self.wavefunction = wavefunction
         self._update_atom_number()
@@ -24,7 +32,9 @@ class Wavefunction:
         """Adds noise to the wavefunction using a normal distribution.
 
         :param mean: The mean of the normal distribution.
+        :type mean: float
         :param std_dev: The standard deviation of the normal distribution.
+        :type std_dev: float
         """
         self.wavefunction += self._generate_complex_normal_dist(mean, std_dev)
         self._update_atom_number()
@@ -40,6 +50,7 @@ class Wavefunction:
         """Applies a phase to the wavefunction.
 
         :param phase: The phase to apply.
+        :type phase: `cupy.ndarray`
         """
         self.wavefunction *= cp.exp(1j * phase)
 
@@ -55,5 +66,9 @@ class Wavefunction:
         self.wavefunction = cp.fft.ifftn(self.fourier_wavefunction)
 
     def density(self) -> cp.ndarray:
-        """Returns the density of the system."""
+        """
+
+        :return: An array of the condensate density.
+        :rtype: `cupy.ndarray`
+        """
         return cp.abs(self.wavefunction) ** 2
