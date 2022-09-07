@@ -32,7 +32,7 @@ def _potential_step(wfn: Wavefunction, pm: dict) -> None:
     :param wfn: The wavefunction of the system.
     :param pm: The parameters dictionary.
     """
-    wfn.wavefunction *= cp.exp(-1j * pm["dt"] * (pm["g"] * cp.abs(wfn.wavefunction) ** 2))
+    wfn.wavefunction *= cp.exp(-1j * pm["dt"] * (pm["trap"] + pm["g"] * cp.abs(wfn.wavefunction) ** 2))
 
 
 def _renormalise_wavefunction(wfn: Wavefunction) -> None:
