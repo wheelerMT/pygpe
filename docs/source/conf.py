@@ -21,6 +21,7 @@ sys.path.insert(0, os.path.abspath('../../'))
 
 extensions = ['sphinx.ext.autodoc', 'sphinx.ext.autosummary', 'sphinx_design']
 autosummary_generate = True
+autodoc_typehints = "none"
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
