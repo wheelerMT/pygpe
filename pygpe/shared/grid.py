@@ -12,9 +12,8 @@ class Grid:
     :type grid_spacings: float or tuple of floats
     """
 
-    def __init__(self, points, grid_spacings):
-        """Constructs the grid object.
-        """
+    def __init__(self, points: int | tuple[int, ...], grid_spacings: int | tuple[int, ...]):
+        """Constructs the grid object."""
 
         self.shape = points
         if isinstance(points, tuple):
@@ -37,7 +36,7 @@ class Grid:
         elif self.ndim == 3:
             self._generate_3d_grids(points, grid_spacings)
 
-    def _generate_1d_grids(self, points, grid_spacing):
+    def _generate_1d_grids(self, points: int, grid_spacing: float):
         """Generates meshgrids for a 1D grid."""
         self.num_points_x = points
         self.grid_spacing_x = grid_spacing
