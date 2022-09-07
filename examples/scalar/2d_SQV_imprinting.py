@@ -20,6 +20,7 @@ psi.apply_phase(cp.asarray(phase))  # Apply phase to wavefunction
 
 # Define condensate parameters
 params = {"g": 1,
+          "trap": 0,
           "nt": 1000,
           "dt": -1j * 1e-2,
           "t": 0}
