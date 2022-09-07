@@ -3,13 +3,17 @@ import cupy as cp
 
 
 class Grid:
-    """An object representing the numerical grid."""
+    """An object representing the numerical grid.
+    It contains information on the number of grid points, the shape, the dimensionality, and lengths of the grid.
 
-    def __init__(self, points: int | tuple[int, ...], grid_spacings: float | tuple[float, ...]):
+    :param points: The number of points in each spatial dimension.
+    :type points: int or tuple of ints
+    :param grid_spacings: The numerical spacing between grid points in each spatial dimension.
+    :type grid_spacings: float or tuple of floats
+    """
+
+    def __init__(self, points, grid_spacings):
         """Constructs the grid object.
-
-        :param points: The number of points in each spatial dimension.
-        :param grid_spacings: The numerical spacing between grid points in each spatial dimension.
         """
 
         self.shape = points
@@ -33,7 +37,7 @@ class Grid:
         elif self.ndim == 3:
             self._generate_3d_grids(points, grid_spacings)
 
-    def _generate_1d_grids(self, points: int, grid_spacing: float):
+    def _generate_1d_grids(self, points, grid_spacing):
         """Generates meshgrids for a 1D grid."""
         self.num_points_x = points
         self.grid_spacing_x = grid_spacing
