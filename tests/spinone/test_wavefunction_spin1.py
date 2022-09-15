@@ -47,7 +47,7 @@ class TestWavefunction2D(unittest.TestCase):
 
         self.assertEqual(wavefunction.plus_component.all(), 1.)
         self.assertEqual(wavefunction.zero_component.all(), 0.)
-        self.assertEqual(wavefunction.minus_component.all(), 1.)
+        self.assertEqual(wavefunction.minus_component.all(), 0.)
 
     def test_custom_wavefunction_components(self):
         """Tests whether a custom wavefunction is set correctly."""

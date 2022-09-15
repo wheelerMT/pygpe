@@ -167,4 +167,4 @@ def _antiferromagnetic_initial_state(wfn: Wavefunction, params: dict):
 
     wfn.plus_component = cp.sqrt(n) * cp.sqrt((1 + p / c2) / 2) * cp.ones(wfn.grid.shape, dtype='complex128')
     wfn.zero_component = cp.zeros(wfn.grid.shape, dtype='complex128')
-    wfn.minus_component = cp.sqrt(n) * cp.sqrt((1 + p / c2) / 2) * cp.ones(wfn.grid.shape, dtype='complex128')
+    wfn.minus_component = cp.sqrt(n) * cp.sqrt((1 - p / c2) / 2) * cp.ones(wfn.grid.shape, dtype='complex128')
