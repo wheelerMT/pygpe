@@ -32,6 +32,42 @@ Below are the methods associated with the initial state.
 
 The `set_ground_state` method is used to set the initial state to a specified ground state of the spin-1 system.
 It is typically the way we start shaping the condensate.
+The supported ground states are listed below
+
+.. list-table:: Supported spin-2 ground states
+    :header-rows: 1
+
+    * - Ground state
+      - Wavefunction
+      - Description
+
+    * - "polar"
+      - :math:`\psi=(0, 1, 0)^T`
+      - (Easy-axis) polar ground state.
+
+    * - "ferromagnetic"
+      - :math:`\psi=(1, 0, 0)^T`
+      - Ferromagnetic ground state with spin pointing up.
+
+    * - "antiferromagnetic"
+      - :math:`\psi=(\sqrt{(1 + p / c_2) / 2}, 0, \sqrt{(1 - p / c_2) / 2})^T`
+      - Antiferromagnetic ground state.
+
+    * - "BA"
+      - See below.
+      - Broken-axisymmetry ground state.
+
+The broken-axisymmetry wavefunction components are
+
+.. math::
+
+    \psi_{\pm 1} = \frac{q \pm p}{2q} \sqrt{\frac{-p^2+q^2+2c_2nq}{2c_2nq}},
+
+.. math ::
+
+    \psi_0 = \sqrt{\frac{(q^2-p^2)(-p^2-q^2+2c_2nq)}{4c_2nq^3}}.
+
+
 If more flexibility is required, the `set_custom_components` method allows us to set specific components to specified
 arrays.
 The `add_noise_to_components` method adds noise to each grid point of the wavefunction for the specified components.
