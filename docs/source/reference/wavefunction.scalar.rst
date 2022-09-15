@@ -14,3 +14,38 @@ Constructing the Wavefunction object is done through the constructor
     Wavefunction
 
 Here, the parameter `grid` is a :class:`Grid` object defined prior to instantiating the Wavefunction class.
+
+Wavefunction methods
+====================
+
+Initial state
+-------------
+Below are the methods associated with the initial state.
+
+.. autosummary::
+   :toctree: generated/
+
+   Wavefunction.set_wavefunction
+   Wavefunction.add_noise
+   Wavefunction.apply_phase
+
+The `set_wavefunction` method is used to set the initial state to whatever we desire.
+The `add_noise` method adds noise to each grid point of the wavefunction where the noise is drawn from a uniform
+distribution with the mean and standard deviation specified in the function signature.
+Finally, `apply_phase` applies a user-defined phase to the wavefunction as :math:`\psi\rightarrow\psi e^{i\phi}` for
+phase :math:`\phi`.
+
+Other methods
+-------------
+The methods below fall under the miscellaneous category and are self-explanatory.
+
+.. autosummary::
+   :toctree: generated/
+
+   Wavefunction.fft
+   Wavefunction.ifft
+   Wavefunction.density
+
+Attributes
+----------
+See :class:`Wavefunction` for list of class attributes (variables).
