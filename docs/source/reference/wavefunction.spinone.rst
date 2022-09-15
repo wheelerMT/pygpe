@@ -61,9 +61,7 @@ The broken-axisymmetry wavefunction components are
 
 .. math::
 
-    \psi_{\pm 1} = \frac{q \pm p}{2q} \sqrt{\frac{-p^2+q^2+2c_2nq}{2c_2nq}},
-
-.. math ::
+    \psi_{\pm 1} = \frac{q \pm p}{2q} \sqrt{\frac{-p^2+q^2+2c_2nq}{2c_2nq}}, \\
 
     \psi_0 = \sqrt{\frac{(q^2-p^2)(-p^2-q^2+2c_2nq)}{4c_2nq^3}}.
 
