@@ -8,7 +8,13 @@ class Wavefunction:
     wavefunction.
 
     :param grid: The numerical grid.
-    :type grid: :class:`Grid`"""
+    :type grid: :class:`Grid`
+
+    :ivar wavefunction: The real-space wavefunction array.
+    :ivar fourier_wavefunction: The Fourier-space wavefunction array.
+    :ivar atom_num: The atom number of the condensate.
+    :ivar grid: Reference to the grid object of the simulation.
+    """
 
     def __init__(self, grid: Grid):
         """Constructs the wavefunction object."""
