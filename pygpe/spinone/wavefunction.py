@@ -3,6 +3,24 @@ import cupy as cp
 
 
 class Wavefunction:
+    """Represents the spin-1 BEC wavefunction.
+    This class contains the wavefunction arrays, in addition to various useful functions for manipulating and using the
+    wavefunction.
+
+    :param grid: The numerical grid.
+    :type grid: :class:`Grid
+
+    :ivar plus_component: The real-space plus component array.
+    :ivar zero_component: The real-space zero component array.
+    :ivar minus_component: The real-space minus component array.
+    :ivar fourier_plus_component: The Fourier-space plus component array.
+    :ivar fourier_zero_component: The Fourier-space zero component array.
+    :ivar fourier_minus_component: The Fourier-space minus component array.
+    :ivar atom_num_plus: The atom number of the plus component.
+    :ivar atom_num_zero: The atom number of the zero component.
+    :ivar atom_num_minus: The atom number of the minus component.
+    :ivar grid: A reference to the grid object of the simulation.
+    """
 
     def __init__(self, grid: Grid):
         self.grid = grid
@@ -22,9 +40,10 @@ class Wavefunction:
         """Sets the components of the wavefunction according to
         the ground state we wish to be in.
 
-        :param ground_state: The ground state of the wavefunction.
+        :param ground_state: "polar", "ferromagnetic", or "antiferromagnetic". The ground state of the wavefunction.
         :param params: Dictionary containing condensate parameters.
         """
+        # TODO: Add BA state
         ground_states = {
             "polar": _polar_initial_state,
             "ferromagnetic": _ferromagnetic_initial_state,
@@ -58,6 +77,8 @@ class Wavefunction:
         :param mean: The mean of the normal distribution.
         :param std_dev: The standard deviation of the normal distribution.
         """
+
+        # TODO: Add middle component
         if components.lower() == "outer":
             self.plus_component += self._generate_complex_normal_dist(mean, std_dev)
             self.minus_component += self._generate_complex_normal_dist(mean, std_dev)
@@ -81,7 +102,7 @@ class Wavefunction:
         """Applies a phase to specified components.
 
         :param phase: The phase to be applied.
-        :param components: The components of which to apply the phase to.
+        :param components: "all", "plus", "zero", "minus" or a list of strings specifying the required components.
         """
         if isinstance(components, list):
             for component in components:
@@ -120,6 +141,8 @@ class Wavefunction:
         self.plus_component = cp.fft.ifftn(self.fourier_plus_component)
         self.zero_component = cp.fft.ifftn(self.fourier_zero_component)
         self.minus_component = cp.fft.ifftn(self.fourier_minus_component)
+
+    # TODO: Add density function
 
 
 def _polar_initial_state(wfn: Wavefunction, params: dict):
