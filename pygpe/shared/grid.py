@@ -12,7 +12,7 @@ class Grid:
     :type grid_spacings: float or tuple of floats
     """
 
-    def __init__(self, points: int | tuple[int, ...], grid_spacings: int | tuple[int, ...]):
+    def __init__(self, points: int | tuple[int, ...], grid_spacings: float | tuple[float, ...]):
         """Constructs the grid object."""
 
         self.shape = points
