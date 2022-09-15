@@ -16,7 +16,7 @@ Constructing the Wavefunction object is done through the constructor
 Here, the parameter `grid` is a :class:`Grid` object defined prior to instantiating the Wavefunction class.
 
 Wavefunction methods
-====================
+^^^^^^^^^^^^^^^^^^^^
 
 Initial state
 -------------
