@@ -5,6 +5,5 @@ The DataManager class
     :maxdepth: 1
 
     datamanager.scalar
-    datamanager.spinhalf
     datamanager.spinone
     datamanager.spintwo
