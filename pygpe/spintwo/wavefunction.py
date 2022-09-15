@@ -3,6 +3,30 @@ import cupy as cp
 
 
 class Wavefunction:
+    """Represents the spin-2 BEC wavefunction.
+    This class contains the wavefunction arrays, in addition to various useful functions for manipulating and using the
+    wavefunction.
+
+    :param grid: The numerical grid.
+    :type grid: :class:`Grid`
+
+    :ivar plus2_component: The real-space +2 component array.
+    :ivar plus1_component: The real-space +1 component array.
+    :ivar zero_component: The real-space 0 component array.
+    :ivar minus1_component: The real-space -1 component array.
+    :ivar minus2_component: The real-space -2 component array.
+    :ivar fourier_plus2_component: The Fourier-space +2 component array.
+    :ivar fourier_plus1_component: The Fourier-space +1 component array.
+    :ivar fourier_zero_component: The Fourier-space 0 component array.
+    :ivar fourier_minus1_component: The Fourier-space -1 component array.
+    :ivar fourier_minus2_component: The Fourier-space -2 component array.
+    :ivar atom_num_plus2: The atom number of the +2 component.
+    :ivar atom_num_plus1: The atom number of the +1 component.
+    :ivar atom_num_zero: The atom number of the 0 component.
+    :ivar atom_num_minus1: The atom number of the -1 component.
+    :ivar atom_num_minus2: The atom number of the -2 component.
+    :ivar grid: Reference to the grid object of the simulation.
+    """
 
     def __init__(self, grid: Grid):
         self.grid = grid
@@ -28,7 +52,7 @@ class Wavefunction:
         """Sets the components of the wavefunction according to
         the ground state we wish to be in.
 
-        :param ground_state: The ground state of the wavefunction.
+        :param ground_state: "UN", "BN", "F2p", "F2m", "F1p", "F1m" or "cyclic".
         :param params: Dictionary containing condensate parameters.
         """
         ground_states = {
@@ -110,7 +134,8 @@ class Wavefunction:
         """Applies a phase to specified components.
 
         :param phase: The phase to be applied.
-        :param components: The components of which to apply the phase to.
+        :param components: "all", "plus2", "plus1", "zero", "minus1", "minus2" or a list of strings specifying the
+            required components.
         """
         if isinstance(components, list):
             for component in components:
