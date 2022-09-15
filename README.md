@@ -6,7 +6,7 @@
 ## Description
 
 PyGPE is a CUDA-accelerated Python library for solving the Gross-Pitaevskii equations for use in simulating
-Bose-Einstein condensate systems accelerated using CUDA.
+Bose-Einstein condensate systems.
 
 ### Planned supported features
 - Scalar, spin-1/2, spin-1, and spin-2 systems.
