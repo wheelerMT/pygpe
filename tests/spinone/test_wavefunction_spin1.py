@@ -137,4 +137,10 @@ class TestWavefunction2D(unittest.TestCase):
         wavefunction.apply_phase(phase, 'zero')
 
         cp.testing.assert_allclose(cp.angle(wavefunction.zero_component), phase)
-       
+
+    def test_density(self):
+        """Tests that the condensate density is calculated correctly."""
+        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+        wavefunction.set_ground_state("polar", {"n0": 1})
+
+        cp.testing.assert_allclose(wavefunction.density(), cp.ones(wavefunction.grid.shape, dtype='float'))

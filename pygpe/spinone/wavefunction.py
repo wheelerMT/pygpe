@@ -143,7 +143,12 @@ class Wavefunction:
         self.zero_component = cp.fft.ifftn(self.fourier_zero_component)
         self.minus_component = cp.fft.ifftn(self.fourier_minus_component)
 
-    # TODO: Add density function
+    def density(self) -> cp.ndarray:
+        """Returns an array of the total condensate density.
+
+        :return: Total condensate density.
+        """
+        return cp.abs(self.plus_component) ** 2 + cp.abs(self.zero_component) ** 2 + cp.abs(self.minus_component) ** 2
 
 
 def _polar_initial_state(wfn: Wavefunction, params: dict):
