@@ -29,7 +29,7 @@ import the relevant module into Python like::
 
     import pygpe.scalar as gpe
 
-We shorten the import name to 'gpe' for better readability.
+We shorten the import name to `gpe` for better readability.
 The table below lists the system types and their respective import statements
 
 .. list-table::
