@@ -28,7 +28,7 @@ How to import PyGPE
 
 Since PyGPE supports multiple types of BEC systems, we need to first select
 the system we want to work with.
-PyGPE currently supports scalar, spin-1/2, spin-1, and spin-2 systems.
+PyGPE currently supports scalar, spin-1, and spin-2 systems.
 To access the correct functions & classes for a given system type, we
 import the relevant module into Python like::
 
