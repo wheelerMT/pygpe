@@ -5,7 +5,7 @@ import sys
 project = 'PyGPE'
 copyright = '2022, Matt Wheeler'
 author = 'Matt Wheeler'
-release = re.sub('^v', '', os.popen('git describe').read().strip())
+release = '1.0.0'
 
 sys.path.insert(0, os.path.abspath('../../'))
 
