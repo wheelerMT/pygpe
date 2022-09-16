@@ -17,3 +17,9 @@ The evolution functions are purposely hidden behind this interface function to s
 The evolution functions are implemented using a second-order symplectic integrator.
 See `here <https://journals.aps.org/pre/abstract/10.1103/PhysRevE.93.053309>`_ for more details on the numerical
 implementation.
+
+.. warning::
+
+    The evolution functions are constructed so that the Fourier-space part is computed first.
+    Ensure that you update the Fourier-space arrays prior to any evolution by calling the :code:`fft()` method
+    of the :class:`Wavefunction` class.
