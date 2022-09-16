@@ -2,23 +2,25 @@
 
 <h4 align="center">A fast and easy to use Gross-Pitaevskii equation solver.</h4>
 
-
 ## Description
 
 PyGPE is a CUDA-accelerated Python library for solving the Gross-Pitaevskii equations for use in simulating
 Bose-Einstein condensate systems.
 
-### Planned supported features
-- Scalar, spin-1/2, spin-1, and spin-2 systems.
+- Documentation: https://wheelermt.github.io/pygpe-docs/
+
+### Supported features
+
+- Scalar, spin-1, and spin-2 BEC systems.
 - 1D, 2D, and 3D grid lattices.
-- Phase profile constructors that allow for vortices.
 - HDF5 data saving system.
-- A suite of diagnostics functions for calculating/using useful quantities.
+- Method for generating vortices within the system.
 
 ### Requirements
 
 - Python (3.9+),
 - [h5py](https://github.com/h5py/h5py) (3.6.0+),
+- CUDA Toolkit (11.2>=)
 - [CuPy](https://github.com/cupy/cupy) (10.2.0+).
 
 ## Examples
