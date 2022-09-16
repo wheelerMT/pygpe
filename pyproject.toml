@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "pygpe"
 version = "1.0.0"
 description = "A fast Gross-Pitaevskii equation solver for scalar, spin-1 and spin-2 BEC systems."
-readme = "README.md"
+readme = "docs/pypi.md"
 authors = [{ name = "Matt Wheeler", email = "mattwheeler15@hotmail.co.uk" }]
 license = { file = "LICENSE" }
 classifiers = [
