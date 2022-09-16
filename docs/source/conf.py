@@ -1,18 +1,11 @@
-# Configuration file for the Sphinx documentation builder.
-#
-# For the full list of built-in configuration values, see the documentation:
-# https://www.sphinx-doc.org/en/master/usage/configuration.html
-
-# -- Project information -----------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+import re
+import os
+import sys
 
 project = 'PyGPE'
 copyright = '2022, Matt Wheeler'
 author = 'Matt Wheeler'
-release = '1.0'
-
-import os
-import sys
+release = re.sub('^v', '', os.popen('git describe').read().strip())
 
 sys.path.insert(0, os.path.abspath('../../'))
 
