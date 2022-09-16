@@ -21,7 +21,7 @@ class TestWavefunction2D(unittest.TestCase):
         """Tests whether the polar initial state is set correctly."""
         wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
         params = {"n0": 1}
-        wavefunction.set_ground_state("Polar", params)
+        wavefunction.set_ground_state("polar", params)
 
         self.assertEqual(wavefunction.plus_component.all(), 0.)
         self.assertEqual(wavefunction.zero_component.all(), 1.)
