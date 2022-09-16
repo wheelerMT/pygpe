@@ -5,6 +5,17 @@ from pygpe.spintwo.wavefunction import Wavefunction
 
 
 class DataManager:
+    """This object handles all the data of the simulation, including the wavefunction, grid, and parameter data.
+
+    :param filename: The name of the data file.
+    :type filename: str
+    :param data_path: The relative path to the folder containing the data file.
+    :type data_path: str
+
+    :ivar filename: The name of the data file.
+    :ivar data_path: The relative path to the folder containing the data file.
+    """
+
     def __init__(self, filename: str, data_path: str):
         self.filename = filename
         self.data_path = data_path
@@ -17,8 +28,11 @@ class DataManager:
         """Saves the initial grid, wavefunction and parameters to a HDF5 file.
 
         :param grid: The grid object of the system.
+        :type grid: :class:`Grid`
         :param wfn: The wavefunction of the system.
+        :type wfn: :class:`Wavefunction`
         :param parameters: The parameter dictionary.
+        :type parameters: dict
         """
 
         self._save_initial_grid_params(grid)
@@ -87,6 +101,7 @@ class DataManager:
         """Saves the current wavefunction data to the dataset.
 
         :param wfn: The wavefunction of the system.
+        :type wfn: :class:`Wavefunction`
         """
         wfn.ifft()  # Update real-space wavefunction before saving
         if wfn.grid.ndim == 1:
