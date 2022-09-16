@@ -44,14 +44,14 @@ class Wavefunction:
         :param ground_state: "polar", "ferromagnetic", or "antiferromagnetic". The ground state of the wavefunction.
         :param params: Dictionary containing condensate parameters.
         """
-        # TODO: Add BA state
         ground_states = {
             "polar": _polar_initial_state,
             "ferromagnetic": _ferromagnetic_initial_state,
-            "antiferromagnetic": _antiferromagnetic_initial_state
+            "antiferromagnetic": _antiferromagnetic_initial_state,
+            "BA": _broken_axisymmetry_initial_state
         }
 
-        ground_states[ground_state.lower()](self, params)
+        ground_states[ground_state](self, params)
 
         self._update_atom_numbers()
 
@@ -169,3 +169,19 @@ def _antiferromagnetic_initial_state(wfn: Wavefunction, params: dict):
     wfn.plus_component = cp.sqrt(n) * cp.sqrt((1 + p / c2) / 2) * cp.ones(wfn.grid.shape, dtype='complex128')
     wfn.zero_component = cp.zeros(wfn.grid.shape, dtype='complex128')
     wfn.minus_component = cp.sqrt(n) * cp.sqrt((1 - p / c2) / 2) * cp.ones(wfn.grid.shape, dtype='complex128')
+
+
+def _broken_axisymmetry_initial_state(wfn: Wavefunction, params: dict):
+    """Sets wavefunction components to antiferromagnetic state."""
+    p = params["p"]  # Linear Zeeman
+    q = params["q"]  # Quadratic Zeeman
+    c2 = params["c2"]  # Spin-dependent interaction strength
+    n = params["n0"]
+
+    wfn.plus_component = cp.sqrt(n) * (q + p) / (2 * q) * cp.sqrt(
+        (-p ** 2 + q ** 2 + 2 * c2 * n * q) / (2 * c2 * n * q)) * cp.ones(wfn.grid.shape, dtype='complex128')
+    wfn.zero_component = cp.sqrt(n) * cp.sqrt(
+        (q ** 2 - p ** 2) * (-p ** 2 - q ** 2 + 2 * c2 * n * q) / (4 * c2 * n * q ** 3)) * cp.ones(wfn.grid.shape,
+                                                                                                   dtype='complex128')
+    wfn.minus_component = cp.sqrt(n) * (q - p) / (2 * q) * cp.sqrt(
+        (-p ** 2 + q ** 2 + 2 * c2 * n * q) / (2 * c2 * n * q)) * cp.ones(wfn.grid.shape, dtype='complex128')
