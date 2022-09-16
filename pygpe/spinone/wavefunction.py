@@ -70,7 +70,7 @@ class Wavefunction:
         if minus_component is not None:
             self.minus_component = minus_component
 
-    def add_noise_to_components(self, components: str, mean: float, std_dev: float) -> None:
+    def add_noise_to_components(self, components: str | list[str], mean: float, std_dev: float) -> None:
         """Adds noise to the specified wavefunction components
         using a normal distribution.
 
@@ -79,7 +79,6 @@ class Wavefunction:
         :param std_dev: The standard deviation of the normal distribution.
         """
 
-        # TODO: Add middle component
         if components.lower() == "outer":
             self.plus_component += self._generate_complex_normal_dist(mean, std_dev)
             self.minus_component += self._generate_complex_normal_dist(mean, std_dev)
@@ -87,6 +86,8 @@ class Wavefunction:
             self.plus_component += self._generate_complex_normal_dist(mean, std_dev)
             self.zero_component += self._generate_complex_normal_dist(mean, std_dev)
             self.minus_component += self._generate_complex_normal_dist(mean, std_dev)
+        elif components.lower() == "middle":
+            self.zero_component += self._generate_complex_normal_dist(mean, std_dev)
         else:
             raise ValueError(f"{components} is not a supported configuration")
 
