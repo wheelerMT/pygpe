@@ -8,7 +8,7 @@ class Wavefunction:
     wavefunction.
 
     :param grid: The numerical grid.
-    :type grid: :class:`Grid
+    :type grid: :class:`Grid`
 
     :ivar plus_component: The real-space plus component array.
     :ivar zero_component: The real-space zero component array.
