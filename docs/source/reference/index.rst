@@ -15,3 +15,4 @@ are and what they do.
    wavefunction
    evolution
    datamanager
+   vortices
