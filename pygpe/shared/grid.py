@@ -6,10 +6,33 @@ class Grid:
     """An object representing the numerical grid.
     It contains information on the number of grid points, the shape, the dimensionality, and lengths of the grid.
 
-    :param points: The number of points in each spatial dimension.
+    :param points: Number of points in each spatial dimension.
     :type points: int or tuple of ints
-    :param grid_spacings: The numerical spacing between grid points in each spatial dimension.
+    :param grid_spacings: Numerical spacing between grid points in each spatial dimension.
     :type grid_spacings: float or tuple of floats
+
+    :ivar shape: Shape of the grid.
+    :ivar ndim: Dimensionality of the grid.
+    :ivar total_num_points: Total number of grid points across all dimensions.
+
+    :ivar num_points_x: Number of points in the x-direction.
+    :ivar num_points_y: (2D and 3D only) Number of points in the y-direction.
+    :ivar num_points_z: (3D only) Number of points in the z-direction.
+    :ivar length_x: Length of the grid in the x-direction.
+    :ivar length_y: (2D and 3D only) Length of the grid in the y-direction.
+    :ivar length_z: (3D only) Length of the grid in the z-direction.
+    :ivar x_mesh: The x meshgrid. The dimensionality matches that of `ndim`.
+    :ivar x_mesh: (2D and 3D only) The y meshgrid. The dimensionality matches that of `ndim`.
+    :ivar x_mesh: (3D only) The z meshgrid. The dimensionality matches that of `ndim`.
+    :ivar grid_spacing_x: Grid spacing in the x-direction.
+    :ivar grid_spacing_y: (2D and 3D only) Grid spacing in the y-direction.
+    :ivar grid_spacing_z: (3D only) Grid spacing in the z-direction.
+    :ivar fourier_x_mesh: The Fourier-space x meshgrid. The dimensionality matches that of `ndim`.
+    :ivar fourier_x_mesh: (2D and 3D only) The Fourier-space y meshgrid. The dimensionality matches that of `ndim`.
+    :ivar fourier_x_mesh: (3D only) The Fourier-space z meshgrid. The dimensionality matches that of `ndim`.
+    :ivar fourier_spacing_x: Fourier grid spacing in the x-direction.
+    :ivar fourier_spacing_y: (2D and 3D only) Fourier grid spacing in the y-direction.
+    :ivar fourier_spacing_z: (3D only) Fourier grid spacing in the z-direction.
     """
 
     def __init__(self, points: int | tuple[int, ...], grid_spacings: float | tuple[float, ...]):

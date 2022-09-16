@@ -23,6 +23,7 @@ class Wavefunction:
     """
 
     def __init__(self, grid: Grid):
+        """Constructs the avefunction object."""
         self.grid = grid
 
         self.plus_component = cp.empty(grid.shape, dtype='complex128')
