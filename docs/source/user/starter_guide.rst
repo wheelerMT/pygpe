@@ -21,7 +21,7 @@ Installation is through pip::
     pip install pygpe
 
 Requirements are installed automatically **except** CUDA Toolkit.
-Ensure you have the required version of CUDA Toolkit (11.2>=) installed before attempting to install PyGPE.
+Ensure you have the required version of CUDA Toolkit (>=11.2) installed before attempting to install PyGPE.
 
 How to import PyGPE
 ^^^^^^^^^^^^^^^^^^^
