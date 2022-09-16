@@ -106,7 +106,7 @@ For a spin-1 system we can define it as::
     "n0": 1,  # Background density
 
     # Time params
-    "dt": -1j * 1e-2,  # Numerical time step
+    "dt": 1e-2,  # Numerical time step
     "nt": 1000,  # Number of time steps
     "t": 0  # Current time
     }
