@@ -1,8 +1,5 @@
 import numpy as np
 from pygpe.shared.grid import Grid
-from typing import List, Tuple
-
-"""Contains set of functions that can add various types of vortices to the """
 
 
 def _generate_positions(grid: Grid, num_vortices: int, threshold: float) -> iter:
@@ -32,7 +29,7 @@ def _generate_positions(grid: Grid, num_vortices: int, threshold: float) -> iter
     return iter(vortex_positions)
 
 
-def _position_sufficiently_far(position: Tuple, accepted_positions: List[Tuple], threshold: float) -> bool:
+def _position_sufficiently_far(position: tuple, accepted_positions: list[tuple], threshold: float) -> bool:
     """Tests that the given `position` is at least `threshold` away from all the positions
     currently in `accepted_positions`.
     """
@@ -54,10 +51,14 @@ def _heaviside(array: np.ndarray) -> np.ndarray:
 
 def vortex_phase_profile(grid: Grid, num_vortices: int, threshold: float) -> np.ndarray:
     """Constructs a 2D phase profile consisting of 2pi phase windings.
+    This phase can be applied to a wavefunction to generate different types of vortices.
 
     :param grid: The 2D grid of the system.
+    :type grid: :class:`Grid`
     :param num_vortices: The total number of vortices to be included in the phase profile.
+    :type num_vortices: int
     :param threshold: The minimum distance allowed between any two vortices.
+    :type threshold: float
     """
     vortex_positions_iter = _generate_positions(grid, num_vortices, threshold)
 
