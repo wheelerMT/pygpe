@@ -6,7 +6,9 @@ def step_wavefunction(wfn: Wavefunction, params: dict) -> None:
     """Propagates the wavefunction forward one time step.
 
     :param wfn: The wavefunction of the system.
+    :type wfn: :class:`Wavefunction`
     :param params: The parameters of the system.
+    :type params: dict
     """
     _kinetic_step(wfn, params)
     wfn.ifft()
