@@ -8,7 +8,7 @@ class DataManager:
     def __init__(self, filename: str, data_path: str):
         self.filename = filename
         self.data_path = data_path
-        self.time_index = 0
+        self._time_index = 0
 
         # Create file
         h5py.File(f'{self.data_path}/{self.filename}', 'w')
@@ -71,13 +71,12 @@ class DataManager:
         if wfn.grid.ndim == 1:
             with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as data:
                 new_psi = data['wavefunction']
-                new_psi.resize((wfn.grid.num_points_x, self.time_index + 1))
-                new_psi[:, self.time_index] = cp.asnumpy(wfn.wavefunction)
+                new_psi.resize((wfn.grid.num_points_x, self._time_index + 1))
+                new_psi[:, self._time_index] = cp.asnumpy(wfn.wavefunction)
         else:
             with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as data:
                 new_psi = data['wavefunction']
-                new_psi.resize((*wfn.grid.shape, self.time_index + 1))
-                new_psi[..., self.time_index] = cp.asnumpy(wfn.wavefunction)
+                new_psi.resize((*wfn.grid.shape, self._time_index + 1))
+                new_psi[..., self._time_index] = cp.asnumpy(wfn.wavefunction)
 
-        self.time_index += 1
-       
+        self._time_index += 1
