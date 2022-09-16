@@ -22,14 +22,14 @@ class Grid:
     :ivar length_y: (2D and 3D only) Length of the grid in the y-direction.
     :ivar length_z: (3D only) Length of the grid in the z-direction.
     :ivar x_mesh: The x meshgrid. The dimensionality matches that of `ndim`.
-    :ivar x_mesh: (2D and 3D only) The y meshgrid. The dimensionality matches that of `ndim`.
-    :ivar x_mesh: (3D only) The z meshgrid. The dimensionality matches that of `ndim`.
+    :ivar y_mesh: (2D and 3D only) The y meshgrid. The dimensionality matches that of `ndim`.
+    :ivar z_mesh: (3D only) The z meshgrid. The dimensionality matches that of `ndim`.
     :ivar grid_spacing_x: Grid spacing in the x-direction.
     :ivar grid_spacing_y: (2D and 3D only) Grid spacing in the y-direction.
     :ivar grid_spacing_z: (3D only) Grid spacing in the z-direction.
     :ivar fourier_x_mesh: The Fourier-space x meshgrid. The dimensionality matches that of `ndim`.
-    :ivar fourier_x_mesh: (2D and 3D only) The Fourier-space y meshgrid. The dimensionality matches that of `ndim`.
-    :ivar fourier_x_mesh: (3D only) The Fourier-space z meshgrid. The dimensionality matches that of `ndim`.
+    :ivar fourier_y_mesh: (2D and 3D only) The Fourier-space y meshgrid. The dimensionality matches that of `ndim`.
+    :ivar fourier_z_mesh: (3D only) The Fourier-space z meshgrid. The dimensionality matches that of `ndim`.
     :ivar fourier_spacing_x: Fourier grid spacing in the x-direction.
     :ivar fourier_spacing_y: (2D and 3D only) Fourier grid spacing in the y-direction.
     :ivar fourier_spacing_z: (3D only) Fourier grid spacing in the z-direction.
