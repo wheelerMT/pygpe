@@ -5,7 +5,7 @@ PyGPE: An introduction
 .. py:currentmodule:: pygpe
 
 Welcome to PyGPE!
------------------
+^^^^^^^^^^^^^^^^^
 
 PyGPE is an open source Python library for use in simulating the dynamics
 of Bose-Einstein condensate (BEC) systems.
@@ -14,12 +14,12 @@ PyGPE solves the Gross-Pitaevskii equations using CuPy meaning above all else,
 PyGPE is **fast**.
 
 Installing PyGPE
-----------------
+^^^^^^^^^^^^^^^^
 
 TODO: ADD PIP INSTRUCTIONS
 
 How to import PyGPE
--------------------
+^^^^^^^^^^^^^^^^^^^
 
 Since PyGPE supports multiple types of BEC systems, we need to first select
 the system we want to work with.
@@ -51,7 +51,7 @@ The table below lists the system types and their respective import statements
     Ensure you are only importing **one** of the above modules in your project.
 
 Using PyGPE
------------
+^^^^^^^^^^^
 
 The use of PyGPE can be broken down into a few simple steps:
     - Set up numerical grid.
@@ -60,7 +60,8 @@ The use of PyGPE can be broken down into a few simple steps:
     - Set up DataManager (if using).
     - Evolve the system.
 
-**Setting up the grid**
+Setting up the grid
+-------------------
 
 PyGPE offers a Grid class that handles all the details of the numerical grid.
 It supports 1D, 2D and 3D grids.
@@ -92,7 +93,8 @@ We can access useful attributes about our grid::
    The grid class is shared between all system types, so what works here
    for the spin-1 system will work for all other systems.
 
-**Defining condensate and time parameters**
+Defining condensate and time parameters
+---------------------------------------
 
 PyGPE uses a simple dictionary to keep track of condensate and time parameters.
 For a spin-1 system we can define it as::
@@ -112,9 +114,10 @@ For a spin-1 system we can define it as::
     }
 
 Each system requires specific parameters to be defined in order for the evolution functions to work correctly.
-See LINK TO NEW SECTION for more details on parameters and their definitions.
+See :doc:`../reference/parameters` for more details on parameters and their definitions.
 
-**Setting up the wavefunction**
+Setting up the wavefunction
+---------------------------
 
 Now that we have a grid class, we can use this to set up our wavefunction.
 Setting up the initial wavefunction class is easy, we just need to pass in the
@@ -131,7 +134,8 @@ subsequently adds numerical noise drawn from a normal distribution with mean
 :math:`\mu=0` and variance :math:`\sigma=10^{-2}` to the outer
 (:math:`\psi_\pm`) components.
 
-**Setting up the data manager**
+Setting up the data manager
+---------------------------
 
 PyGPE provides an easy way to save data throughout the simulation.
 Once the initial grid, wavefunction and condensate parameters have been defined we an instantiate a DataManager class,
@@ -149,7 +153,8 @@ Finally, to save the current wavefunction to the dataset we simply write::
 
 For more detail on how the DataManager class works see LINK TO DATA MANAGER API.
 
-**Evolving the wavefunction**
+Evolving the wavefunction
+-------------------------
 
 Now that everything is set up, we get to the important part: evolving the wavefunction.
 PyGPE provides a simple function for evolving stepping the wavefunction forward one time step.
@@ -161,7 +166,7 @@ To step the wavefunction forward for a set number of time steps we include a for
 That's it! All the evolution happens behind the `step_wavefunction` method.
 
 Imaginary/complex time evolution
---------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Imaginary time evolution is an extremely useful way of computing ground states of Bose-Einstein condensate systems and
 PyGPE readily supports it.
