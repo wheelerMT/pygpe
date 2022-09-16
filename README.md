@@ -23,6 +23,15 @@ Bose-Einstein condensate systems.
 - CUDA Toolkit (11.2>=)
 - [CuPy](https://github.com/cupy/cupy) (10.2.0+).
 
+### Installation
+
+Installation is through pip:
+
+    pip install pygpe
+
+Requirements are installed automatically **except** CUDA Toolkit.
+Ensure you have the required version of CUDA Toolkit (11.2>=) installed before attempting to install PyGPE.
+
 ## Examples
 
 See [examples](examples) folder for various examples on the usage of the library.
