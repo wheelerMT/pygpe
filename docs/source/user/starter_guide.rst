@@ -156,7 +156,7 @@ Finally, to save the current wavefunction to the dataset we simply write::
 
     data.save_wavefunction(wavefunction)
 
-For more detail on how the DataManager class works see LINK TO DATA MANAGER API.
+For more detail on how the DataManager class works see :doc:`../reference/datamanager`.
 
 Evolving the wavefunction
 -------------------------
