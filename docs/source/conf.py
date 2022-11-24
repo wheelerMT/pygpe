@@ -5,7 +5,7 @@ import sys
 project = 'PyGPE'
 copyright = '2022, Matt Wheeler'
 author = 'Matt Wheeler'
-release = '1.0.1'
+release = '1.0.2'
 
 sys.path.insert(0, os.path.abspath('../../'))
 
