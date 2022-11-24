@@ -24,8 +24,8 @@ requires-python = ">=3.9"
 [project.urls]
 Homepage = "https://github.com/wheelerMT/pygpe"
 
-[tool.setuptools.packages.find]
-where = ["pygpe"]
+[tool.setuptools]
+packages = ["pygpe", "pygpe.shared", "pygpe.scalar", "pygpe.spinone", "pygpe.spintwo"]
 
 [tool.bumpver]
 current_version = "1.0.1"
