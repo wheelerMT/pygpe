@@ -34,7 +34,7 @@ The `set_ground_state` method is used to set the initial state to a specified gr
 It is typically the way we start shaping the condensate.
 The supported ground states are listed below
 
-.. list-table:: Supported spin-2 ground states
+.. list-table:: Supported spin-1 ground states
     :header-rows: 1
 
     * - Ground state
