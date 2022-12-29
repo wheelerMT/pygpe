@@ -1,6 +1,7 @@
 import h5py
 import cupy as cp
 from pygpe.shared.grid import Grid
+from pygpe.shared import data_manager_paths as dmp
 from pygpe.scalar.wavefunction import Wavefunction
 
 
@@ -43,39 +44,39 @@ class DataManager:
         """Saves grid parameters to dataset."""
         if grid.ndim == 1:
             with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as file:
-                file.create_dataset('grid/nx', data=grid.num_points_x)
-                file.create_dataset('grid/dx', data=grid.grid_spacing_x)
+                file.create_dataset(dmp.GRID_NX, data=grid.num_points_x)
+                file.create_dataset(dmp.GRID_DX, data=grid.grid_spacing_x)
         elif grid.ndim == 2:
             with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as file:
-                file.create_dataset('grid/nx', data=grid.num_points_x)
-                file.create_dataset('grid/ny', data=grid.num_points_y)
-                file.create_dataset('grid/dx', data=grid.grid_spacing_x)
-                file.create_dataset('grid/dy', data=grid.grid_spacing_y)
+                file.create_dataset(dmp.GRID_NX, data=grid.num_points_x)
+                file.create_dataset(dmp.GRID_NY, data=grid.num_points_y)
+                file.create_dataset(dmp.GRID_DX, data=grid.grid_spacing_x)
+                file.create_dataset(dmp.GRID_DY, data=grid.grid_spacing_y)
         elif grid.ndim == 3:
             with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as file:
-                file.create_dataset('grid/nx', data=grid.num_points_x)
-                file.create_dataset('grid/ny', data=grid.num_points_y)
-                file.create_dataset('grid/nz', data=grid.num_points_z)
-                file.create_dataset('grid/dx', data=grid.grid_spacing_x)
-                file.create_dataset('grid/dy', data=grid.grid_spacing_y)
-                file.create_dataset('grid/dz', data=grid.grid_spacing_z)
+                file.create_dataset(dmp.GRID_NX, data=grid.num_points_x)
+                file.create_dataset(dmp.GRID_NY, data=grid.num_points_y)
+                file.create_dataset(dmp.GRID_NZ, data=grid.num_points_z)
+                file.create_dataset(dmp.GRID_DX, data=grid.grid_spacing_x)
+                file.create_dataset(dmp.GRID_DY, data=grid.grid_spacing_y)
+                file.create_dataset(dmp.GRID_DZ, data=grid.grid_spacing_z)
 
     def _save_initial_wfn(self, wfn: Wavefunction) -> None:
         """Saves initial wavefunction to dataset."""
         if wfn.grid.ndim == 1:
             with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as file:
-                file.create_dataset('wavefunction', (wfn.grid.shape, 1), maxshape=(wfn.grid.shape, None),
+                file.create_dataset(dmp.SCALAR_WAVEFUNCTION, (wfn.grid.shape, 1), maxshape=(wfn.grid.shape, None),
                                     dtype='complex128')
         else:
             with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as file:
-                file.create_dataset('wavefunction', (*wfn.grid.shape, 1), maxshape=(*wfn.grid.shape, None),
+                file.create_dataset(dmp.SCALAR_WAVEFUNCTION, (*wfn.grid.shape, 1), maxshape=(*wfn.grid.shape, None),
                                     dtype='complex128')
 
     def _save_params(self, parameters: dict) -> None:
         """Saves condensate parameters to dataset."""
         with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as file:
             for key in parameters:
-                file.create_dataset(f'parameters/{key}', data=parameters[key])
+                file.create_dataset(f'{dmp.PARAMETERS}/{key}', data=parameters[key])
 
     def save_wavefunction(self, wfn: Wavefunction) -> None:
         """Saves the current wavefunction data to the dataset.
@@ -86,12 +87,12 @@ class DataManager:
         wfn.ifft()  # Update real-space wavefunction before saving
         if wfn.grid.ndim == 1:
             with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as data:
-                new_psi = data['wavefunction']
+                new_psi = data[dmp.SCALAR_WAVEFUNCTION]
                 new_psi.resize((wfn.grid.num_points_x, self._time_index + 1))
                 new_psi[:, self._time_index] = cp.asnumpy(wfn.component)
         else:
             with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as data:
-                new_psi = data['wavefunction']
+                new_psi = data[dmp.SCALAR_WAVEFUNCTION]
                 new_psi.resize((*wfn.grid.shape, self._time_index + 1))
                 new_psi[..., self._time_index] = cp.asnumpy(wfn.component)
 

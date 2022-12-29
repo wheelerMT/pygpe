@@ -1,6 +1,7 @@
 import h5py
 import cupy as cp
 from pygpe.shared.grid import Grid
+from pygpe.shared import data_manager_paths as dmp
 from pygpe.spinone.wavefunction import Wavefunction
 
 
@@ -44,22 +45,22 @@ class DataManager:
         """
         if grid.ndim == 1:
             with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as file:
-                file.create_dataset('grid/nx', data=grid.num_points_x)
-                file.create_dataset('grid/dx', data=grid.grid_spacing_x)
+                file.create_dataset(dmp.GRID_NX, data=grid.num_points_x)
+                file.create_dataset(dmp.GRID_DX, data=grid.grid_spacing_x)
         elif grid.ndim == 2:
             with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as file:
-                file.create_dataset('grid/nx', data=grid.num_points_x)
-                file.create_dataset('grid/ny', data=grid.num_points_y)
-                file.create_dataset('grid/dx', data=grid.grid_spacing_x)
-                file.create_dataset('grid/dy', data=grid.grid_spacing_y)
+                file.create_dataset(dmp.GRID_NX, data=grid.num_points_x)
+                file.create_dataset(dmp.GRID_NY, data=grid.num_points_y)
+                file.create_dataset(dmp.GRID_DX, data=grid.grid_spacing_x)
+                file.create_dataset(dmp.GRID_DY, data=grid.grid_spacing_y)
         elif grid.ndim == 3:
             with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as file:
-                file.create_dataset('grid/nx', data=grid.num_points_x)
-                file.create_dataset('grid/ny', data=grid.num_points_y)
-                file.create_dataset('grid/nz', data=grid.num_points_z)
-                file.create_dataset('grid/dx', data=grid.grid_spacing_x)
-                file.create_dataset('grid/dy', data=grid.grid_spacing_y)
-                file.create_dataset('grid/dz', data=grid.grid_spacing_z)
+                file.create_dataset(dmp.GRID_NX, data=grid.num_points_x)
+                file.create_dataset(dmp.GRID_NY, data=grid.num_points_y)
+                file.create_dataset(dmp.GRID_NZ, data=grid.num_points_z)
+                file.create_dataset(dmp.GRID_DX, data=grid.grid_spacing_x)
+                file.create_dataset(dmp.GRID_DY, data=grid.grid_spacing_y)
+                file.create_dataset(dmp.GRID_DZ, data=grid.grid_spacing_z)
 
     def _save_initial_wfn(self, wfn: Wavefunction) -> None:
         """Creates new datasets in file for the wavefunction and saves
@@ -67,19 +68,20 @@ class DataManager:
         """
         if wfn.grid.ndim == 1:
             with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as file:
-                file.create_dataset('wavefunction/psi_plus', (wfn.grid.shape, 1), maxshape=(wfn.grid.shape, None),
+                file.create_dataset(dmp.SPIN1_WAVEFUNCTION_PLUS, (wfn.grid.shape, 1), maxshape=(wfn.grid.shape, None),
                                     dtype='complex128')
-                file.create_dataset('wavefunction/psi_zero', (wfn.grid.shape, 1), maxshape=(wfn.grid.shape, None),
+                file.create_dataset(dmp.SPIN1_WAVEFUNCTION_ZERO, (wfn.grid.shape, 1), maxshape=(wfn.grid.shape, None),
                                     dtype='complex128')
-                file.create_dataset('wavefunction/psi_minus', (wfn.grid.shape, 1), maxshape=(wfn.grid.shape, None),
+                file.create_dataset(dmp.SPIN1_WAVEFUNCTION_MINUS, (wfn.grid.shape, 1), maxshape=(wfn.grid.shape, None),
                                     dtype='complex128')
         else:
             with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as file:
-                file.create_dataset('wavefunction/psi_plus', (*wfn.grid.shape, 1), maxshape=(*wfn.grid.shape, None),
+                file.create_dataset(dmp.SPIN1_WAVEFUNCTION_PLUS, (*wfn.grid.shape, 1), maxshape=(*wfn.grid.shape, None),
                                     dtype='complex128')
-                file.create_dataset('wavefunction/psi_zero', (*wfn.grid.shape, 1), maxshape=(*wfn.grid.shape, None),
+                file.create_dataset(dmp.SPIN1_WAVEFUNCTION_ZERO, (*wfn.grid.shape, 1), maxshape=(*wfn.grid.shape, None),
                                     dtype='complex128')
-                file.create_dataset('wavefunction/psi_minus', (*wfn.grid.shape, 1), maxshape=(*wfn.grid.shape, None),
+                file.create_dataset(dmp.SPIN1_WAVEFUNCTION_MINUS, (*wfn.grid.shape, 1),
+                                    maxshape=(*wfn.grid.shape, None),
                                     dtype='complex128')
 
     def _save_params(self, parameters: dict) -> None:
@@ -99,28 +101,28 @@ class DataManager:
         wfn.ifft()  # Update real-space wavefunction before saving
         if wfn.grid.ndim == 1:
             with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as data:
-                new_psi_plus = data['wavefunction/psi_plus']
+                new_psi_plus = data[dmp.SPIN1_WAVEFUNCTION_PLUS]
                 new_psi_plus.resize((wfn.grid.num_points_x, self._time_index + 1))
                 new_psi_plus[:, self._time_index] = cp.asnumpy(wfn.plus_component)
 
-                new_psi_zero = data['wavefunction/psi_zero']
+                new_psi_zero = data[dmp.SPIN1_WAVEFUNCTION_ZERO]
                 new_psi_zero.resize((wfn.grid.num_points_x, self._time_index + 1))
                 new_psi_zero[:, self._time_index] = cp.asnumpy(wfn.zero_component)
 
-                new_psi_minus = data['wavefunction/psi_minus']
+                new_psi_minus = data[dmp.SPIN1_WAVEFUNCTION_MINUS]
                 new_psi_minus.resize((wfn.grid.num_points_x, self._time_index + 1))
                 new_psi_minus[:, self._time_index] = cp.asnumpy(wfn.minus_component)
         else:
             with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as data:
-                new_psi_plus = data['wavefunction/psi_plus']
+                new_psi_plus = data[dmp.SPIN1_WAVEFUNCTION_PLUS]
                 new_psi_plus.resize((*wfn.grid.shape, self._time_index + 1))
                 new_psi_plus[..., self._time_index] = cp.asnumpy(wfn.plus_component)
 
-                new_psi_zero = data['wavefunction/psi_zero']
+                new_psi_zero = data[dmp.SPIN1_WAVEFUNCTION_ZERO]
                 new_psi_zero.resize((*wfn.grid.shape, self._time_index + 1))
                 new_psi_zero[..., self._time_index] = cp.asnumpy(wfn.zero_component)
 
-                new_psi_minus = data['wavefunction/psi_minus']
+                new_psi_minus = data[dmp.SPIN1_WAVEFUNCTION_MINUS]
                 new_psi_minus.resize((*wfn.grid.shape, self._time_index + 1))
                 new_psi_minus[..., self._time_index] = cp.asnumpy(wfn.minus_component)
 
