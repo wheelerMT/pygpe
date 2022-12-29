@@ -1,4 +1,4 @@
-import unittest
+import pytest
 import cupy as cp
 from typing import Tuple
 from pygpe.shared.grid import Grid
@@ -17,148 +17,192 @@ def generate_wavefunction2d(
     return Wavefunction(Grid(points, grid_spacing))
 
 
-class TestWavefunction2D(unittest.TestCase):
-    def test_polar_initial_state(self):
-        """Tests whether the polar initial state is set correctly."""
-        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-        params = {"n0": 1}
-        wavefunction.set_ground_state("polar", params)
+def test_polar_initial_state():
+    """Tests whether the polar initial state is set correctly."""
+    wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+    params = {"n0": 1}
+    wavefunction.set_ground_state("polar", params)
 
-        self.assertEqual(wavefunction.plus_component.all(), 0.0)
-        self.assertEqual(wavefunction.zero_component.all(), 1.0)
-        self.assertEqual(wavefunction.minus_component.all(), 0.0)
+    cp.testing.assert_array_equal(
+        wavefunction.plus_component, cp.zeros(wavefunction.grid.shape)
+    )
+    cp.testing.assert_array_equal(
+        wavefunction.zero_component, cp.ones(wavefunction.grid.shape)
+    )
+    cp.testing.assert_array_equal(
+        wavefunction.minus_component, cp.zeros(wavefunction.grid.shape)
+    )
 
-    def test_ferromagnetic_initial_state(self):
-        """Tests whether the ferromagnetic initial state is set correctly."""
-        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-        params = {"n0": 1}
-        wavefunction.set_ground_state("ferromagnetic", params)
 
-        self.assertEqual(wavefunction.plus_component.all(), 1.0)
-        self.assertEqual(wavefunction.zero_component.all(), 0.0)
-        self.assertEqual(wavefunction.minus_component.all(), 0.0)
+def test_ferromagnetic_initial_state():
+    """Tests whether the ferromagnetic initial state is set correctly."""
+    wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+    params = {"n0": 1}
+    wavefunction.set_ground_state("ferromagnetic", params)
 
-    def test_antiferromagnetic_initial_state(self):
-        """Tests whether the antiferromagnetic initial state is set correctly."""
-        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-        params = {"n0": 1, "p": 0.5, "c2": 0.5}
-        wavefunction.set_ground_state("antiferromagnetic", params)
+    cp.testing.assert_array_equal(
+        wavefunction.plus_component, cp.ones(wavefunction.grid.shape)
+    )
+    cp.testing.assert_array_equal(
+        wavefunction.zero_component, cp.zeros(wavefunction.grid.shape)
+    )
+    cp.testing.assert_array_equal(
+        wavefunction.minus_component, cp.zeros(wavefunction.grid.shape)
+    )
 
-        self.assertEqual(wavefunction.plus_component.all(), 1.0)
-        self.assertEqual(wavefunction.zero_component.all(), 0.0)
-        self.assertEqual(wavefunction.minus_component.all(), 0.0)
 
-    def test_broken_axisymmetry_initial_state(self):
-        """Tests whether the broken-axisymmetry initial state is set correctly."""
-        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-        params = {"n0": 1, "p": 0.0, "q": 0.5, "c2": -0.5}
-        wavefunction.set_ground_state("BA", params)
+def test_antiferromagnetic_initial_state():
+    """Tests whether the antiferromagnetic initial state is set correctly."""
+    wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+    params = {"n0": 1, "p": 0.25, "c2": 0.5}
+    wavefunction.set_ground_state("antiferromagnetic", params)
 
-        cp.testing.assert_allclose(wavefunction.plus_component, cp.sqrt(2) / 4)
-        cp.testing.assert_allclose(wavefunction.zero_component, cp.sqrt(3) / 2)
-        cp.testing.assert_allclose(wavefunction.minus_component, cp.sqrt(2) / 4)
+    cp.testing.assert_allclose(
+        wavefunction.plus_component,
+        cp.sqrt(0.75) * cp.ones(wavefunction.grid.shape),
+    )
+    cp.testing.assert_allclose(
+        wavefunction.zero_component, cp.zeros(wavefunction.grid.shape)
+    )
+    cp.testing.assert_allclose(
+        wavefunction.minus_component,
+        cp.sqrt(0.25) * cp.ones(wavefunction.grid.shape),
+    )
 
-    def test_custom_wavefunction_components(self):
-        """Tests whether a custom wavefunction is set correctly."""
-        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-        plus_component = 1.67 * cp.ones((64, 64))
-        zero_component = 1e4 * cp.ones((64, 64))
-        minus_component = cp.zeros((64, 64))
 
-        wavefunction.set_custom_components(
-            plus_component, zero_component, minus_component
+def test_broken_axisymmetry_initial_state():
+    """Tests whether the broken-axisymmetry initial state is set correctly."""
+    wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+    params = {"n0": 1, "p": 0.0, "q": 0.5, "c2": -0.5}
+    wavefunction.set_ground_state("BA", params)
+
+    cp.testing.assert_allclose(wavefunction.plus_component, cp.sqrt(2) / 4)
+    cp.testing.assert_allclose(wavefunction.zero_component, cp.sqrt(3) / 2)
+    cp.testing.assert_allclose(wavefunction.minus_component, cp.sqrt(2) / 4)
+
+
+def test_custom_wavefunction_components():
+    """Tests whether a custom wavefunction is set correctly."""
+    wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+    plus_component = 1.67 * cp.ones((64, 64))
+    zero_component = 1e4 * cp.ones((64, 64))
+    minus_component = cp.zeros((64, 64))
+
+    wavefunction.set_custom_components(plus_component, zero_component, minus_component)
+
+    cp.testing.assert_array_equal(wavefunction.plus_component, plus_component)
+    cp.testing.assert_array_equal(wavefunction.zero_component, zero_component)
+    cp.testing.assert_array_equal(wavefunction.minus_component, minus_component)
+
+
+def test_set_initial_state_raises_error():
+    """Tests that an unsupported/invalid initial state returns an error."""
+    wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+    with pytest.raises(KeyError):
+        wavefunction.set_ground_state("garbage", params={})
+
+
+def test_adding_noise_outer():
+    """Tests whether adding noise to empty outer components correctly
+    makes those components non-zero.
+    """
+    wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+    wavefunction.add_noise_to_components("outer", 0, 1e-2)
+
+    with pytest.raises(AssertionError):
+        cp.testing.assert_array_equal(
+            wavefunction.plus_component, cp.zeros(wavefunction.grid.shape)
+        )
+        cp.testing.assert_array_equal(
+            wavefunction.minus_component, cp.zeros(wavefunction.grid.shape)
         )
 
-        cp.testing.assert_array_equal(wavefunction.plus_component, plus_component)
-        cp.testing.assert_array_equal(wavefunction.zero_component, zero_component)
-        cp.testing.assert_array_equal(wavefunction.minus_component, minus_component)
 
-    def test_set_initial_state_raises_error(self):
-        """Tests that an unsupported/invalid initial state returns an error."""
-        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-        with self.assertRaises(KeyError):
-            wavefunction.set_ground_state("garbage", params={})
+def test_adding_noise_all():
+    """Tests whether adding noise to all components correctly
+    makes them non-zero.
+    """
+    wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+    wavefunction.add_noise_to_components("all", 0, 1e-2)
 
-    def test_adding_noise_outer(self):
-        """Tests whether adding noise to empty outer components correctly
-        makes those components non-zero.
-        """
-        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-        wavefunction.add_noise_to_components("outer", 0, 1e-2)
-
-        self.assertNotEqual(wavefunction.plus_component.all(), 0.0)
-        self.assertNotEqual(wavefunction.minus_component.all(), 0.0)
-
-    def test_adding_noise_all(self):
-        """Tests whether adding noise to all components correctly
-        makes them non-zero.
-        """
-        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-        wavefunction.add_noise_to_components("all", 0, 1e-2)
-
-        self.assertNotEqual(wavefunction.plus_component.all(), 0.0)
-        self.assertNotEqual(wavefunction.zero_component.all(), 0.0)
-        self.assertNotEqual(wavefunction.minus_component.all(), 0.0)
-
-    def test_adding_noise_middle(self):
-        """Tests whether adding noise to the middle component correctly
-        makes it non-zero.
-        """
-        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-        wavefunction.add_noise_to_components("middle", 0, 1e-2)
-
-        self.assertNotEqual(wavefunction.zero_component.all(), 0.0)
-
-    def test_phase_all(self):
-        """Tests that a phase applied to all components is applied correctly."""
-        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-        wavefunction.set_custom_components(
-            cp.ones((64, 64), dtype="complex128"),
-            cp.ones((64, 64), dtype="complex128"),
-            cp.ones((64, 64), dtype="complex128"),
+    with pytest.raises(AssertionError):
+        cp.testing.assert_array_equal(
+            wavefunction.plus_component, cp.zeros(wavefunction.grid.shape)
+        )
+        cp.testing.assert_array_equal(
+            wavefunction.zero_component, cp.zeros(wavefunction.grid.shape)
+        )
+        cp.testing.assert_array_equal(
+            wavefunction.minus_component, cp.zeros(wavefunction.grid.shape)
         )
 
-        phase = cp.random.uniform(size=(64, 64), dtype=cp.float64)
-        wavefunction.apply_phase(phase, "all")
 
-        cp.testing.assert_allclose(cp.angle(wavefunction.plus_component), phase)
-        cp.testing.assert_allclose(cp.angle(wavefunction.zero_component), phase)
-        cp.testing.assert_allclose(cp.angle(wavefunction.minus_component), phase)
+def test_adding_noise_middle():
+    """Tests whether adding noise to the middle component correctly
+    makes it non-zero.
+    """
+    wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+    wavefunction.add_noise_to_components("middle", 0, 1e-2)
 
-    def test_phase_multiple_components(self):
-        """Tests that a phase is applied correctly to multiple components."""
-        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-        wavefunction.set_custom_components(
-            cp.ones((64, 64), dtype="complex128"),
-            cp.ones((64, 64), dtype="complex128"),
-            cp.ones((64, 64), dtype="complex128"),
+    with pytest.raises(AssertionError):
+        cp.testing.assert_array_equal(
+            wavefunction.zero_component, cp.zeros(wavefunction.grid.shape)
         )
 
-        phase = cp.random.uniform(size=(64, 64), dtype=cp.float64)
-        wavefunction.apply_phase(phase, ["plus", "minus"])
 
-        cp.testing.assert_allclose(cp.angle(wavefunction.plus_component), phase)
-        cp.testing.assert_allclose(cp.angle(wavefunction.minus_component), phase)
+def test_phase_all():
+    """Tests that a phase applied to all components is applied correctly."""
+    wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+    wavefunction.set_custom_components(
+        cp.ones((64, 64), dtype="complex128"),
+        cp.ones((64, 64), dtype="complex128"),
+        cp.ones((64, 64), dtype="complex128"),
+    )
 
-    def test_phase_single(self):
-        """Tests that a phase is applied correctly to a single component."""
-        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-        wavefunction.set_custom_components(
-            cp.ones((64, 64), dtype="complex128"),
-            cp.ones((64, 64), dtype="complex128"),
-            cp.ones((64, 64), dtype="complex128"),
-        )
+    phase = cp.random.uniform(size=(64, 64), dtype=cp.float64)
+    wavefunction.apply_phase(phase, "all")
 
-        phase = cp.random.uniform(size=(64, 64), dtype=cp.float64)
-        wavefunction.apply_phase(phase, "zero")
+    cp.testing.assert_allclose(cp.angle(wavefunction.plus_component), phase)
+    cp.testing.assert_allclose(cp.angle(wavefunction.zero_component), phase)
+    cp.testing.assert_allclose(cp.angle(wavefunction.minus_component), phase)
 
-        cp.testing.assert_allclose(cp.angle(wavefunction.zero_component), phase)
 
-    def test_density(self):
-        """Tests that the condensate density is calculated correctly."""
-        wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-        wavefunction.set_ground_state("polar", {"n0": 1})
+def test_phase_multiple_components():
+    """Tests that a phase is applied correctly to multiple components."""
+    wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+    wavefunction.set_custom_components(
+        cp.ones((64, 64), dtype="complex128"),
+        cp.ones((64, 64), dtype="complex128"),
+        cp.ones((64, 64), dtype="complex128"),
+    )
 
-        cp.testing.assert_allclose(
-            wavefunction.density(), cp.ones(wavefunction.grid.shape, dtype="float")
-        )
+    phase = cp.random.uniform(size=(64, 64), dtype=cp.float64)
+    wavefunction.apply_phase(phase, ["plus", "minus"])
+
+    cp.testing.assert_allclose(cp.angle(wavefunction.plus_component), phase)
+    cp.testing.assert_allclose(cp.angle(wavefunction.minus_component), phase)
+
+
+def test_phase_single():
+    """Tests that a phase is applied correctly to a single component."""
+    wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+    wavefunction.set_custom_components(
+        cp.ones((64, 64), dtype="complex128"),
+        cp.ones((64, 64), dtype="complex128"),
+        cp.ones((64, 64), dtype="complex128"),
+    )
+
+    phase = cp.random.uniform(size=(64, 64), dtype=cp.float64)
+    wavefunction.apply_phase(phase, "zero")
+
+    cp.testing.assert_allclose(cp.angle(wavefunction.zero_component), phase)
+
+
+def test_density():
+    """Tests that the condensate density is calculated correctly."""
+    wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+    wavefunction.set_ground_state("polar", {"n0": 1})
+
+    cp.testing.assert_allclose(
+        wavefunction.density(), cp.ones(wavefunction.grid.shape, dtype="float")
+    )
