@@ -88,11 +88,11 @@ class DataManager:
             with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as data:
                 new_psi = data['wavefunction']
                 new_psi.resize((wfn.grid.num_points_x, self._time_index + 1))
-                new_psi[:, self._time_index] = cp.asnumpy(wfn.wavefunction)
+                new_psi[:, self._time_index] = cp.asnumpy(wfn.component)
         else:
             with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as data:
                 new_psi = data['wavefunction']
                 new_psi.resize((*wfn.grid.shape, self._time_index + 1))
-                new_psi[..., self._time_index] = cp.asnumpy(wfn.wavefunction)
+                new_psi[..., self._time_index] = cp.asnumpy(wfn.component)
 
         self._time_index += 1

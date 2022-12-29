@@ -24,7 +24,7 @@ class TestWavefunction2D(unittest.TestCase):
         array = cp.ones((64, 64))
         wavefunction.set_wavefunction(array)
 
-        self.assertEqual(wavefunction.wavefunction.all(), 1.)
+        self.assertEqual(wavefunction.component.all(), 1.)
 
     def test_adding_noise(self):
         """Tests whether adding noise to empty wavefunction correctly
@@ -33,7 +33,7 @@ class TestWavefunction2D(unittest.TestCase):
         wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
         wavefunction.add_noise(0, 1e-2)
 
-        self.assertNotEqual(wavefunction.wavefunction.all(), 0.)
+        self.assertNotEqual(wavefunction.component.all(), 0.)
 
     def test_fft(self):
         """Tests whether performing a forward fft followed by an inverse
@@ -42,11 +42,11 @@ class TestWavefunction2D(unittest.TestCase):
         wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
         wavefunction.add_noise(0, 1e-2)
 
-        before_fft = wavefunction.wavefunction
+        before_fft = wavefunction.component
         wavefunction.fft()
         wavefunction.ifft()
 
-        cp.testing.assert_allclose(wavefunction.wavefunction, before_fft)
+        cp.testing.assert_allclose(wavefunction.component, before_fft)
 
     def test_density(self):
         """Tests whether the atomic density is calculated correctly."""
@@ -63,4 +63,4 @@ class TestWavefunction2D(unittest.TestCase):
         phase = cp.random.uniform(0, 1, size=(64, 64))
         wavefunction.apply_phase(phase)
 
-        cp.testing.assert_allclose(phase, cp.angle(wavefunction.wavefunction))
+        cp.testing.assert_allclose(phase, cp.angle(wavefunction.component))

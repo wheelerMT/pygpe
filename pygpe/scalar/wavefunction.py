@@ -10,8 +10,8 @@ class Wavefunction:
     :param grid: The numerical grid.
     :type grid: :class:`Grid`
 
-    :ivar wavefunction: The real-space wavefunction array.
-    :ivar fourier_wavefunction: The Fourier-space wavefunction array.
+    :ivar component: The real-space wavefunction array.
+    :ivar fourier_component: The Fourier-space wavefunction array.
     :ivar atom_num: The atom number of the condensate.
     :ivar grid: Reference to the grid object of the simulation.
     """
@@ -20,8 +20,8 @@ class Wavefunction:
         """Constructs the wavefunction object."""
         self.grid = grid
 
-        self.wavefunction = cp.empty(grid.shape, dtype='complex128')
-        self.fourier_wavefunction = cp.empty(grid.shape, dtype='complex128')  # Fourier component
+        self.component = cp.empty(grid.shape, dtype='complex128')
+        self.fourier_component = cp.empty(grid.shape, dtype='complex128')  # Fourier component
 
         self.atom_num = 0
 
@@ -31,7 +31,7 @@ class Wavefunction:
         :param wavefunction:  The array to set the wavefunction as.
         :type wavefunction: `cupy.ndarray`
         """
-        self.wavefunction = wavefunction
+        self.component = wavefunction
         self._update_atom_number()
 
     def add_noise(self, mean: float, std_dev: float) -> None:
@@ -42,7 +42,7 @@ class Wavefunction:
         :param std_dev: The standard deviation of the normal distribution.
         :type std_dev: float
         """
-        self.wavefunction += self._generate_complex_normal_dist(mean, std_dev)
+        self.component += self._generate_complex_normal_dist(mean, std_dev)
         self._update_atom_number()
 
     def _generate_complex_normal_dist(self, mean: float, std_dev: float) -> cp.ndarray:
@@ -58,18 +58,18 @@ class Wavefunction:
         :param phase: The phase to apply.
         :type phase: `cupy.ndarray`
         """
-        self.wavefunction *= cp.exp(1j * phase)
+        self.component *= cp.exp(1j * phase)
 
     def _update_atom_number(self) -> None:
-        self.atom_num = self.grid.grid_spacing_product * cp.sum(cp.abs(self.wavefunction) ** 2)
+        self.atom_num = self.grid.grid_spacing_product * cp.sum(cp.abs(self.component) ** 2)
 
     def fft(self) -> None:
         """Fourier transforms real-space component and updates Fourier-space component."""
-        self.fourier_wavefunction = cp.fft.fftn(self.wavefunction)
+        self.fourier_component = cp.fft.fftn(self.component)
 
     def ifft(self) -> None:
         """Inverse Fourier transforms Fourier-space component and updates real-space component."""
-        self.wavefunction = cp.fft.ifftn(self.fourier_wavefunction)
+        self.component = cp.fft.ifftn(self.fourier_component)
 
     def density(self) -> cp.ndarray:
         """
@@ -77,4 +77,4 @@ class Wavefunction:
         :return: An array of the condensate density.
         :rtype: `cupy.ndarray`
         """
-        return cp.abs(self.wavefunction) ** 2
+        return cp.abs(self.component) ** 2
