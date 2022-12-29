@@ -20,8 +20,10 @@ class Wavefunction:
         """Constructs the wavefunction object."""
         self.grid = grid
 
-        self.component = cp.empty(grid.shape, dtype='complex128')
-        self.fourier_component = cp.empty(grid.shape, dtype='complex128')  # Fourier component
+        self.component = cp.empty(grid.shape, dtype="complex128")
+        self.fourier_component = cp.empty(
+            grid.shape, dtype="complex128"
+        )  # Fourier component
 
         self.atom_num = 0
 
@@ -49,8 +51,9 @@ class Wavefunction:
         """Returns a ndarray of complex values containing results from
         a normal distribution.
         """
-        return cp.random.normal(mean, std_dev, size=self.grid.shape) + 1j * cp.random.normal(mean, std_dev,
-                                                                                             size=self.grid.shape)
+        return cp.random.normal(
+            mean, std_dev, size=self.grid.shape
+        ) + 1j * cp.random.normal(mean, std_dev, size=self.grid.shape)
 
     def apply_phase(self, phase: cp.ndarray) -> None:
         """Applies a phase to the wavefunction.
@@ -61,7 +64,9 @@ class Wavefunction:
         self.component *= cp.exp(1j * phase)
 
     def _update_atom_number(self) -> None:
-        self.atom_num = self.grid.grid_spacing_product * cp.sum(cp.abs(self.component) ** 2)
+        self.atom_num = self.grid.grid_spacing_product * cp.sum(
+            cp.abs(self.component) ** 2
+        )
 
     def fft(self) -> None:
         """Fourier transforms real-space component and updates Fourier-space component."""

@@ -23,7 +23,7 @@ def _kinetic_step(wfn: Wavefunction, pm: dict) -> None:
     """Computes the kinetic energy subsystem for half a time step.
 
     :param wfn: The wavefunction of the system.
-    :param pm: The parameters dictionary.
+    :param pm: The parameters' dictionary.
     """
     wfn.fourier_component *= cp.exp(-0.25 * 1j * pm["dt"] * wfn.grid.wave_number)
 
@@ -32,9 +32,11 @@ def _potential_step(wfn: Wavefunction, pm: dict) -> None:
     """Computes the potential subsystem for a full time step.
 
     :param wfn: The wavefunction of the system.
-    :param pm: The parameters dictionary.
+    :param pm: The parameters' dictionary.
     """
-    wfn.component *= cp.exp(-1j * pm["dt"] * (pm["trap"] + pm["g"] * cp.abs(wfn.component) ** 2))
+    wfn.component *= cp.exp(
+        -1j * pm["dt"] * (pm["trap"] + pm["g"] * cp.abs(wfn.component) ** 2)
+    )
 
 
 def _renormalise_wavefunction(wfn: Wavefunction) -> None:

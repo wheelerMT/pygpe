@@ -23,9 +23,11 @@ class DataManager:
         self._time_index = 0
 
         # Create file
-        h5py.File(f'{self.data_path}/{self.filename}', 'w')
+        h5py.File(f"{self.data_path}/{self.filename}", "w")
 
-    def save_initial_parameters(self, grid: Grid, wfn: Wavefunction, parameters: dict) -> None:
+    def save_initial_parameters(
+        self, grid: Grid, wfn: Wavefunction, parameters: dict
+    ) -> None:
         """Saves the initial grid, wavefunction and parameters to a HDF5 file.
 
         :param grid: The grid object of the system.
@@ -45,17 +47,17 @@ class DataManager:
         initial values.
         """
         if grid.ndim == 1:
-            with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as file:
+            with h5py.File(f"{self.data_path}/{self.filename}", "r+") as file:
                 file.create_dataset(dmp.GRID_NX, data=grid.num_points_x)
                 file.create_dataset(dmp.GRID_DX, data=grid.grid_spacing_x)
         elif grid.ndim == 2:
-            with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as file:
+            with h5py.File(f"{self.data_path}/{self.filename}", "r+") as file:
                 file.create_dataset(dmp.GRID_NX, data=grid.num_points_x)
                 file.create_dataset(dmp.GRID_NY, data=grid.num_points_y)
                 file.create_dataset(dmp.GRID_DX, data=grid.grid_spacing_x)
                 file.create_dataset(dmp.GRID_DY, data=grid.grid_spacing_y)
         elif grid.ndim == 3:
-            with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as file:
+            with h5py.File(f"{self.data_path}/{self.filename}", "r+") as file:
                 file.create_dataset(dmp.GRID_NX, data=grid.num_points_x)
                 file.create_dataset(dmp.GRID_NY, data=grid.num_points_y)
                 file.create_dataset(dmp.GRID_NZ, data=grid.num_points_z)
@@ -66,45 +68,77 @@ class DataManager:
     def _save_initial_wfn(self, wfn: Wavefunction) -> None:
         """Creates new datasets in file for the wavefunction."""
         if wfn.grid.ndim == 1:
-            with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as file:
-                file.create_dataset(dmp.SPIN2_WAVEFUNCTION_PLUS_TWO, (wfn.grid.shape, 1),
-                                    maxshape=(wfn.grid.shape, None),
-                                    dtype='complex128')
-                file.create_dataset(dmp.SPIN2_WAVEFUNCTION_PLUS_ONE, (wfn.grid.shape, 1),
-                                    maxshape=(wfn.grid.shape, None),
-                                    dtype='complex128')
-                file.create_dataset(dmp.SPIN2_WAVEFUNCTION_ZERO, (wfn.grid.shape, 1), maxshape=(wfn.grid.shape, None),
-                                    dtype='complex128')
-                file.create_dataset(dmp.SPIN2_WAVEFUNCTION_MINUS_ONE, (wfn.grid.shape, 1),
-                                    maxshape=(wfn.grid.shape, None),
-                                    dtype='complex128')
-                file.create_dataset(dmp.SPIN2_WAVEFUNCTION_MINUS_TWO, (wfn.grid.shape, 1),
-                                    maxshape=(wfn.grid.shape, None),
-                                    dtype='complex128')
+            with h5py.File(f"{self.data_path}/{self.filename}", "r+") as file:
+                file.create_dataset(
+                    dmp.SPIN2_WAVEFUNCTION_PLUS_TWO,
+                    (wfn.grid.shape, 1),
+                    maxshape=(wfn.grid.shape, None),
+                    dtype="complex128",
+                )
+                file.create_dataset(
+                    dmp.SPIN2_WAVEFUNCTION_PLUS_ONE,
+                    (wfn.grid.shape, 1),
+                    maxshape=(wfn.grid.shape, None),
+                    dtype="complex128",
+                )
+                file.create_dataset(
+                    dmp.SPIN2_WAVEFUNCTION_ZERO,
+                    (wfn.grid.shape, 1),
+                    maxshape=(wfn.grid.shape, None),
+                    dtype="complex128",
+                )
+                file.create_dataset(
+                    dmp.SPIN2_WAVEFUNCTION_MINUS_ONE,
+                    (wfn.grid.shape, 1),
+                    maxshape=(wfn.grid.shape, None),
+                    dtype="complex128",
+                )
+                file.create_dataset(
+                    dmp.SPIN2_WAVEFUNCTION_MINUS_TWO,
+                    (wfn.grid.shape, 1),
+                    maxshape=(wfn.grid.shape, None),
+                    dtype="complex128",
+                )
         else:
-            with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as file:
-                file.create_dataset(dmp.SPIN2_WAVEFUNCTION_PLUS_TWO, (*wfn.grid.shape, 1),
-                                    maxshape=(*wfn.grid.shape, None),
-                                    dtype='complex128')
-                file.create_dataset(dmp.SPIN2_WAVEFUNCTION_PLUS_ONE, (*wfn.grid.shape, 1),
-                                    maxshape=(*wfn.grid.shape, None),
-                                    dtype='complex128')
-                file.create_dataset(dmp.SPIN2_WAVEFUNCTION_ZERO, (*wfn.grid.shape, 1), maxshape=(*wfn.grid.shape, None),
-                                    dtype='complex128')
-                file.create_dataset(dmp.SPIN2_WAVEFUNCTION_MINUS_ONE, (*wfn.grid.shape, 1),
-                                    maxshape=(*wfn.grid.shape, None),
-                                    dtype='complex128')
-                file.create_dataset(dmp.SPIN2_WAVEFUNCTION_MINUS_TWO, (*wfn.grid.shape, 1),
-                                    maxshape=(*wfn.grid.shape, None),
-                                    dtype='complex128')
+            with h5py.File(f"{self.data_path}/{self.filename}", "r+") as file:
+                file.create_dataset(
+                    dmp.SPIN2_WAVEFUNCTION_PLUS_TWO,
+                    (*wfn.grid.shape, 1),
+                    maxshape=(*wfn.grid.shape, None),
+                    dtype="complex128",
+                )
+                file.create_dataset(
+                    dmp.SPIN2_WAVEFUNCTION_PLUS_ONE,
+                    (*wfn.grid.shape, 1),
+                    maxshape=(*wfn.grid.shape, None),
+                    dtype="complex128",
+                )
+                file.create_dataset(
+                    dmp.SPIN2_WAVEFUNCTION_ZERO,
+                    (*wfn.grid.shape, 1),
+                    maxshape=(*wfn.grid.shape, None),
+                    dtype="complex128",
+                )
+                file.create_dataset(
+                    dmp.SPIN2_WAVEFUNCTION_MINUS_ONE,
+                    (*wfn.grid.shape, 1),
+                    maxshape=(*wfn.grid.shape, None),
+                    dtype="complex128",
+                )
+                file.create_dataset(
+                    dmp.SPIN2_WAVEFUNCTION_MINUS_TWO,
+                    (*wfn.grid.shape, 1),
+                    maxshape=(*wfn.grid.shape, None),
+                    dtype="complex128",
+                )
 
     def _save_params(self, parameters: dict) -> None:
         """Creates new datasets in file for condensate & time parameters
         and saves initial values.
         """
-        with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as file:
+        with h5py.File(f"{self.data_path}/{self.filename}", "r+") as file:
             for key in parameters:
-                file.create_dataset(f'parameters/{key}', data=parameters[key])
+                file.create_dataset(f"parameters/{key}", data=parameters[key])
 
     def save_wavefunction(self, wfn: Wavefunction) -> None:
         """Saves the current wavefunction data to the dataset.
@@ -114,7 +148,7 @@ class DataManager:
         """
         wfn.ifft()  # Update real-space wavefunction before saving
         if wfn.grid.ndim == 1:
-            with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as data:
+            with h5py.File(f"{self.data_path}/{self.filename}", "r+") as data:
                 new_psi_plus2 = data[dmp.SPIN2_WAVEFUNCTION_PLUS_TWO]
                 new_psi_plus2.resize((wfn.grid.num_points_x, self._time_index + 1))
                 new_psi_plus2[:, self._time_index] = cp.asnumpy(wfn.plus2_component)
@@ -135,7 +169,7 @@ class DataManager:
                 new_psi_minus2.resize((wfn.grid.num_points_x, self._time_index + 1))
                 new_psi_minus2[:, self._time_index] = cp.asnumpy(wfn.minus2_component)
         else:
-            with h5py.File(f'{self.data_path}/{self.filename}', 'r+') as data:
+            with h5py.File(f"{self.data_path}/{self.filename}", "r+") as data:
                 new_psi_plus2 = data[dmp.SPIN2_WAVEFUNCTION_PLUS_TWO]
                 new_psi_plus2.resize((*wfn.grid.shape, self._time_index + 1))
                 new_psi_plus2[..., self._time_index] = cp.asnumpy(wfn.plus2_component)

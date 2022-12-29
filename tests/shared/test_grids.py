@@ -3,10 +3,9 @@ import pygpe.shared.grid as grid
 
 
 class TestGrid(unittest.TestCase):
-
     def test_correct_mesh_shape_1d(self):
         """
-        Tests to see whether meshgrids match the
+        Tests to see whether the meshgrid matches the
         shape of points passed in for a 1D grid.
         """
 
@@ -22,11 +21,11 @@ class TestGrid(unittest.TestCase):
         """
 
         grid1d = grid.Grid(64, 0.5)
-        self.assertEqual(grid1d.length_x, 32.)
+        self.assertEqual(grid1d.length_x, 32.0)
 
     def test_correct_mesh_shape_2d(self):
         """
-        Tests to see whether meshgrids match the
+        Tests to see whether the meshgrid matches the
         shape of points passed in for a 2D grid.
         """
 
@@ -44,8 +43,8 @@ class TestGrid(unittest.TestCase):
         """
 
         grid2d = grid.Grid((64, 64), (0.5, 0.5))
-        self.assertEqual(grid2d.length_x, 32.)
-        self.assertEqual(grid2d.length_y, 32.)
+        self.assertEqual(grid2d.length_x, 32.0)
+        self.assertEqual(grid2d.length_y, 32.0)
 
     def test_correct_fourier_shift_2d(self):
         """Tests to see whether Fourier space
@@ -61,7 +60,7 @@ class TestGrid(unittest.TestCase):
 
     def test_correct_mesh_shape_3d(self):
         """
-        Tests to see whether meshgrids match the
+        Tests to see whether the meshgrid matches the
         shape of points passed in for a 3D grid.
         """
 
@@ -81,6 +80,6 @@ class TestGrid(unittest.TestCase):
         """
 
         grid3d = grid.Grid((32, 32, 32), (0.5, 0.5, 0.5))
-        self.assertEqual(grid3d.length_x, 16.)
-        self.assertEqual(grid3d.length_y, 16.)
-        self.assertEqual(grid3d.length_z, 16.)
+        self.assertEqual(grid3d.length_x, 16.0)
+        self.assertEqual(grid3d.length_y, 16.0)
+        self.assertEqual(grid3d.length_z, 16.0)

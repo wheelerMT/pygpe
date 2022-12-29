@@ -5,7 +5,9 @@ from pygpe.shared.grid import Grid
 from pygpe.scalar.wavefunction import Wavefunction
 
 
-def generate_wavefunction2d(points: Tuple[int, int], grid_spacing: Tuple[float, float]) -> Wavefunction:
+def generate_wavefunction2d(
+    points: Tuple[int, int], grid_spacing: Tuple[float, float]
+) -> Wavefunction:
     """Generates and returns a Wavefunction2D object specified
 
     :param points: The number of grid points in the x and y dimension, respectively.
@@ -16,7 +18,6 @@ def generate_wavefunction2d(points: Tuple[int, int], grid_spacing: Tuple[float, 
 
 
 class TestWavefunction2D(unittest.TestCase):
-
     def test_set_wavefunction(self):
         """Tests whether the wavefunction array is set correctly."""
 
@@ -24,7 +25,7 @@ class TestWavefunction2D(unittest.TestCase):
         array = cp.ones((64, 64))
         wavefunction.set_wavefunction(array)
 
-        self.assertEqual(wavefunction.component.all(), 1.)
+        self.assertEqual(wavefunction.component.all(), 1.0)
 
     def test_adding_noise(self):
         """Tests whether adding noise to empty wavefunction correctly
@@ -33,7 +34,7 @@ class TestWavefunction2D(unittest.TestCase):
         wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
         wavefunction.add_noise(0, 1e-2)
 
-        self.assertNotEqual(wavefunction.component.all(), 0.)
+        self.assertNotEqual(wavefunction.component.all(), 0.0)
 
     def test_fft(self):
         """Tests whether performing a forward fft followed by an inverse
@@ -58,7 +59,7 @@ class TestWavefunction2D(unittest.TestCase):
     def test_phase(self):
         """Tests whether the specified phase gets applied correctly."""
         wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-        wavefunction.set_wavefunction(5 * cp.ones((64, 64), dtype='complex128'))
+        wavefunction.set_wavefunction(5 * cp.ones((64, 64), dtype="complex128"))
 
         phase = cp.random.uniform(0, 1, size=(64, 64))
         wavefunction.apply_phase(phase)

@@ -23,15 +23,15 @@ class Wavefunction:
     """
 
     def __init__(self, grid: Grid):
-        """Constructs the avefunction object."""
+        """Constructs the wavefunction object."""
         self.grid = grid
 
-        self.plus_component = cp.empty(grid.shape, dtype='complex128')
-        self.zero_component = cp.empty(grid.shape, dtype='complex128')
-        self.minus_component = cp.empty(grid.shape, dtype='complex128')
-        self.fourier_plus_component = cp.empty(grid.shape, dtype='complex128')
-        self.fourier_zero_component = cp.empty(grid.shape, dtype='complex128')
-        self.fourier_minus_component = cp.empty(grid.shape, dtype='complex128')
+        self.plus_component = cp.empty(grid.shape, dtype="complex128")
+        self.zero_component = cp.empty(grid.shape, dtype="complex128")
+        self.minus_component = cp.empty(grid.shape, dtype="complex128")
+        self.fourier_plus_component = cp.empty(grid.shape, dtype="complex128")
+        self.fourier_zero_component = cp.empty(grid.shape, dtype="complex128")
+        self.fourier_minus_component = cp.empty(grid.shape, dtype="complex128")
 
         self.atom_num_plus = 0
         self.atom_num_zero = 0
@@ -48,15 +48,19 @@ class Wavefunction:
             "polar": _polar_initial_state,
             "ferromagnetic": _ferromagnetic_initial_state,
             "antiferromagnetic": _antiferromagnetic_initial_state,
-            "BA": _broken_axisymmetry_initial_state
+            "BA": _broken_axisymmetry_initial_state,
         }
 
         ground_states[ground_state](self, params)
 
         self._update_atom_numbers()
 
-    def set_custom_components(self, plus_component: cp.ndarray = None, zero_component: cp.ndarray = None,
-                              minus_component: cp.ndarray = None) -> None:
+    def set_custom_components(
+        self,
+        plus_component: cp.ndarray = None,
+        zero_component: cp.ndarray = None,
+        minus_component: cp.ndarray = None,
+    ) -> None:
         """Sets the wavefunction components to the specified arrays.
 
         :param plus_component: Plus component of the wavefunction.
@@ -70,7 +74,9 @@ class Wavefunction:
         if minus_component is not None:
             self.minus_component = minus_component
 
-    def add_noise_to_components(self, components: str | list[str], mean: float, std_dev: float) -> None:
+    def add_noise_to_components(
+        self, components: str | list[str], mean: float, std_dev: float
+    ) -> None:
         """Adds noise to the specified wavefunction components
         using a normal distribution.
 
@@ -97,10 +103,13 @@ class Wavefunction:
         """Returns a ndarray of complex values containing results from
         a normal distribution.
         """
-        return cp.random.normal(mean, std_dev, size=self.grid.shape) + 1j * cp.random.normal(mean, std_dev,
-                                                                                             size=self.grid.shape)
+        return cp.random.normal(
+            mean, std_dev, size=self.grid.shape
+        ) + 1j * cp.random.normal(mean, std_dev, size=self.grid.shape)
 
-    def apply_phase(self, phase: cp.ndarray, components: str | list[str] = 'all') -> None:
+    def apply_phase(
+        self, phase: cp.ndarray, components: str | list[str] = "all"
+    ) -> None:
         """Applies a phase to specified components.
 
         :param phase: The phase to be applied.
@@ -109,28 +118,34 @@ class Wavefunction:
         if isinstance(components, list):
             for component in components:
                 self._apply_phase_to_component(phase, component)
-        elif components == 'all':
-            for component in ['plus', 'zero', 'minus']:
+        elif components == "all":
+            for component in ["plus", "zero", "minus"]:
                 self._apply_phase_to_component(phase, component)
         elif isinstance(components, str):
             self._apply_phase_to_component(phase, components)
         else:
-            raise ValueError(f'Components type {components} is unsupported')
+            raise ValueError(f"Components type {components} is unsupported")
 
     def _apply_phase_to_component(self, phase: cp.ndarray, component: str) -> None:
-        if component == 'plus':
+        if component == "plus":
             self.plus_component *= cp.exp(1j * phase)
-        elif component == 'zero':
+        elif component == "zero":
             self.zero_component *= cp.exp(1j * phase)
-        elif component == 'minus':
+        elif component == "minus":
             self.minus_component *= cp.exp(1j * phase)
         else:
-            raise ValueError(f'Component type {component} is unsupported')
+            raise ValueError(f"Component type {component} is unsupported")
 
     def _update_atom_numbers(self) -> None:
-        self.atom_num_plus = self.grid.grid_spacing_product * cp.sum(cp.abs(self.plus_component) ** 2)
-        self.atom_num_zero = self.grid.grid_spacing_product * cp.sum(cp.abs(self.zero_component) ** 2)
-        self.atom_num_minus = self.grid.grid_spacing_product * cp.sum(cp.abs(self.minus_component) ** 2)
+        self.atom_num_plus = self.grid.grid_spacing_product * cp.sum(
+            cp.abs(self.plus_component) ** 2
+        )
+        self.atom_num_zero = self.grid.grid_spacing_product * cp.sum(
+            cp.abs(self.zero_component) ** 2
+        )
+        self.atom_num_minus = self.grid.grid_spacing_product * cp.sum(
+            cp.abs(self.minus_component) ** 2
+        )
 
     def fft(self) -> None:
         """Fourier transforms real-space components and updates Fourier-space components."""
@@ -149,21 +164,29 @@ class Wavefunction:
 
         :return: Total condensate density.
         """
-        return cp.abs(self.plus_component) ** 2 + cp.abs(self.zero_component) ** 2 + cp.abs(self.minus_component) ** 2
+        return (
+            cp.abs(self.plus_component) ** 2
+            + cp.abs(self.zero_component) ** 2
+            + cp.abs(self.minus_component) ** 2
+        )
 
 
 def _polar_initial_state(wfn: Wavefunction, params: dict) -> None:
     """Sets wavefunction components to (easy-axis) polar state."""
-    wfn.plus_component = cp.zeros(wfn.grid.shape, dtype='complex128')
-    wfn.zero_component = cp.sqrt(params["n0"]) * cp.ones(wfn.grid.shape, dtype='complex128')
-    wfn.minus_component = cp.zeros(wfn.grid.shape, dtype='complex128')
+    wfn.plus_component = cp.zeros(wfn.grid.shape, dtype="complex128")
+    wfn.zero_component = cp.sqrt(params["n0"]) * cp.ones(
+        wfn.grid.shape, dtype="complex128"
+    )
+    wfn.minus_component = cp.zeros(wfn.grid.shape, dtype="complex128")
 
 
 def _ferromagnetic_initial_state(wfn: Wavefunction, params: dict) -> None:
     """Sets wavefunction components to ferromagnetic state."""
-    wfn.plus_component = cp.sqrt(params["n0"]) * cp.ones(wfn.grid.shape, dtype='complex128')
-    wfn.zero_component = cp.zeros(wfn.grid.shape, dtype='complex128')
-    wfn.minus_component = cp.zeros(wfn.grid.shape, dtype='complex128')
+    wfn.plus_component = cp.sqrt(params["n0"]) * cp.ones(
+        wfn.grid.shape, dtype="complex128"
+    )
+    wfn.zero_component = cp.zeros(wfn.grid.shape, dtype="complex128")
+    wfn.minus_component = cp.zeros(wfn.grid.shape, dtype="complex128")
 
 
 def _antiferromagnetic_initial_state(wfn: Wavefunction, params: dict) -> None:
@@ -172,9 +195,17 @@ def _antiferromagnetic_initial_state(wfn: Wavefunction, params: dict) -> None:
     c2 = params["c2"]  # Spin-dependent interaction strength
     n = params["n0"]
 
-    wfn.plus_component = cp.sqrt(n) * cp.sqrt((1 + p / c2) / 2) * cp.ones(wfn.grid.shape, dtype='complex128')
-    wfn.zero_component = cp.zeros(wfn.grid.shape, dtype='complex128')
-    wfn.minus_component = cp.sqrt(n) * cp.sqrt((1 - p / c2) / 2) * cp.ones(wfn.grid.shape, dtype='complex128')
+    wfn.plus_component = (
+        cp.sqrt(n)
+        * cp.sqrt((1 + p / c2) / 2)
+        * cp.ones(wfn.grid.shape, dtype="complex128")
+    )
+    wfn.zero_component = cp.zeros(wfn.grid.shape, dtype="complex128")
+    wfn.minus_component = (
+        cp.sqrt(n)
+        * cp.sqrt((1 - p / c2) / 2)
+        * cp.ones(wfn.grid.shape, dtype="complex128")
+    )
 
 
 def _broken_axisymmetry_initial_state(wfn: Wavefunction, params: dict) -> None:
@@ -184,10 +215,26 @@ def _broken_axisymmetry_initial_state(wfn: Wavefunction, params: dict) -> None:
     c2 = params["c2"]  # Spin-dependent interaction strength
     n = params["n0"]
 
-    wfn.plus_component = cp.sqrt(n) * (q + p) / (2 * q) * cp.sqrt(
-        (-p ** 2 + q ** 2 + 2 * c2 * n * q) / (2 * c2 * n * q)) * cp.ones(wfn.grid.shape, dtype='complex128')
-    wfn.zero_component = cp.sqrt(n) * cp.sqrt(
-        (q ** 2 - p ** 2) * (-p ** 2 - q ** 2 + 2 * c2 * n * q) / (4 * c2 * n * q ** 3)) * cp.ones(wfn.grid.shape,
-                                                                                                   dtype='complex128')
-    wfn.minus_component = cp.sqrt(n) * (q - p) / (2 * q) * cp.sqrt(
-        (-p ** 2 + q ** 2 + 2 * c2 * n * q) / (2 * c2 * n * q)) * cp.ones(wfn.grid.shape, dtype='complex128')
+    wfn.plus_component = (
+        cp.sqrt(n)
+        * (q + p)
+        / (2 * q)
+        * cp.sqrt((-(p**2) + q**2 + 2 * c2 * n * q) / (2 * c2 * n * q))
+        * cp.ones(wfn.grid.shape, dtype="complex128")
+    )
+    wfn.zero_component = (
+        cp.sqrt(n)
+        * cp.sqrt(
+            (q**2 - p**2)
+            * (-(p**2) - q**2 + 2 * c2 * n * q)
+            / (4 * c2 * n * q**3)
+        )
+        * cp.ones(wfn.grid.shape, dtype="complex128")
+    )
+    wfn.minus_component = (
+        cp.sqrt(n)
+        * (q - p)
+        / (2 * q)
+        * cp.sqrt((-(p**2) + q**2 + 2 * c2 * n * q) / (2 * c2 * n * q))
+        * cp.ones(wfn.grid.shape, dtype="complex128")
+    )

@@ -13,12 +13,15 @@ def _generate_positions(grid: Grid, num_vortices: int, threshold: float) -> iter
     iterations = 0
     while len(vortex_positions) < num_vortices:
         if iterations > max_iter:
-            print(f"WARNING: Number of iterations exceeded maximum, "
-                  f"returning with only {len(vortex_positions)} positions\n")
+            print(
+                f"WARNING: Number of iterations exceeded maximum, "
+                f"returning with only {len(vortex_positions)} positions\n"
+            )
             return vortex_positions
 
-        position = np.random.uniform(-grid.length_x / 2, grid.length_x / 2), \
-                   np.random.uniform(-grid.length_y / 2, grid.length_y / 2)
+        position = np.random.uniform(
+            -grid.length_x / 2, grid.length_x / 2
+        ), np.random.uniform(-grid.length_y / 2, grid.length_y / 2)
 
         if _position_sufficiently_far(position, vortex_positions, threshold):
             vortex_positions.append(position)
@@ -29,7 +32,9 @@ def _generate_positions(grid: Grid, num_vortices: int, threshold: float) -> iter
     return iter(vortex_positions)
 
 
-def _position_sufficiently_far(position: tuple, accepted_positions: list[tuple], threshold: float) -> bool:
+def _position_sufficiently_far(
+    position: tuple, accepted_positions: list[tuple], threshold: float
+) -> bool:
     """Tests that the given `position` is at least `threshold` away from all the positions
     currently in `accepted_positions`.
     """
@@ -62,12 +67,16 @@ def vortex_phase_profile(grid: Grid, num_vortices: int, threshold: float) -> np.
     """
     vortex_positions_iter = _generate_positions(grid, num_vortices, threshold)
 
-    phase = np.zeros((grid.num_points_x, grid.num_points_y), dtype='float32')
+    phase = np.zeros((grid.num_points_x, grid.num_points_y), dtype="float32")
 
     for _ in range(num_vortices // 2):
-        phase_temp = np.zeros((grid.num_points_x, grid.num_points_y), dtype='float32')
-        x_pos_minus, y_pos_minus = next(vortex_positions_iter)  # Negative circulation vortex
-        x_pos_plus, y_pos_plus = next(vortex_positions_iter)  # Positive circulation vortex
+        phase_temp = np.zeros((grid.num_points_x, grid.num_points_y), dtype="float32")
+        x_pos_minus, y_pos_minus = next(
+            vortex_positions_iter
+        )  # Negative circulation vortex
+        x_pos_plus, y_pos_plus = next(
+            vortex_positions_iter
+        )  # Positive circulation vortex
 
         # Aux variables
         y_minus = 2 * np.pi / grid.length_y * (grid.y_mesh - y_pos_minus)
@@ -79,11 +88,24 @@ def vortex_phase_profile(grid: Grid, num_vortices: int, threshold: float) -> np.
         heaviside_x_minus = _heaviside(x_minus)
 
         for nn in np.arange(-5, 6):
-            phase_temp += np.arctan(np.tanh((y_minus + 2 * np.pi * nn) / 2) * np.tan((x_minus - np.pi) / 2)) \
-                          - np.arctan(np.tanh((y_plus + 2 * np.pi * nn) / 2) * np.tan((x_plus - np.pi) / 2)) \
-                          + np.pi * (heaviside_x_plus - heaviside_x_minus)
-        phase_temp -= 2 * np.pi * (grid.y_mesh - grid.y_mesh.min()) \
-                      * (x_pos_plus - x_pos_minus) / (grid.length_y * grid.length_x)
+            phase_temp += (
+                np.arctan(
+                    np.tanh((y_minus + 2 * np.pi * nn) / 2)
+                    * np.tan((x_minus - np.pi) / 2)
+                )
+                - np.arctan(
+                    np.tanh((y_plus + 2 * np.pi * nn) / 2)
+                    * np.tan((x_plus - np.pi) / 2)
+                )
+                + np.pi * (heaviside_x_plus - heaviside_x_minus)
+            )
+        phase_temp -= (
+            2
+            * np.pi
+            * (grid.y_mesh - grid.y_mesh.min())
+            * (x_pos_plus - x_pos_minus)
+            / (grid.length_y * grid.length_x)
+        )
         phase += phase_temp
 
     return phase

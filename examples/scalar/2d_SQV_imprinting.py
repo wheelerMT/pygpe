@@ -11,22 +11,18 @@ grid = gpe.Grid(points, grid_spacings)
 
 # Set up initial wavefunction with uniform density
 psi = gpe.Wavefunction(grid)
-psi.set_wavefunction(cp.ones(grid.shape, dtype='complex128'))
-psi.add_noise(mean=0., std_dev=1e-2)  # Add noise to wavefunction
+psi.set_wavefunction(cp.ones(grid.shape, dtype="complex128"))
+psi.add_noise(mean=0.0, std_dev=1e-2)  # Add noise to wavefunction
 
 # Generate phase that contains 100 phase windings spaced at least 1 spatial unit apart
-phase = vortex_phase_profile(grid, 100, 1.)
+phase = vortex_phase_profile(grid, 100, 1.0)
 psi.apply_phase(cp.asarray(phase))  # Apply phase to wavefunction
 
 # Define condensate parameters
-params = {"g": 1,
-          "trap": 0,
-          "nt": 1000,
-          "dt": -1j * 1e-2,
-          "t": 0}
+params = {"g": 1, "trap": 0, "nt": 1000, "dt": -1j * 1e-2, "t": 0}
 
 # Create DataManager
-data = gpe.DataManager('scalar_data.hdf5', '../../data/')
+data = gpe.DataManager("scalar_data.hdf5", "../../data/")
 data.save_initial_parameters(grid, psi, params)
 
 psi.fft()  # FFT to ensure k-space wavefunction is up-to-date
