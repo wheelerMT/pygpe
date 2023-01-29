@@ -10,5 +10,6 @@ For more information on HDF5 and how it works, see their `website <https://www.h
     :maxdepth: 1
 
     datamanager.scalar
+    datamanager.spinhalf
     datamanager.spinone
     datamanager.spintwo
