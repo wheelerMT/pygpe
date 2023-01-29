@@ -19,6 +19,10 @@ PARAMETERS = "parameters"
 # Scalar wavefunction
 SCALAR_WAVEFUNCTION = "wavefunction"
 
+# Spin-1/2 wavefunction
+SPINHALF_WAVEFUNCTION_PLUS = "wavefunction/psi_plus"
+SPINHALF_WAVEFUNCTION_MINUS = "wavefunction/psi_minus"
+
 # Spin-1 wavefunction
 SPIN1_WAVEFUNCTION_PLUS = "wavefunction/psi_plus"
 SPIN1_WAVEFUNCTION_ZERO = "wavefunction/psi_zero"
