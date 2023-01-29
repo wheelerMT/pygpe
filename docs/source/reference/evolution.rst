@@ -14,5 +14,6 @@ See the respective pages below for details on the implementation.
     :maxdepth: 1
 
     evolution.scalar
+    evolution.spinhalf
     evolution.spinone
     evolution.spintwo
