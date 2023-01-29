@@ -10,5 +10,6 @@ There are subtle differences between the wavefunction classes for different BEC 
     :maxdepth: 1
 
     wavefunction.scalar
+    wavefunction.spinhalf
     wavefunction.spinone
     wavefunction.spintwo
