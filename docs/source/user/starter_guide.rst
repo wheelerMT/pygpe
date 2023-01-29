@@ -45,6 +45,8 @@ The table below lists the system types and their respective import statements
       - Import statement
     * - Scalar BEC
       - :code:`import pygpe.scalar`
+    * - Two-component BEC
+      - :code:`import pygpe.spinhalf`
     * - Spin-1 BEC
       - :code:`import pygpe.spinone`
     * - Spin-2 BEC
