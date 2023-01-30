@@ -38,7 +38,7 @@ The parameters required for the scalar system are in the table below
       - Current simulation time
 
 Two-component dictionary
-=================
+========================
 The parameters required for the two-component system are in the table below
 
 .. list-table:: Two-component system parameters
