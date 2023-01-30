@@ -18,7 +18,7 @@ Bose-Einstein condensate systems.
 
 ### Requirements
 
-- Python (3.9 and above),
+- Python (3.10 and above),
 - [h5py](https://github.com/h5py/h5py) (>=3.6.0),
 - CUDA Toolkit (>=11.2)
 - [CuPy](https://github.com/cupy/cupy) (>=10.2.0).

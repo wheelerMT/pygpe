@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pygpe"
-version = "1.0.2"
+version = "1.1.0"
 description = "A fast Gross-Pitaevskii equation solver for scalar, spin-1 and spin-2 BEC systems."
 readme = "docs/pypi.md"
 authors = [{ name = "Matt Wheeler", email = "mattwheeler15@hotmail.co.uk" }]
@@ -19,16 +19,16 @@ dependencies = [
     "cupy-cuda11x",
     "h5py"
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 
 [project.urls]
 Homepage = "https://github.com/wheelerMT/pygpe"
 
 [tool.setuptools]
-packages = ["pygpe", "pygpe.shared", "pygpe.scalar", "pygpe.spinone", "pygpe.spintwo"]
+packages = ["pygpe", "pygpe.shared", "pygpe.scalar", "pygpe.spinhalf", "pygpe.spinone", "pygpe.spintwo"]
 
 [tool.bumpver]
-current_version = "1.0.2"
+current_version = "1.1.0"
 version_pattern = "MAJOR.MINOR.PATCH"
 commit_message = "bump version {old_version} -> {new_version}"
 commit = true
