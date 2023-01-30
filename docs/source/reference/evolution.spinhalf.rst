@@ -1,7 +1,7 @@
 .. currentmodule:: pygpe.spinhalf.evolution
 
 Two-component BEC evolution functions
-==============================
+=====================================
 
 The evolution of the condensate is handle by one simple function
 

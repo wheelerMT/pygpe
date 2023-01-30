@@ -1,7 +1,7 @@
 .. currentmodule:: pygpe.spinhalf.data_manager
 
 Two-component BEC DataManager
-======================
+=============================
 
 The two-component BEC DataManager handles the wavefunction, grid, and parameter data of the simulation.
 To instantiate a DataManager object we simply call the constructor

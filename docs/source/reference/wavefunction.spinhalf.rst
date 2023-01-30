@@ -1,7 +1,7 @@
 .. currentmodule:: pygpe.spinhalf.wavefunction
 
 Two-component BEC wavefunction
-=======================
+==============================
 
 The two-component BEC wavefunction class contains the wavefunction arrays plus an assortment of useful functions for
 manipulating and using the wavefunction.
