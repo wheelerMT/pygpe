@@ -75,8 +75,7 @@ class Wavefunction:
         """Applies a given phase to the specified condensate components.
 
         :param phase: Array containing the required phase.
-        :param components: "plus", "minus", or "all". String specifying which component(s)
-        to apply the phase to.
+        :param components: "plus", "minus", or "all". String specifying which component(s) to apply the phase to.
         """
         match components:
             case "plus":
