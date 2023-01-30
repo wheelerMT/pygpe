@@ -14,7 +14,7 @@ PyGPE is a Python library for simulating the dynamics of Bose-Einstein condensat
 It offers an intuitive :doc:`reference/wavefunction` class for managing and manipulating the wavefunction of the system.
 What's more, the evolution of the Gross-Pitaevskii equations is handled using CuPy, making PyGPE extremely fast at
 simulating dynamics.
-PyGPE currently supports scalar, spin-1 and spin-2 systems.
+PyGPE currently supports scalar, two-component, spin-1 and spin-2 systems.
 
 .. grid:: 2
 

@@ -11,7 +11,7 @@ Bose-Einstein condensate systems.
 
 ### Supported features
 
-- Scalar, spin-1, and spin-2 BEC systems.
+- Scalar, two-component, spin-1, and spin-2 BEC systems.
 - 1D, 2D, and 3D grid lattices.
 - HDF5 data saving system.
 - Method for generating vortices within the system.
