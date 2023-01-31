@@ -107,12 +107,15 @@ def test_adding_noise_outer():
     makes those components non-zero.
     """
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+    zeros = cp.zeros(wavefunction.grid.shape, dtype='complex128')
+    wavefunction.set_custom_components(cp.zeros_like(zeros), cp.zeros_like(zeros), cp.zeros_like(zeros))
     wavefunction.add_noise_to_components("outer", 0, 1e-2)
 
     with pytest.raises(AssertionError):
         cp.testing.assert_array_equal(
             wavefunction.plus_component, cp.zeros(wavefunction.grid.shape)
         )
+    with pytest.raises(AssertionError):
         cp.testing.assert_array_equal(
             wavefunction.minus_component, cp.zeros(wavefunction.grid.shape)
         )
@@ -123,27 +126,49 @@ def test_adding_noise_all():
     makes them non-zero.
     """
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+    zeros = cp.zeros(wavefunction.grid.shape, dtype='complex128')
+    wavefunction.set_custom_components(cp.zeros_like(zeros), cp.zeros_like(zeros), cp.zeros_like(zeros))
     wavefunction.add_noise_to_components("all", 0, 1e-2)
 
     with pytest.raises(AssertionError):
         cp.testing.assert_array_equal(
             wavefunction.plus_component, cp.zeros(wavefunction.grid.shape)
         )
+    with pytest.raises(AssertionError):
         cp.testing.assert_array_equal(
             wavefunction.zero_component, cp.zeros(wavefunction.grid.shape)
         )
+    with pytest.raises(AssertionError):
         cp.testing.assert_array_equal(
             wavefunction.minus_component, cp.zeros(wavefunction.grid.shape)
         )
 
 
-def test_adding_noise_middle():
+def test_adding_noise_zero():
     """Tests whether adding noise to the middle component correctly
     makes it non-zero.
     """
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-    wavefunction.add_noise_to_components("middle", 0, 1e-2)
+    zeros = cp.zeros(wavefunction.grid.shape, dtype='complex128')
+    wavefunction.set_custom_components(cp.zeros_like(zeros), cp.zeros_like(zeros), cp.zeros_like(zeros))
+    wavefunction.add_noise_to_components("zero", 0, 1e-2)
 
+    with pytest.raises(AssertionError):
+        cp.testing.assert_array_equal(
+            wavefunction.zero_component, cp.zeros(wavefunction.grid.shape)
+        )
+
+
+def test_adding_noise_list():
+    wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+    zeros = cp.zeros(wavefunction.grid.shape, dtype='complex128')
+    wavefunction.set_custom_components(cp.zeros_like(zeros), cp.zeros_like(zeros), cp.zeros_like(zeros))
+    wavefunction.add_noise_to_components(["plus", "zero"], 0, 1e-2)
+
+    with pytest.raises(AssertionError):
+        cp.testing.assert_array_equal(
+            wavefunction.plus_component, cp.zeros(wavefunction.grid.shape)
+        )
     with pytest.raises(AssertionError):
         cp.testing.assert_array_equal(
             wavefunction.zero_component, cp.zeros(wavefunction.grid.shape)
