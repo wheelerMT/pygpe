@@ -2,7 +2,7 @@ import numpy as np
 import cupy as cp
 
 
-def _check_valid_tuple(points: tuple, grid_spacings: tuple):
+def _check_valid_tuple(points: tuple, grid_spacings: tuple) -> None:
     if len(points) != len(grid_spacings):
         raise ValueError(f"{points} and {grid_spacings} are not of same length")
     if len(points) > 3:
