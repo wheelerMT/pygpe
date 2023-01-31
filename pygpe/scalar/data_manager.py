@@ -1,3 +1,5 @@
+import warnings
+
 import h5py
 import cupy as cp
 from pygpe.shared.grid import Grid
@@ -38,6 +40,8 @@ class DataManager:
         :param parameters: The parameter dictionary.
         :type parameters: dict
         """
+        if grid.ndim > 3 or grid.ndim < 1:
+            raise ValueError(f"Grid with dimension of {grid.ndim} is unsupported, please use a 1D, 2D, or 3D grid.")
         self._save_grid_params(grid)
         self._save_initial_wfn(wfn)
         self._save_params(parameters)
