@@ -80,24 +80,39 @@ class Wavefunction:
         """Adds noise to the specified wavefunction components
         using a normal distribution.
 
-        :param components: "outer" or "all": The components to add noise to.
+        :param components: "all", "outer", "plus", "zero", "minus", or list of strings specifying the
+        required components to add noise to.
         :param mean: The mean of the normal distribution.
         :param std_dev: The standard deviation of the normal distribution.
         """
-
-        if components.lower() == "outer":
-            self.plus_component += self._generate_complex_normal_dist(mean, std_dev)
-            self.minus_component += self._generate_complex_normal_dist(mean, std_dev)
-        elif components.lower() == "all":
-            self.plus_component += self._generate_complex_normal_dist(mean, std_dev)
-            self.zero_component += self._generate_complex_normal_dist(mean, std_dev)
-            self.minus_component += self._generate_complex_normal_dist(mean, std_dev)
-        elif components.lower() == "middle":
-            self.zero_component += self._generate_complex_normal_dist(mean, std_dev)
-        else:
-            raise ValueError(f"{components} is not a supported configuration")
+        match components:
+            case [*_]:
+                for component in components:
+                    self._add_noise_to_components(component, mean, std_dev)
+            case "outer":
+                for component in ["plus", "minus"]:
+                    self._add_noise_to_components(component, mean, std_dev)
+            case "all":
+                for component in ["plus", "zero", "minus"]:
+                    self._add_noise_to_components(component, mean, std_dev)
+            case str(component):
+                self._add_noise_to_components(component, mean, std_dev)
+            case _:
+                raise ValueError(f"{components} is not a supported configuration")
 
         self._update_atom_numbers()
+
+    def _add_noise_to_components(self, component: str, mean: float, std_dev: float) -> None:
+        """Adds noise from drawn from a normal distribution to the specified component."""
+        match component.lower():
+            case "plus":
+                self.plus_component += self._generate_complex_normal_dist(mean, std_dev)
+            case "zero":
+                self.zero_component += self._generate_complex_normal_dist(mean, std_dev)
+            case "minus":
+                self.minus_component += self._generate_complex_normal_dist(mean, std_dev)
+            case _:
+                raise ValueError(f"{component} is not a supported configuration")
 
     def _generate_complex_normal_dist(self, mean: float, std_dev: float) -> cp.ndarray:
         """Returns a ndarray of complex values containing results from
@@ -115,26 +130,29 @@ class Wavefunction:
         :param phase: The phase to be applied.
         :param components: "all", "plus", "zero", "minus" or a list of strings specifying the required components.
         """
-        if isinstance(components, list):
-            for component in components:
+        match components:
+            case [*_]:
+                for component in components:
+                    self._apply_phase_to_component(phase, component)
+            case "all":
+                for component in ["plus", "zero", "minus"]:
+                    self._apply_phase_to_component(phase, component)
+            case str(component):
                 self._apply_phase_to_component(phase, component)
-        elif components == "all":
-            for component in ["plus", "zero", "minus"]:
-                self._apply_phase_to_component(phase, component)
-        elif isinstance(components, str):
-            self._apply_phase_to_component(phase, components)
-        else:
-            raise ValueError(f"Components type {components} is unsupported")
+            case _:
+                raise ValueError(f"Components type {components} is unsupported")
 
     def _apply_phase_to_component(self, phase: cp.ndarray, component: str) -> None:
-        if component == "plus":
-            self.plus_component *= cp.exp(1j * phase)
-        elif component == "zero":
-            self.zero_component *= cp.exp(1j * phase)
-        elif component == "minus":
-            self.minus_component *= cp.exp(1j * phase)
-        else:
-            raise ValueError(f"Component type {component} is unsupported")
+        """Applies the specified phase to the specified component."""
+        match component.lower():
+            case "plus":
+                self.plus_component *= cp.exp(1j * phase)
+            case "zero":
+                self.zero_component *= cp.exp(1j * phase)
+            case "minus":
+                self.minus_component *= cp.exp(1j * phase)
+            case _:
+                raise ValueError(f"Component type {component} is unsupported")
 
     def _update_atom_numbers(self) -> None:
         self.atom_num_plus = self.grid.grid_spacing_product * cp.sum(
