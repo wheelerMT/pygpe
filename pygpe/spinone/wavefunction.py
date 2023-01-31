@@ -81,7 +81,7 @@ class Wavefunction:
         using a normal distribution.
 
         :param components: "all", "outer", "plus", "zero", "minus", or list of strings specifying the
-        required components to add noise to.
+            required components to add noise to.
         :param mean: The mean of the normal distribution.
         :param std_dev: The standard deviation of the normal distribution.
         """
