@@ -1,4 +1,5 @@
 import pygpe.shared.grid as grid
+import pytest
 
 
 def test_correct_mesh_shape_1d():
@@ -89,3 +90,13 @@ def test_correct_lengths_3d():
     assert grid3d.length_x == 16.0
     assert grid3d.length_y == 16.0
     assert grid3d.length_z == 16.0
+
+
+def test_handles_incorrect_dimension():
+    with pytest.raises(ValueError):
+        grid.Grid((64, 64, 64, 64), (0.5, 0.5, 0.5, 0.5))
+
+
+def test_handles_incorrect_type_1d():
+    with pytest.raises(ValueError):
+        grid.Grid(64.0, 0.5)

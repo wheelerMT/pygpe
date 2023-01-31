@@ -2,6 +2,16 @@ import numpy as np
 import cupy as cp
 
 
+def _check_valid_tuple(points: tuple, grid_spacings: tuple):
+    if len(points) != len(grid_spacings):
+        raise ValueError(f"{points} and {grid_spacings} are not of same length")
+    if len(points) > 3:
+        raise ValueError(f"{points} is not a valid dimensionality")
+    for point in points:
+        if not isinstance(point, int):
+            raise ValueError(f"{points} contains non-integer values")
+
+
 class Grid:
     """An object representing the numerical grid.
     It contains information on the number of grid points, the shape, the dimensionality, and lengths of the grid.
@@ -43,17 +53,17 @@ class Grid:
 
         self.shape = points
         if isinstance(points, tuple):
-            if len(points) != len(grid_spacings):
-                raise ValueError(f"{points} and {grid_spacings} are not of same length")
-            if len(points) > 3:
-                raise ValueError(f"{points} is not a valid dimensionality")
+            _check_valid_tuple(points, grid_spacings)
+
             self.ndim = len(points)
             self.total_num_points = 1
             for point in points:
                 self.total_num_points *= point
-        else:
+        elif isinstance(points, int):
             self.ndim = 1
             self.total_num_points = points
+        else:
+            raise ValueError(f"{points} is of unsupported type. Use int or tuple of ints.")
 
         if self.ndim == 1:
             self._generate_1d_grids(points, grid_spacings)
