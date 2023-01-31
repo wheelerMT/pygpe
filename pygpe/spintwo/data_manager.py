@@ -46,18 +46,16 @@ class DataManager:
         """Creates new datasets in file for grid-related parameters and saves
         initial values.
         """
-        if grid.ndim == 1:
-            with h5py.File(f"{self.data_path}/{self.filename}", "r+") as file:
+        with h5py.File(f"{self.data_path}/{self.filename}", "r+") as file:
+            if grid.ndim == 1:
                 file.create_dataset(dmp.GRID_NX, data=grid.num_points_x)
                 file.create_dataset(dmp.GRID_DX, data=grid.grid_spacing_x)
-        elif grid.ndim == 2:
-            with h5py.File(f"{self.data_path}/{self.filename}", "r+") as file:
+            elif grid.ndim == 2:
                 file.create_dataset(dmp.GRID_NX, data=grid.num_points_x)
                 file.create_dataset(dmp.GRID_NY, data=grid.num_points_y)
                 file.create_dataset(dmp.GRID_DX, data=grid.grid_spacing_x)
                 file.create_dataset(dmp.GRID_DY, data=grid.grid_spacing_y)
-        elif grid.ndim == 3:
-            with h5py.File(f"{self.data_path}/{self.filename}", "r+") as file:
+            elif grid.ndim == 3:
                 file.create_dataset(dmp.GRID_NX, data=grid.num_points_x)
                 file.create_dataset(dmp.GRID_NY, data=grid.num_points_y)
                 file.create_dataset(dmp.GRID_NZ, data=grid.num_points_z)
@@ -67,8 +65,8 @@ class DataManager:
 
     def _save_initial_wfn(self, wfn: Wavefunction) -> None:
         """Creates new datasets in file for the wavefunction."""
-        if wfn.grid.ndim == 1:
-            with h5py.File(f"{self.data_path}/{self.filename}", "r+") as file:
+        with h5py.File(f"{self.data_path}/{self.filename}", "r+") as file:
+            if wfn.grid.ndim == 1:
                 file.create_dataset(
                     dmp.SPIN2_WAVEFUNCTION_PLUS_TWO,
                     (wfn.grid.shape, 1),
@@ -99,8 +97,7 @@ class DataManager:
                     maxshape=(wfn.grid.shape, None),
                     dtype="complex128",
                 )
-        else:
-            with h5py.File(f"{self.data_path}/{self.filename}", "r+") as file:
+            else:
                 file.create_dataset(
                     dmp.SPIN2_WAVEFUNCTION_PLUS_TWO,
                     (*wfn.grid.shape, 1),
@@ -147,8 +144,8 @@ class DataManager:
         :type wfn: :class:`Wavefunction`
         """
         wfn.ifft()  # Update real-space wavefunction before saving
-        if wfn.grid.ndim == 1:
-            with h5py.File(f"{self.data_path}/{self.filename}", "r+") as data:
+        with h5py.File(f"{self.data_path}/{self.filename}", "r+") as data:
+            if wfn.grid.ndim == 1:
                 new_psi_plus2 = data[dmp.SPIN2_WAVEFUNCTION_PLUS_TWO]
                 new_psi_plus2.resize((wfn.grid.num_points_x, self._time_index + 1))
                 new_psi_plus2[:, self._time_index] = cp.asnumpy(wfn.plus2_component)
@@ -168,8 +165,7 @@ class DataManager:
                 new_psi_minus2 = data[dmp.SPIN2_WAVEFUNCTION_MINUS_TWO]
                 new_psi_minus2.resize((wfn.grid.num_points_x, self._time_index + 1))
                 new_psi_minus2[:, self._time_index] = cp.asnumpy(wfn.minus2_component)
-        else:
-            with h5py.File(f"{self.data_path}/{self.filename}", "r+") as data:
+            else:
                 new_psi_plus2 = data[dmp.SPIN2_WAVEFUNCTION_PLUS_TWO]
                 new_psi_plus2.resize((*wfn.grid.shape, self._time_index + 1))
                 new_psi_plus2[..., self._time_index] = cp.asnumpy(wfn.plus2_component)
