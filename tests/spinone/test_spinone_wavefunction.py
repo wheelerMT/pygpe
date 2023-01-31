@@ -6,7 +6,7 @@ from pygpe.spinone.wavefunction import Wavefunction
 
 
 def generate_wavefunction2d(
-    points: Tuple[int, int], grid_spacing: Tuple[float, float]
+        points: Tuple[int, int], grid_spacing: Tuple[float, float]
 ) -> Wavefunction:
     """Generates and returns a Wavefunction2D object specified
 
@@ -160,6 +160,8 @@ def test_adding_noise_zero():
 
 
 def test_adding_noise_list():
+    """Tests whether adding noise to specified components given as a list
+    correctly makes those components non-zero."""
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
     zeros = cp.zeros(wavefunction.grid.shape, dtype='complex128')
     wavefunction.set_custom_components(cp.zeros_like(zeros), cp.zeros_like(zeros), cp.zeros_like(zeros))
