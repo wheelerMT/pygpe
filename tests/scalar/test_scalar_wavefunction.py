@@ -10,8 +10,10 @@ def generate_wavefunction2d(
 ) -> Wavefunction:
     """Generates and returns a Wavefunction2D object specified
 
-    :param points: The number of grid points in the x and y dimension, respectively.
-    :param grid_spacing: The spacing of grid points in the x and y dimension, respectively.
+    :param points: The number of grid points in the x and y dimension,
+        respectively.
+    :param grid_spacing: The spacing of grid points in the x and y dimension,
+        respectively.
     :return: The Wavefunction2D object.
     """
     return Wavefunction(Grid(points, grid_spacing))
@@ -59,7 +61,9 @@ def test_density():
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
     wavefunction.set_wavefunction(5 * cp.ones((64, 64)))
 
-    cp.testing.assert_array_equal(wavefunction.density(), 25 * cp.ones((64, 64)))
+    cp.testing.assert_array_equal(
+        wavefunction.density(), 25 * cp.ones((64, 64))
+    )
 
 
 def test_phase():

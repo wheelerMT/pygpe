@@ -4,8 +4,8 @@ import cupy as cp
 
 class Wavefunction:
     """Represents the spin-2 BEC wavefunction.
-    This class contains the wavefunction arrays, in addition to various useful functions for manipulating and using the
-    wavefunction.
+    This class contains the wavefunction arrays, in addition to various useful
+    functions for manipulating and using the wavefunction.
 
     :param grid: The numerical grid.
     :type grid: :class:`Grid`
@@ -40,8 +40,12 @@ class Wavefunction:
         self.fourier_plus2_component = cp.empty(grid.shape, dtype="complex128")
         self.fourier_plus1_component = cp.empty(grid.shape, dtype="complex128")
         self.fourier_zero_component = cp.empty(grid.shape, dtype="complex128")
-        self.fourier_minus1_component = cp.empty(grid.shape, dtype="complex128")
-        self.fourier_minus2_component = cp.empty(grid.shape, dtype="complex128")
+        self.fourier_minus1_component = cp.empty(
+            grid.shape, dtype="complex128"
+        )
+        self.fourier_minus2_component = cp.empty(
+            grid.shape, dtype="complex128"
+        )
 
         self.atom_num_plus2 = 0
         self.atom_num_plus1 = 0
@@ -53,7 +57,8 @@ class Wavefunction:
         """Sets the components of the wavefunction according to
         the ground state we wish to be in.
 
-        :param ground_state: "UN", "BN", "F2p", "F2m", "F1p", "F1m" or "cyclic".
+        :param ground_state: "UN", "BN", "F2p", "F2m", "F1p", "F1m" or
+            "cyclic".
         :param params: Dictionary containing condensate parameters.
         """
         ground_states = {
@@ -71,12 +76,12 @@ class Wavefunction:
         self._update_atom_numbers()
 
     def set_custom_components(
-            self,
-            plus2_component: cp.ndarray = None,
-            plus1_component: cp.ndarray = None,
-            zero_component: cp.ndarray = None,
-            minus1_component: cp.ndarray = None,
-            minus2_component: cp.ndarray = None,
+        self,
+        plus2_component: cp.ndarray = None,
+        plus1_component: cp.ndarray = None,
+        zero_component: cp.ndarray = None,
+        minus1_component: cp.ndarray = None,
+        minus2_component: cp.ndarray = None,
     ) -> None:
         """Sets the wavefunction components to the specified arrays.
 
@@ -98,7 +103,7 @@ class Wavefunction:
             self.minus2_component = minus2_component
 
     def add_noise_to_components(
-            self, components: str | list[str], mean: float, std_dev: float
+        self, components: str | list[str], mean: float, std_dev: float
     ) -> None:
         """Adds noise to the specified wavefunction components
         using a normal distribution.
@@ -113,32 +118,58 @@ class Wavefunction:
                 for component in components:
                     self._add_noise_to_components(component, mean, std_dev)
             case "all":
-                for component in ["plus2", "plus1", "zero", "minus1", "minus2"]:
+                for component in [
+                    "plus2",
+                    "plus1",
+                    "zero",
+                    "minus1",
+                    "minus2",
+                ]:
                     self._add_noise_to_components(component, mean, std_dev)
             case str(component):
                 self._add_noise_to_components(component, mean, std_dev)
             case _:
-                raise ValueError(f"{components} is not a supported configuration")
+                raise ValueError(
+                    f"{components} is not a supported configuration"
+                )
 
         self._update_atom_numbers()
 
-    def _add_noise_to_components(self, component: str, mean: float, std_dev: float) -> None:
-        """Adds noise from drawn from a normal distribution to the specified component."""
+    def _add_noise_to_components(
+        self, component: str, mean: float, std_dev: float
+    ) -> None:
+        """Adds noise from drawn from a normal distribution to the specified
+        component.
+        """
         match component.lower():
             case "plus2":
-                self.plus2_component += self._generate_complex_normal_dist(mean, std_dev)
+                self.plus2_component += self._generate_complex_normal_dist(
+                    mean, std_dev
+                )
             case "plus1":
-                self.plus1_component += self._generate_complex_normal_dist(mean, std_dev)
+                self.plus1_component += self._generate_complex_normal_dist(
+                    mean, std_dev
+                )
             case "zero":
-                self.zero_component += self._generate_complex_normal_dist(mean, std_dev)
+                self.zero_component += self._generate_complex_normal_dist(
+                    mean, std_dev
+                )
             case "minus1":
-                self.minus1_component += self._generate_complex_normal_dist(mean, std_dev)
+                self.minus1_component += self._generate_complex_normal_dist(
+                    mean, std_dev
+                )
             case "minus2":
-                self.minus2_component += self._generate_complex_normal_dist(mean, std_dev)
+                self.minus2_component += self._generate_complex_normal_dist(
+                    mean, std_dev
+                )
             case _:
-                raise ValueError(f"{component} is not a supported configuration")
+                raise ValueError(
+                    f"{component} is not a supported configuration"
+                )
 
-    def _generate_complex_normal_dist(self, mean: float, std_dev: float) -> cp.ndarray:
+    def _generate_complex_normal_dist(
+        self, mean: float, std_dev: float
+    ) -> cp.ndarray:
         """Returns a ndarray of complex values containing results from
         a normal distribution.
         """
@@ -147,27 +178,37 @@ class Wavefunction:
         ) + 1j * cp.random.normal(mean, std_dev, size=self.grid.shape)
 
     def apply_phase(
-            self, phase: cp.ndarray, components: str | list[str] = "all"
+        self, phase: cp.ndarray, components: str | list[str] = "all"
     ) -> None:
         """Applies a phase to specified components.
 
         :param phase: The phase to be applied.
-        :param components: "all", "plus2", "plus1", "zero", "minus1", "minus2" or a list of strings specifying the
-            required components.
+        :param components: "all", "plus2", "plus1", "zero", "minus1", "minus2"
+            or a list of strings specifying the required components.
         """
         match components:
             case [*_]:
                 for component in components:
                     self._apply_phase_to_component(phase, component)
             case "all":
-                for component in ["plus2", "plus1", "zero", "minus1", "minus2"]:
+                for component in [
+                    "plus2",
+                    "plus1",
+                    "zero",
+                    "minus1",
+                    "minus2",
+                ]:
                     self._apply_phase_to_component(phase, component)
             case str(component):
                 self._apply_phase_to_component(phase, component)
             case _:
-                raise ValueError(f"Components type {components} is unsupported")
+                raise ValueError(
+                    f"Components type {components} is unsupported"
+                )
 
-    def _apply_phase_to_component(self, phase: cp.ndarray, component: str) -> None:
+    def _apply_phase_to_component(
+        self, phase: cp.ndarray, component: str
+    ) -> None:
         """Applies the specified phase to the specified component."""
         match component.lower():
             case "plus2":
@@ -202,7 +243,9 @@ class Wavefunction:
         )
 
     def fft(self) -> None:
-        """Fourier transforms real-space components and updates Fourier-space components."""
+        """Fourier transforms real-space components and updates Fourier-space
+        components.
+        """
         self.fourier_plus2_component = cp.fft.fftn(self.plus2_component)
         self.fourier_plus1_component = cp.fft.fftn(self.plus1_component)
         self.fourier_zero_component = cp.fft.fftn(self.zero_component)
@@ -210,7 +253,9 @@ class Wavefunction:
         self.fourier_minus2_component = cp.fft.fftn(self.minus2_component)
 
     def ifft(self) -> None:
-        """Inverse Fourier transforms Fourier-space components and updates real-space components."""
+        """Inverse Fourier transforms Fourier-space components and updates
+        real-space components.
+        """
         self.plus2_component = cp.fft.ifftn(self.fourier_plus2_component)
         self.plus1_component = cp.fft.ifftn(self.fourier_plus1_component)
         self.zero_component = cp.fft.ifftn(self.fourier_zero_component)
@@ -232,22 +277,24 @@ def _uniaxial_initial_state(wfn: Wavefunction, params: dict) -> None:
 def _biaxial_initial_state(wfn: Wavefunction, params: dict) -> None:
     """Sets wavefunction components to biaxial nematic polar state."""
     wfn.plus2_component = (
-            cp.sqrt(params["n0"])
-            / cp.sqrt(2.0)
-            * cp.ones(wfn.grid.shape, dtype="complex128")
+        cp.sqrt(params["n0"])
+        / cp.sqrt(2.0)
+        * cp.ones(wfn.grid.shape, dtype="complex128")
     )
     wfn.plus1_component = cp.zeros(wfn.grid.shape, dtype="complex128")
     wfn.zero_component = cp.zeros(wfn.grid.shape, dtype="complex128")
     wfn.minus1_component = cp.zeros(wfn.grid.shape, dtype="complex128")
     wfn.minus2_component = (
-            cp.sqrt(params["n0"])
-            / cp.sqrt(2.0)
-            * cp.ones(wfn.grid.shape, dtype="complex128")
+        cp.sqrt(params["n0"])
+        / cp.sqrt(2.0)
+        * cp.ones(wfn.grid.shape, dtype="complex128")
     )
 
 
 def _ferromagnetic2p_initial_state(wfn: Wavefunction, params: dict) -> None:
-    """Sets wavefunction components to ferromagnetic (F=2) state, with atoms in the plus two component."""
+    """Sets wavefunction components to ferromagnetic (F=2) state, with atoms
+    in the plus two component.
+    """
     wfn.plus2_component = cp.sqrt(params["n0"]) * cp.ones(
         wfn.grid.shape, dtype="complex128"
     )
@@ -258,7 +305,9 @@ def _ferromagnetic2p_initial_state(wfn: Wavefunction, params: dict) -> None:
 
 
 def _ferromagnetic2m_initial_state(wfn: Wavefunction, params: dict) -> None:
-    """Sets wavefunction components to ferromagnetic (F=2) state, with atoms in the minus two component."""
+    """Sets wavefunction components to ferromagnetic (F=2) state, with atoms in
+    the minus two component.
+    """
     wfn.plus2_component = cp.zeros(wfn.grid.shape, dtype="complex128")
     wfn.plus1_component = cp.zeros(wfn.grid.shape, dtype="complex128")
     wfn.zero_component = cp.zeros(wfn.grid.shape, dtype="complex128")
@@ -269,7 +318,9 @@ def _ferromagnetic2m_initial_state(wfn: Wavefunction, params: dict) -> None:
 
 
 def _ferromagnetic1p_initial_state(wfn: Wavefunction, params: dict) -> None:
-    """Sets wavefunction components to ferromagnetic (F=1) state, with atoms in the plus one component."""
+    """Sets wavefunction components to ferromagnetic (F=1) state, with atoms in
+    the plus one component.
+    """
     wfn.plus2_component = cp.zeros(wfn.grid.shape, dtype="complex128")
     wfn.plus1_component = cp.sqrt(params["n0"]) * cp.ones(
         wfn.grid.shape, dtype="complex128"
@@ -280,7 +331,9 @@ def _ferromagnetic1p_initial_state(wfn: Wavefunction, params: dict) -> None:
 
 
 def _ferromagnetic1m_initial_state(wfn: Wavefunction, params: dict) -> None:
-    """Sets wavefunction components to ferromagnetic (F=1) state, with atoms in the minus one component."""
+    """Sets wavefunction components to ferromagnetic (F=1) state, with atoms in
+    the minus one component.
+    """
     wfn.plus2_component = cp.zeros(wfn.grid.shape, dtype="complex128")
     wfn.plus1_component = cp.zeros(wfn.grid.shape, dtype="complex128")
     wfn.zero_component = cp.zeros(wfn.grid.shape, dtype="complex128")
@@ -296,15 +349,15 @@ def _cyclic_initial_state(wfn: Wavefunction, params: dict) -> None:
     fz = params["p"] + params["q"] / (params["c2"] * params["n0"])
 
     wfn.plus2_component = (
-            cp.sqrt(params["n0"])
-            * cp.sqrt((1 + fz) / 3)
-            * cp.ones(wfn.grid.shape, dtype="complex128")
+        cp.sqrt(params["n0"])
+        * cp.sqrt((1 + fz) / 3)
+        * cp.ones(wfn.grid.shape, dtype="complex128")
     )
     wfn.plus1_component = cp.zeros(wfn.grid.shape, dtype="complex128")
     wfn.zero_component = cp.zeros(wfn.grid.shape, dtype="complex128")
     wfn.minus1_component = (
-            cp.sqrt(params["n0"])
-            * cp.sqrt((2 - fz) / 3)
-            * cp.ones(wfn.grid.shape, dtype="complex128")
+        cp.sqrt(params["n0"])
+        * cp.sqrt((2 - fz) / 3)
+        * cp.ones(wfn.grid.shape, dtype="complex128")
     )
     wfn.minus2_component = cp.zeros(wfn.grid.shape, dtype="complex128")

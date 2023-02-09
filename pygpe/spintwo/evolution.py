@@ -25,11 +25,21 @@ def _kinetic_step(wfn: Wavefunction, pm: dict) -> None:
     :param wfn: The wavefunction of the system.
     :param pm:  The parameters' dictionary.
     """
-    wfn.fourier_plus2_component *= cp.exp(-0.25 * 1j * pm["dt"] * wfn.grid.wave_number)
-    wfn.fourier_plus1_component *= cp.exp(-0.25 * 1j * pm["dt"] * wfn.grid.wave_number)
-    wfn.fourier_zero_component *= cp.exp(-0.25 * 1j * pm["dt"] * wfn.grid.wave_number)
-    wfn.fourier_minus1_component *= cp.exp(-0.25 * 1j * pm["dt"] * wfn.grid.wave_number)
-    wfn.fourier_minus2_component *= cp.exp(-0.25 * 1j * pm["dt"] * wfn.grid.wave_number)
+    wfn.fourier_plus2_component *= cp.exp(
+        -0.25 * 1j * pm["dt"] * wfn.grid.wave_number
+    )
+    wfn.fourier_plus1_component *= cp.exp(
+        -0.25 * 1j * pm["dt"] * wfn.grid.wave_number
+    )
+    wfn.fourier_zero_component *= cp.exp(
+        -0.25 * 1j * pm["dt"] * wfn.grid.wave_number
+    )
+    wfn.fourier_minus1_component *= cp.exp(
+        -0.25 * 1j * pm["dt"] * wfn.grid.wave_number
+    )
+    wfn.fourier_minus2_component *= cp.exp(
+        -0.25 * 1j * pm["dt"] * wfn.grid.wave_number
+    )
 
 
 def _interaction_step(wfn: Wavefunction, pm: dict) -> None:
@@ -118,13 +128,19 @@ def _evolve_spin_singlet(
     psi_p2 = (
         wfn.plus2_component * cos_term
         + 1j
-        * (dens * wfn.plus2_component - singlet * cp.conj(wfn.minus2_component))
+        * (
+            dens * wfn.plus2_component
+            - singlet * cp.conj(wfn.minus2_component)
+        )
         * sin_term
     )
     psi_p1 = (
         wfn.plus1_component * cos_term
         + 1j
-        * (dens * wfn.plus1_component + singlet * cp.conj(wfn.minus1_component))
+        * (
+            dens * wfn.plus1_component
+            + singlet * cp.conj(wfn.minus1_component)
+        )
         * sin_term
     )
     psi_0 = (
@@ -136,13 +152,19 @@ def _evolve_spin_singlet(
     psi_m1 = (
         wfn.minus1_component * cos_term
         + 1j
-        * (dens * wfn.minus1_component + singlet * cp.conj(wfn.plus1_component))
+        * (
+            dens * wfn.minus1_component
+            + singlet * cp.conj(wfn.plus1_component)
+        )
         * sin_term
     )
     psi_m2 = (
         wfn.minus2_component * cos_term
         + 1j
-        * (dens * wfn.minus2_component - singlet * cp.conj(wfn.plus2_component))
+        * (
+            dens * wfn.minus2_component
+            - singlet * cp.conj(wfn.plus2_component)
+        )
         * sin_term
     )
 
@@ -150,10 +172,14 @@ def _evolve_spin_singlet(
 
 
 def _calculate_spin_vectors(wfn: list[cp.ndarray]):
-    fp = cp.sqrt(6) * (wfn[1] * cp.conj(wfn[2]) + wfn[2] * cp.conj(wfn[3])) + 2 * (
-        wfn[3] * cp.conj(wfn[4]) + wfn[0] * cp.conj(wfn[1])
+    fp = cp.sqrt(6) * (
+        wfn[1] * cp.conj(wfn[2]) + wfn[2] * cp.conj(wfn[3])
+    ) + 2 * (wfn[3] * cp.conj(wfn[4]) + wfn[0] * cp.conj(wfn[1]))
+    fz = (
+        2 * (abs(wfn[0]) ** 2 - abs(wfn[4]) ** 2)
+        + abs(wfn[1]) ** 2
+        - abs(wfn[3]) ** 2
     )
-    fz = 2 * (abs(wfn[0]) ** 2 - abs(wfn[4]) ** 2) + abs(wfn[1]) ** 2 - abs(wfn[3]) ** 2
     return fp, fz
 
 
@@ -216,8 +242,8 @@ def _calculate_atom_num(wfn: Wavefunction) -> tuple[int, int, int, int, int]:
     """Calculates the atom number of each wavefunction component.
 
     :param wfn: The wavefunction of the system.
-    :return: The atom numbers of the plus two, plus one, zero, minus one, and minus two
-    components, respectively.
+    :return: The atom numbers of the plus two, plus one, zero, minus one, and
+        minus two components, respectively.
     """
     atom_num_plus2 = wfn.grid.grid_spacing_product * cp.sum(
         cp.abs(wfn.plus2_component) ** 2

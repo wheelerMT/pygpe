@@ -13,7 +13,9 @@ def test_spin_vectors_polar():
 
     f_perp, f_z = evo._calculate_spins(wavefunction_polar)
 
-    cp.testing.assert_array_equal(f_perp, cp.zeros(wavefunction_polar.grid.shape))
+    cp.testing.assert_array_equal(
+        f_perp, cp.zeros(wavefunction_polar.grid.shape)
+    )
     cp.testing.assert_array_equal(f_z, cp.zeros(wavefunction_polar.grid.shape))
 
 

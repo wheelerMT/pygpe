@@ -5,12 +5,14 @@ from pygpe.spintwo.wavefunction import Wavefunction
 
 
 def generate_wavefunction2d(
-        points: tuple[int, int], grid_spacing: tuple[float, float]
+    points: tuple[int, int], grid_spacing: tuple[float, float]
 ) -> Wavefunction:
     """Generates and returns a Wavefunction2D object specified
 
-    :param points: The number of grid points in the x and y dimension, respectively.
-    :param grid_spacing: The spacing of grid points in the x and y dimension, respectively.
+    :param points: The number of grid points in the x and y dimension,
+        respectively.
+    :param grid_spacing: The spacing of grid points in the x and y dimension,
+        respectively.
     :return: The Wavefunction2D object.
     """
     return Wavefunction(Grid(points, grid_spacing))
@@ -65,7 +67,9 @@ def test_biaxial_initial_state():
 
 
 def test_f2p_initial_state():
-    """Tests whether the ferromagnetic-2 (with spin up) initial state is set correctly."""
+    """Tests whether the ferromagnetic-2 (with spin up) initial state is set
+    correctly.
+    """
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
     params = {"n0": 1}
     wavefunction.set_ground_state("F2p", params)
@@ -88,7 +92,9 @@ def test_f2p_initial_state():
 
 
 def test_f2m_initial_state():
-    """Tests whether the ferromagnetic-2 (with spin down) initial state is set correctly."""
+    """Tests whether the ferromagnetic-2 (with spin down) initial state is set
+    correctly.
+    """
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
     params = {"n0": 1}
     wavefunction.set_ground_state("F2m", params)
@@ -111,7 +117,9 @@ def test_f2m_initial_state():
 
 
 def test_f1p_initial_state():
-    """Tests whether the ferromagnetic-1 (with spin up) initial state is set correctly."""
+    """Tests whether the ferromagnetic-1 (with spin up) initial state is set
+    correctly.
+    """
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
     params = {"n0": 1}
     wavefunction.set_ground_state("F1p", params)
@@ -134,7 +142,9 @@ def test_f1p_initial_state():
 
 
 def test_f1m_initial_state():
-    """Tests whether the ferromagnetic-1 (with spin down) initial state is set correctly."""
+    """Tests whether the ferromagnetic-1 (with spin down) initial state is set
+    correctly.
+    """
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
     params = {"n0": 1}
     wavefunction.set_ground_state("F1m", params)
@@ -187,7 +197,9 @@ def test_custom_components():
     plus2_comp = cp.ones(wavefunction.grid.shape, dtype="complex128")
     plus1_comp = cp.zeros(wavefunction.grid.shape, dtype="complex128")
     zero_comp = cp.zeros(wavefunction.grid.shape, dtype="complex128")
-    minus1_comp = cp.sqrt(1 / 3) * cp.ones(wavefunction.grid.shape, dtype="complex128")
+    minus1_comp = cp.sqrt(1 / 3) * cp.ones(
+        wavefunction.grid.shape, dtype="complex128"
+    )
     minus2_comp = 5 * cp.ones(wavefunction.grid.shape, dtype="complex128")
     wavefunction.set_custom_components(
         plus2_comp, plus1_comp, zero_comp, minus1_comp, minus2_comp
@@ -205,9 +217,14 @@ def test_adding_noise_list():
     makes those components non-zero.
     """
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-    zeros = cp.zeros(wavefunction.grid.shape, dtype='complex128')
-    wavefunction.set_custom_components(cp.zeros_like(zeros), cp.zeros_like(zeros), cp.zeros_like(zeros),
-                                       cp.zeros_like(zeros), cp.zeros_like(zeros))
+    zeros = cp.zeros(wavefunction.grid.shape, dtype="complex128")
+    wavefunction.set_custom_components(
+        cp.zeros_like(zeros),
+        cp.zeros_like(zeros),
+        cp.zeros_like(zeros),
+        cp.zeros_like(zeros),
+        cp.zeros_like(zeros),
+    )
     wavefunction.add_noise_to_components(["plus2", "plus1"], 0, 1e-2)
 
     with pytest.raises(AssertionError):
@@ -225,9 +242,14 @@ def test_adding_noise_all():
     makes those components non-zero.
     """
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-    zeros = cp.zeros(wavefunction.grid.shape, dtype='complex128')
-    wavefunction.set_custom_components(cp.zeros_like(zeros), cp.zeros_like(zeros), cp.zeros_like(zeros),
-                                       cp.zeros_like(zeros), cp.zeros_like(zeros))
+    zeros = cp.zeros(wavefunction.grid.shape, dtype="complex128")
+    wavefunction.set_custom_components(
+        cp.zeros_like(zeros),
+        cp.zeros_like(zeros),
+        cp.zeros_like(zeros),
+        cp.zeros_like(zeros),
+        cp.zeros_like(zeros),
+    )
     wavefunction.add_noise_to_components("all", 0, 1e-2)
 
     with pytest.raises(AssertionError):

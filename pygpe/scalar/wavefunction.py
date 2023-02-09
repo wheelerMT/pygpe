@@ -4,8 +4,8 @@ import cupy as cp
 
 class Wavefunction:
     """Represents the scalar BEC wavefunction.
-    This class contains the wavefunction array, in addition to various useful functions for manipulating and using the
-    wavefunction.
+    This class contains the wavefunction array, in addition to various useful
+    functions for manipulating and using the wavefunction.
 
     :param grid: The numerical grid.
     :type grid: :class:`Grid`
@@ -47,7 +47,9 @@ class Wavefunction:
         self.component += self._generate_complex_normal_dist(mean, std_dev)
         self._update_atom_number()
 
-    def _generate_complex_normal_dist(self, mean: float, std_dev: float) -> cp.ndarray:
+    def _generate_complex_normal_dist(
+        self, mean: float, std_dev: float
+    ) -> cp.ndarray:
         """Returns a ndarray of complex values containing results from
         a normal distribution.
         """
@@ -69,11 +71,15 @@ class Wavefunction:
         )
 
     def fft(self) -> None:
-        """Fourier transforms real-space component and updates Fourier-space component."""
+        """Fourier transforms real-space component and updates Fourier-space
+        component.
+        """
         self.fourier_component = cp.fft.fftn(self.component)
 
     def ifft(self) -> None:
-        """Inverse Fourier transforms Fourier-space component and updates real-space component."""
+        """Inverse Fourier transforms Fourier-space component and updates
+        real-space component.
+        """
         self.component = cp.fft.ifftn(self.fourier_component)
 
     def density(self) -> cp.ndarray:

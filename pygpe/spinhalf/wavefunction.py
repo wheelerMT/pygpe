@@ -44,26 +44,35 @@ class Wavefunction:
         """Adds noise to the specified wavefunction components
         using a normal distribution.
 
-        :param components: "plus", "minus", or "all": The components to add noise to.
+        :param components: "plus", "minus", or "all": The components to add
+            noise to.
         :param mean: The mean of the normal distribution.
         :param std_dev: The standard deviation of the normal distribution.
         """
         match components.lower():
             case "plus":
-                self.plus_component += self._generate_complex_normal_dist(mean, std_dev)
+                self.plus_component += self._generate_complex_normal_dist(
+                    mean, std_dev
+                )
             case "minus":
                 self.minus_component += self._generate_complex_normal_dist(
                     mean, std_dev
                 )
             case "all":
-                self.plus_component += self._generate_complex_normal_dist(mean, std_dev)
+                self.plus_component += self._generate_complex_normal_dist(
+                    mean, std_dev
+                )
                 self.minus_component += self._generate_complex_normal_dist(
                     mean, std_dev
                 )
             case _:
-                raise ValueError(f"{components} is not a supported configuration")
+                raise ValueError(
+                    f"{components} is not a supported configuration"
+                )
 
-    def _generate_complex_normal_dist(self, mean: float, std_dev: float) -> cp.ndarray:
+    def _generate_complex_normal_dist(
+        self, mean: float, std_dev: float
+    ) -> cp.ndarray:
         """Returns a ndarray of complex values containing results from
         a normal distribution.
         """
@@ -75,7 +84,8 @@ class Wavefunction:
         """Applies a given phase to the specified condensate components.
 
         :param phase: Array containing the required phase.
-        :param components: "plus", "minus", or "all". String specifying which component(s) to apply the phase to.
+        :param components: "plus", "minus", or "all". String specifying which
+            component(s) to apply the phase to.
         """
         match components:
             case "plus":
@@ -86,25 +96,33 @@ class Wavefunction:
                 self.plus_component *= cp.exp(1j * phase)
                 self.minus_component *= cp.exp(1j * phase)
             case _:
-                raise ValueError(f"Components type {components} is unsupported")
+                raise ValueError(
+                    f"Components type {components} is unsupported"
+                )
 
     def fft(self) -> None:
-        """Fourier transforms real-space components and updates Fourier-space components."""
+        """Fourier transforms real-space components and updates Fourier-space
+        components.
+        """
         self.fourier_plus_component = cp.fft.fftn(self.plus_component)
         self.fourier_minus_component = cp.fft.fftn(self.minus_component)
 
     def ifft(self) -> None:
-        """Inverse Fourier transforms Fourier-space components and updates real-space components."""
+        """Inverse Fourier transforms Fourier-space components and updates
+        real-space components."""
         self.plus_component = cp.fft.ifftn(self.fourier_plus_component)
         self.minus_component = cp.fft.ifftn(self.fourier_minus_component)
 
-    def density(self, components: str) -> cp.ndarray | tuple[cp.ndarray, cp.ndarray]:
+    def density(
+        self, components: str
+    ) -> cp.ndarray | tuple[cp.ndarray, cp.ndarray]:
         """Calculates the density of the specified component(s).
 
-        :param components: "plus", "minus", or "all". String specifying which component(s) to
-        calculate the density of.
-        :return: Respective density array. If "all" is specified as the component, then both
-        the plus and minus component densities are returned as a tuple, respectively.
+        :param components: "plus", "minus", or "all". String specifying which
+            component(s) to calculate the density of.
+        :return: Respective density array. If "all" is specified as the
+            component, then both the plus and minus component densities are
+            returned as a tuple, respectively.
         """
         match components.lower():
             case "plus":
@@ -117,4 +135,6 @@ class Wavefunction:
                     cp.abs(self.minus_component) ** 2,
                 )
             case _:
-                raise ValueError(f"Components type {components} is unsupported")
+                raise ValueError(
+                    f"Components type {components} is unsupported"
+                )

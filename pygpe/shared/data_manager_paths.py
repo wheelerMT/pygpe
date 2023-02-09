@@ -1,6 +1,8 @@
 """
-This file contains string constants that specify the paths of data stored in the DataManager classes.
-You can modify any of these constants if you wish to change the specified path within the data HDF5 files.
+This file contains string constants that specify the paths of data stored in
+the DataManager classes.
+You can modify any of these constants if you wish to change the specified path
+within the data HDF5 files.
 """
 
 # Grid points

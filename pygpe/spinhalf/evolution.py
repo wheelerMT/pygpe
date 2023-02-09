@@ -25,8 +25,12 @@ def _kinetic_step(wfn: Wavefunction, pm: dict) -> None:
     :param wfn: The wavefunction of the system.
     :param pm: The parameters' dictionary.
     """
-    wfn.fourier_plus_component *= cp.exp(-0.25 * 1j * pm["dt"] * wfn.grid.wave_number)
-    wfn.fourier_minus_component *= cp.exp(-0.25 * 1j * pm["dt"] * wfn.grid.wave_number)
+    wfn.fourier_plus_component *= cp.exp(
+        -0.25 * 1j * pm["dt"] * wfn.grid.wave_number
+    )
+    wfn.fourier_minus_component *= cp.exp(
+        -0.25 * 1j * pm["dt"] * wfn.grid.wave_number
+    )
 
 
 def _potential_step(wfn: Wavefunction, pm: dict) -> None:
@@ -39,12 +43,22 @@ def _potential_step(wfn: Wavefunction, pm: dict) -> None:
     current_minus_component = wfn.minus_component
 
     wfn.plus_component *= cp.exp(
-        -1j * pm["dt"] * (pm["trap"] + pm["g_plus"] * cp.abs(current_plus_component) ** 2 + pm["g_pm"] * cp.abs(
-            current_minus_component))
+        -1j
+        * pm["dt"]
+        * (
+            pm["trap"]
+            + pm["g_plus"] * cp.abs(current_plus_component) ** 2
+            + pm["g_pm"] * cp.abs(current_minus_component)
+        )
     )
     wfn.minus_component *= cp.exp(
-        -1j * pm["dt"] * (pm["trap"] + pm["g_minus"] * cp.abs(current_minus_component) ** 2 + pm["g_pm"] * cp.abs(
-            current_plus_component))
+        -1j
+        * pm["dt"]
+        * (
+            pm["trap"]
+            + pm["g_minus"] * cp.abs(current_minus_component) ** 2
+            + pm["g_pm"] * cp.abs(current_plus_component)
+        )
     )
 
 
@@ -68,7 +82,8 @@ def _calculate_atom_num(wfn: Wavefunction) -> tuple[int, int]:
     """Calculates the atom number of each wavefunction component.
 
     :param wfn: The wavefunction of the system.
-    :return: The atom numbers of the plus, zero, and minus components, respectively.
+    :return: The atom numbers of the plus, zero, and minus components,
+        respectively.
     """
     atom_num_plus = wfn.grid.grid_spacing_product * cp.sum(
         cp.abs(wfn.plus_component) ** 2

@@ -28,7 +28,9 @@ def _kinetic_zeeman_step(wfn: Wavefunction, pm: dict) -> None:
     wfn.fourier_plus_component *= cp.exp(
         -0.25 * 1j * pm["dt"] * (wfn.grid.wave_number + 2 * pm["q"])
     )
-    wfn.fourier_zero_component *= cp.exp(-0.25 * 1j * pm["dt"] * wfn.grid.wave_number)
+    wfn.fourier_zero_component *= cp.exp(
+        -0.25 * 1j * pm["dt"] * wfn.grid.wave_number
+    )
     wfn.fourier_minus_component *= cp.exp(
         -0.25 * 1j * pm["dt"] * (wfn.grid.wave_number + 2 * pm["q"])
     )
@@ -53,10 +55,12 @@ def _interaction_step(wfn: Wavefunction, pm: dict) -> None:
         + cp.conj(spin_perp) / cp.sqrt(2) * wfn.zero_component
     )
     zero_comp_temp = cos_term * wfn.zero_component - sin_term / cp.sqrt(2) * (
-        spin_perp * wfn.plus_component + cp.conj(spin_perp) * wfn.minus_component
+        spin_perp * wfn.plus_component
+        + cp.conj(spin_perp) * wfn.minus_component
     )
     minus_comp_temp = cos_term * wfn.minus_component - sin_term * (
-        spin_perp / cp.sqrt(2) * wfn.zero_component - spin_z * wfn.minus_component
+        spin_perp / cp.sqrt(2) * wfn.zero_component
+        - spin_z * wfn.minus_component
     )
 
     wfn.plus_component = plus_comp_temp * cp.exp(
@@ -109,7 +113,11 @@ def _renormalise_wavefunction(wfn: Wavefunction) -> None:
         wfn.atom_num_zero,
         wfn.atom_num_minus,
     )
-    current_atom_plus, current_atom_zero, current_atom_minus = _calculate_atom_num(wfn)
+    (
+        current_atom_plus,
+        current_atom_zero,
+        current_atom_minus,
+    ) = _calculate_atom_num(wfn)
     wfn.plus_component *= cp.sqrt(correct_atom_plus / current_atom_plus)
     wfn.zero_component *= cp.sqrt(correct_atom_zero / current_atom_zero)
     wfn.minus_component *= cp.sqrt(correct_atom_minus / current_atom_minus)
@@ -120,7 +128,8 @@ def _calculate_atom_num(wfn: Wavefunction) -> tuple[int, int, int]:
     """Calculates the atom number of each wavefunction component.
 
     :param wfn: The wavefunction of the system.
-    :return: The atom numbers of the plus, zero, and minus components, respectively.
+    :return: The atom numbers of the plus, zero, and minus components,
+        respectively.
     """
     atom_num_plus = wfn.grid.grid_spacing_product * cp.sum(
         cp.abs(wfn.plus_component) ** 2

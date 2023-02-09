@@ -1,5 +1,3 @@
-import warnings
-
 import h5py
 import cupy as cp
 from pygpe.shared.grid import Grid
@@ -8,7 +6,8 @@ from pygpe.scalar.wavefunction import Wavefunction
 
 
 class DataManager:
-    """This object handles all the data of the simulation, including the wavefunction, grid, and parameter data.
+    """This object handles all the data of the simulation, including the
+    wavefunction, grid, and parameter data.
 
     :param filename: The name of the data file.
     :type filename: str
@@ -41,7 +40,10 @@ class DataManager:
         :type parameters: dict
         """
         if grid.ndim > 3 or grid.ndim < 1:
-            raise ValueError(f"Grid with dimension of {grid.ndim} is unsupported, please use a 1D, 2D, or 3D grid.")
+            raise ValueError(
+                f"Grid with dimension of {grid.ndim} is unsupported, "
+                "please use a 1D, 2D, or 3D grid."
+            )
         self._save_grid_params(grid)
         self._save_initial_wfn(wfn)
         self._save_params(parameters)
@@ -87,7 +89,9 @@ class DataManager:
         """Saves condensate parameters to dataset."""
         with h5py.File(f"{self.data_path}/{self.filename}", "r+") as file:
             for key in parameters:
-                file.create_dataset(f"{dmp.PARAMETERS}/{key}", data=parameters[key])
+                file.create_dataset(
+                    f"{dmp.PARAMETERS}/{key}", data=parameters[key]
+                )
 
     def save_wavefunction(self, wfn: Wavefunction) -> None:
         """Saves the current wavefunction data to the dataset.

@@ -9,8 +9,10 @@ def generate_wavefunction2d(
 ) -> Wavefunction:
     """Generates and returns a Wavefunction2D object specified
 
-    :param points: The number of grid points in the x and y dimension, respectively.
-    :param grid_spacing: The spacing of grid points in the x and y dimension, respectively.
+    :param points: The number of grid points in the x and y dimension,
+    respectively.
+    :param grid_spacing: The spacing of grid points in the x and y dimension,
+    respectively.
     :return: The Wavefunction2D object.
     """
     return Wavefunction(Grid(points, grid_spacing))
@@ -25,7 +27,9 @@ def test_set_wavefunction_components():
     wavefunction.set_wavefunction_components(plus_component, minus_component)
 
     cp.testing.assert_array_equal(wavefunction.plus_component, plus_component)
-    cp.testing.assert_array_equal(wavefunction.minus_component, minus_component)
+    cp.testing.assert_array_equal(
+        wavefunction.minus_component, minus_component
+    )
 
 
 def test_update_atom_numbers():
@@ -119,7 +123,8 @@ def test_phase_all():
 
 
 def test_phase_plus():
-    """Tests that a phase applied to the plus component is applied correctly."""
+    """Tests that a phase applied to the plus component is applied correctly.
+    """
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
 
     plus_component = cp.ones((64, 64), dtype="complex128")
@@ -130,11 +135,15 @@ def test_phase_plus():
     wavefunction.apply_phase(phase, components="plus")
 
     cp.testing.assert_allclose(cp.angle(wavefunction.plus_component), phase)
-    cp.testing.assert_allclose(cp.angle(wavefunction.minus_component), cp.zeros(wavefunction.grid.shape))
+    cp.testing.assert_allclose(
+        cp.angle(wavefunction.minus_component),
+        cp.zeros(wavefunction.grid.shape),
+    )
 
 
 def test_phase_minus():
-    """Tests that a phase applied to the plus component is applied correctly."""
+    """Tests that a phase applied to the plus component is applied correctly.
+    """
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
 
     plus_component = cp.ones((64, 64), dtype="complex128")
@@ -145,11 +154,16 @@ def test_phase_minus():
     wavefunction.apply_phase(phase, components="minus")
 
     cp.testing.assert_allclose(cp.angle(wavefunction.minus_component), phase)
-    cp.testing.assert_allclose(cp.angle(wavefunction.plus_component), cp.zeros(wavefunction.grid.shape))
+    cp.testing.assert_allclose(
+        cp.angle(wavefunction.plus_component),
+        cp.zeros(wavefunction.grid.shape),
+    )
 
 
 def test_phase_handles_unknown():
-    """Tests whether the apply phase function correctly handles an unknown component."""
+    """Tests whether the apply phase function correctly handles an unknown
+    component.
+    """
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
     phase = cp.random.uniform(size=(64, 64), dtype=cp.float64)
 
@@ -167,16 +181,26 @@ def test_density():
 
     plus_density = wavefunction.density("plus")
     minus_density = wavefunction.density("minus")
-    cp.testing.assert_allclose(plus_density, 0.25 * cp.ones(wavefunction.grid.shape))
-    cp.testing.assert_allclose(minus_density, 4 * cp.ones(wavefunction.grid.shape))
+    cp.testing.assert_allclose(
+        plus_density, 0.25 * cp.ones(wavefunction.grid.shape)
+    )
+    cp.testing.assert_allclose(
+        minus_density, 4 * cp.ones(wavefunction.grid.shape)
+    )
 
     plus_density, minus_density = wavefunction.density("all")
-    cp.testing.assert_allclose(plus_density, 0.25 * cp.ones(wavefunction.grid.shape))
-    cp.testing.assert_allclose(minus_density, 4 * cp.ones(wavefunction.grid.shape))
+    cp.testing.assert_allclose(
+        plus_density, 0.25 * cp.ones(wavefunction.grid.shape)
+    )
+    cp.testing.assert_allclose(
+        minus_density, 4 * cp.ones(wavefunction.grid.shape)
+    )
 
 
 def test_density_handles_unknown():
-    """Tests whether the density function correctly handles an unknown component."""
+    """Tests whether the density function correctly handles an unknown
+    component.
+    """
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
 
     with pytest.raises(ValueError):

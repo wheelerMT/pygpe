@@ -4,8 +4,8 @@ import cupy as cp
 
 class Wavefunction:
     """Represents the spin-1 BEC wavefunction.
-    This class contains the wavefunction arrays, in addition to various useful functions for manipulating and using the
-    wavefunction.
+    This class contains the wavefunction arrays, in addition to various useful
+    functions for manipulating and using the wavefunction.
 
     :param grid: The numerical grid.
     :type grid: :class:`Grid`
@@ -41,7 +41,8 @@ class Wavefunction:
         """Sets the components of the wavefunction according to
         the ground state we wish to be in.
 
-        :param ground_state: "polar", "ferromagnetic", or "antiferromagnetic". The ground state of the wavefunction.
+        :param ground_state: "polar", "ferromagnetic", or "antiferromagnetic".
+            The ground state of the wavefunction.
         :param params: Dictionary containing condensate parameters.
         """
         ground_states = {
@@ -80,8 +81,8 @@ class Wavefunction:
         """Adds noise to the specified wavefunction components
         using a normal distribution.
 
-        :param components: "all", "outer", "plus", "zero", "minus", or list of strings specifying the
-            required components to add noise to.
+        :param components: "all", "outer", "plus", "zero", "minus", or list of
+            strings specifying the required components to add noise to.
         :param mean: The mean of the normal distribution.
         :param std_dev: The standard deviation of the normal distribution.
         """
@@ -98,23 +99,39 @@ class Wavefunction:
             case str(component):
                 self._add_noise_to_components(component, mean, std_dev)
             case _:
-                raise ValueError(f"{components} is not a supported configuration")
+                raise ValueError(
+                    f"{components} is not a supported configuration"
+                )
 
         self._update_atom_numbers()
 
-    def _add_noise_to_components(self, component: str, mean: float, std_dev: float) -> None:
-        """Adds noise from drawn from a normal distribution to the specified component."""
+    def _add_noise_to_components(
+        self, component: str, mean: float, std_dev: float
+    ) -> None:
+        """Adds noise from drawn from a normal distribution to the specified
+        component.
+        """
         match component.lower():
             case "plus":
-                self.plus_component += self._generate_complex_normal_dist(mean, std_dev)
+                self.plus_component += self._generate_complex_normal_dist(
+                    mean, std_dev
+                )
             case "zero":
-                self.zero_component += self._generate_complex_normal_dist(mean, std_dev)
+                self.zero_component += self._generate_complex_normal_dist(
+                    mean, std_dev
+                )
             case "minus":
-                self.minus_component += self._generate_complex_normal_dist(mean, std_dev)
+                self.minus_component += self._generate_complex_normal_dist(
+                    mean, std_dev
+                )
             case _:
-                raise ValueError(f"{component} is not a supported configuration")
+                raise ValueError(
+                    f"{component} is not a supported configuration"
+                )
 
-    def _generate_complex_normal_dist(self, mean: float, std_dev: float) -> cp.ndarray:
+    def _generate_complex_normal_dist(
+        self, mean: float, std_dev: float
+    ) -> cp.ndarray:
         """Returns a ndarray of complex values containing results from
         a normal distribution.
         """
@@ -128,7 +145,8 @@ class Wavefunction:
         """Applies a phase to specified components.
 
         :param phase: The phase to be applied.
-        :param components: "all", "plus", "zero", "minus" or a list of strings specifying the required components.
+        :param components: "all", "plus", "zero", "minus" or a list of strings
+        specifying the required components.
         """
         match components:
             case [*_]:
@@ -140,9 +158,13 @@ class Wavefunction:
             case str(component):
                 self._apply_phase_to_component(phase, component)
             case _:
-                raise ValueError(f"Components type {components} is unsupported")
+                raise ValueError(
+                    f"Components type {components} is unsupported"
+                )
 
-    def _apply_phase_to_component(self, phase: cp.ndarray, component: str) -> None:
+    def _apply_phase_to_component(
+        self, phase: cp.ndarray, component: str
+    ) -> None:
         """Applies the specified phase to the specified component."""
         match component.lower():
             case "plus":
@@ -166,13 +188,17 @@ class Wavefunction:
         )
 
     def fft(self) -> None:
-        """Fourier transforms real-space components and updates Fourier-space components."""
+        """Fourier transforms real-space components and updates Fourier-space
+        components.
+        """
         self.fourier_plus_component = cp.fft.fftn(self.plus_component)
         self.fourier_zero_component = cp.fft.fftn(self.zero_component)
         self.fourier_minus_component = cp.fft.fftn(self.minus_component)
 
     def ifft(self) -> None:
-        """Inverse Fourier transforms Fourier-space components and updates real-space components."""
+        """Inverse Fourier transforms Fourier-space components and updates
+        real-space components.
+        """
         self.plus_component = cp.fft.ifftn(self.fourier_plus_component)
         self.zero_component = cp.fft.ifftn(self.fourier_zero_component)
         self.minus_component = cp.fft.ifftn(self.fourier_minus_component)

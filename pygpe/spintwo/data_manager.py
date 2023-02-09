@@ -6,7 +6,8 @@ from pygpe.spintwo.wavefunction import Wavefunction
 
 
 class DataManager:
-    """This object handles all the data of the simulation, including the wavefunction, grid, and parameter data.
+    """This object handles all the data of the simulation, including the
+    wavefunction, grid, and parameter data.
 
     :param filename: The name of the data file.
     :type filename: str
@@ -38,7 +39,10 @@ class DataManager:
         :type parameters: dict
         """
         if grid.ndim > 3 or grid.ndim < 1:
-            raise ValueError(f"Grid with dimension of {grid.ndim} is unsupported, please use a 1D, 2D, or 3D grid.")
+            raise ValueError(
+                f"Grid with dimension of {grid.ndim} is unsupported, "
+                "please use a 1D, 2D, or 3D grid."
+            )
         self._save_initial_grid_params(grid)
         self._save_initial_wfn(wfn)
         self._save_params(parameters)
@@ -148,43 +152,73 @@ class DataManager:
         with h5py.File(f"{self.data_path}/{self.filename}", "r+") as data:
             if wfn.grid.ndim == 1:
                 new_psi_plus2 = data[dmp.SPIN2_WAVEFUNCTION_PLUS_TWO]
-                new_psi_plus2.resize((wfn.grid.num_points_x, self._time_index + 1))
-                new_psi_plus2[:, self._time_index] = cp.asnumpy(wfn.plus2_component)
+                new_psi_plus2.resize(
+                    (wfn.grid.num_points_x, self._time_index + 1)
+                )
+                new_psi_plus2[:, self._time_index] = cp.asnumpy(
+                    wfn.plus2_component
+                )
 
                 new_psi_plus1 = data[dmp.SPIN2_WAVEFUNCTION_PLUS_ONE]
-                new_psi_plus1.resize((wfn.grid.num_points_x, self._time_index + 1))
-                new_psi_plus1[:, self._time_index] = cp.asnumpy(wfn.plus1_component)
+                new_psi_plus1.resize(
+                    (wfn.grid.num_points_x, self._time_index + 1)
+                )
+                new_psi_plus1[:, self._time_index] = cp.asnumpy(
+                    wfn.plus1_component
+                )
 
                 new_psi_zero = data[dmp.SPIN2_WAVEFUNCTION_ZERO]
-                new_psi_zero.resize((wfn.grid.num_points_x, self._time_index + 1))
-                new_psi_zero[:, self._time_index] = cp.asnumpy(wfn.zero_component)
+                new_psi_zero.resize(
+                    (wfn.grid.num_points_x, self._time_index + 1)
+                )
+                new_psi_zero[:, self._time_index] = cp.asnumpy(
+                    wfn.zero_component
+                )
 
                 new_psi_minus1 = data[dmp.SPIN2_WAVEFUNCTION_MINUS_ONE]
-                new_psi_minus1.resize((wfn.grid.num_points_x, self._time_index + 1))
-                new_psi_minus1[:, self._time_index] = cp.asnumpy(wfn.minus1_component)
+                new_psi_minus1.resize(
+                    (wfn.grid.num_points_x, self._time_index + 1)
+                )
+                new_psi_minus1[:, self._time_index] = cp.asnumpy(
+                    wfn.minus1_component
+                )
 
                 new_psi_minus2 = data[dmp.SPIN2_WAVEFUNCTION_MINUS_TWO]
-                new_psi_minus2.resize((wfn.grid.num_points_x, self._time_index + 1))
-                new_psi_minus2[:, self._time_index] = cp.asnumpy(wfn.minus2_component)
+                new_psi_minus2.resize(
+                    (wfn.grid.num_points_x, self._time_index + 1)
+                )
+                new_psi_minus2[:, self._time_index] = cp.asnumpy(
+                    wfn.minus2_component
+                )
             else:
                 new_psi_plus2 = data[dmp.SPIN2_WAVEFUNCTION_PLUS_TWO]
                 new_psi_plus2.resize((*wfn.grid.shape, self._time_index + 1))
-                new_psi_plus2[..., self._time_index] = cp.asnumpy(wfn.plus2_component)
+                new_psi_plus2[..., self._time_index] = cp.asnumpy(
+                    wfn.plus2_component
+                )
 
                 new_psi_plus1 = data[dmp.SPIN2_WAVEFUNCTION_PLUS_ONE]
                 new_psi_plus1.resize((*wfn.grid.shape, self._time_index + 1))
-                new_psi_plus1[..., self._time_index] = cp.asnumpy(wfn.plus1_component)
+                new_psi_plus1[..., self._time_index] = cp.asnumpy(
+                    wfn.plus1_component
+                )
 
                 new_psi_zero = data[dmp.SPIN2_WAVEFUNCTION_ZERO]
                 new_psi_zero.resize((*wfn.grid.shape, self._time_index + 1))
-                new_psi_zero[..., self._time_index] = cp.asnumpy(wfn.zero_component)
+                new_psi_zero[..., self._time_index] = cp.asnumpy(
+                    wfn.zero_component
+                )
 
                 new_psi_minus1 = data[dmp.SPIN2_WAVEFUNCTION_MINUS_ONE]
                 new_psi_minus1.resize((*wfn.grid.shape, self._time_index + 1))
-                new_psi_minus1[..., self._time_index] = cp.asnumpy(wfn.minus1_component)
+                new_psi_minus1[..., self._time_index] = cp.asnumpy(
+                    wfn.minus1_component
+                )
 
                 new_psi_minus2 = data[dmp.SPIN2_WAVEFUNCTION_MINUS_TWO]
                 new_psi_minus2.resize((*wfn.grid.shape, self._time_index + 1))
-                new_psi_minus2[..., self._time_index] = cp.asnumpy(wfn.minus2_component)
+                new_psi_minus2[..., self._time_index] = cp.asnumpy(
+                    wfn.minus2_component
+                )
 
         self._time_index += 1
