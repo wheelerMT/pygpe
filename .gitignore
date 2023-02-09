@@ -131,6 +131,7 @@ dmypy.json
 
 # Other
 .idea/
+.vscode/
 data/
 tests/throwaway_spin1.py
 tests/throwaway_scalar.py
