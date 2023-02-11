@@ -1,8 +1,9 @@
 from pygpe.shared.grid import Grid
+from pygpe.shared.wavefunction import _Wavefunction
 import cupy as cp
 
 
-class Wavefunction:
+class ScalarWavefunction(_Wavefunction):
     """Represents the scalar BEC wavefunction.
     This class contains the wavefunction array, in addition to various useful
     functions for manipulating and using the wavefunction.
@@ -18,7 +19,7 @@ class Wavefunction:
 
     def __init__(self, grid: Grid):
         """Constructs the wavefunction object."""
-        self.grid = grid
+        super().__init__(grid)
 
         self.component = cp.empty(grid.shape, dtype="complex128")
         self.fourier_component = cp.empty(
@@ -44,18 +45,8 @@ class Wavefunction:
         :param std_dev: The standard deviation of the normal distribution.
         :type std_dev: float
         """
-        self.component += self._generate_complex_normal_dist(mean, std_dev)
+        self.component += super()._generate_complex_normal_dist(mean, std_dev)
         self._update_atom_number()
-
-    def _generate_complex_normal_dist(
-        self, mean: float, std_dev: float
-    ) -> cp.ndarray:
-        """Returns a ndarray of complex values containing results from
-        a normal distribution.
-        """
-        return cp.random.normal(
-            mean, std_dev, size=self.grid.shape
-        ) + 1j * cp.random.normal(mean, std_dev, size=self.grid.shape)
 
     def apply_phase(self, phase: cp.ndarray) -> None:
         """Applies a phase to the wavefunction.

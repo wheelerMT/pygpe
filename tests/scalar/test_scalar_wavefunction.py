@@ -2,12 +2,12 @@ import pytest
 import cupy as cp
 from typing import Tuple
 from pygpe.shared.grid import Grid
-from pygpe.scalar.wavefunction import Wavefunction
+from pygpe.scalar.wavefunction import ScalarWavefunction
 
 
 def generate_wavefunction2d(
     points: Tuple[int, int], grid_spacing: Tuple[float, float]
-) -> Wavefunction:
+) -> ScalarWavefunction:
     """Generates and returns a Wavefunction2D object specified
 
     :param points: The number of grid points in the x and y dimension,
@@ -16,7 +16,7 @@ def generate_wavefunction2d(
         respectively.
     :return: The Wavefunction2D object.
     """
-    return Wavefunction(Grid(points, grid_spacing))
+    return ScalarWavefunction(Grid(points, grid_spacing))
 
 
 def test_set_wavefunction():

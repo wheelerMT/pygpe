@@ -1,8 +1,8 @@
 import cupy as cp
-from pygpe.scalar.wavefunction import Wavefunction
+from pygpe.scalar.wavefunction import ScalarWavefunction
 
 
-def step_wavefunction(wfn: Wavefunction, params: dict) -> None:
+def step_wavefunction(wfn: ScalarWavefunction, params: dict) -> None:
     """Propagates the wavefunction forward one time step.
 
     :param wfn: The wavefunction of the system.
@@ -19,7 +19,7 @@ def step_wavefunction(wfn: Wavefunction, params: dict) -> None:
         _renormalise_wavefunction(wfn)
 
 
-def _kinetic_step(wfn: Wavefunction, pm: dict) -> None:
+def _kinetic_step(wfn: ScalarWavefunction, pm: dict) -> None:
     """Computes the kinetic energy subsystem for half a time step.
 
     :param wfn: The wavefunction of the system.
@@ -30,7 +30,7 @@ def _kinetic_step(wfn: Wavefunction, pm: dict) -> None:
     )
 
 
-def _potential_step(wfn: Wavefunction, pm: dict) -> None:
+def _potential_step(wfn: ScalarWavefunction, pm: dict) -> None:
     """Computes the potential subsystem for a full time step.
 
     :param wfn: The wavefunction of the system.
@@ -41,7 +41,7 @@ def _potential_step(wfn: Wavefunction, pm: dict) -> None:
     )
 
 
-def _renormalise_wavefunction(wfn: Wavefunction) -> None:
+def _renormalise_wavefunction(wfn: ScalarWavefunction) -> None:
     """Re-normalises the wavefunction to the correct atom number.
 
     :param wfn: The wavefunction of the system.
@@ -53,7 +53,7 @@ def _renormalise_wavefunction(wfn: Wavefunction) -> None:
     wfn.fft()
 
 
-def _calculate_atom_num(wfn: Wavefunction) -> float:
+def _calculate_atom_num(wfn: ScalarWavefunction) -> float:
     """Calculates the current atom number of the wavefunction.
 
     :param wfn: The wavefunction of the system.

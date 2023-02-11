@@ -1,12 +1,12 @@
 import cupy as cp
 import pytest
 from pygpe.shared.grid import Grid
-from pygpe.spintwo.wavefunction import Wavefunction
+from pygpe.spintwo.wavefunction import SpinTwoWavefunction
 
 
 def generate_wavefunction2d(
     points: tuple[int, int], grid_spacing: tuple[float, float]
-) -> Wavefunction:
+) -> SpinTwoWavefunction:
     """Generates and returns a Wavefunction2D object specified
 
     :param points: The number of grid points in the x and y dimension,
@@ -15,7 +15,7 @@ def generate_wavefunction2d(
         respectively.
     :return: The Wavefunction2D object.
     """
-    return Wavefunction(Grid(points, grid_spacing))
+    return SpinTwoWavefunction(Grid(points, grid_spacing))
 
 
 def test_uniaxial_initial_state():
@@ -201,7 +201,7 @@ def test_custom_components():
         wavefunction.grid.shape, dtype="complex128"
     )
     minus2_comp = 5 * cp.ones(wavefunction.grid.shape, dtype="complex128")
-    wavefunction.set_custom_components(
+    wavefunction.set_wavefunction(
         plus2_comp, plus1_comp, zero_comp, minus1_comp, minus2_comp
     )
 
@@ -218,14 +218,14 @@ def test_adding_noise_list():
     """
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
     zeros = cp.zeros(wavefunction.grid.shape, dtype="complex128")
-    wavefunction.set_custom_components(
+    wavefunction.set_wavefunction(
         cp.zeros_like(zeros),
         cp.zeros_like(zeros),
         cp.zeros_like(zeros),
         cp.zeros_like(zeros),
         cp.zeros_like(zeros),
     )
-    wavefunction.add_noise_to_components(["plus2", "plus1"], 0, 1e-2)
+    wavefunction.add_noise(["plus2", "plus1"], 0, 1e-2)
 
     with pytest.raises(AssertionError):
         cp.testing.assert_array_equal(
@@ -243,14 +243,14 @@ def test_adding_noise_all():
     """
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
     zeros = cp.zeros(wavefunction.grid.shape, dtype="complex128")
-    wavefunction.set_custom_components(
+    wavefunction.set_wavefunction(
         cp.zeros_like(zeros),
         cp.zeros_like(zeros),
         cp.zeros_like(zeros),
         cp.zeros_like(zeros),
         cp.zeros_like(zeros),
     )
-    wavefunction.add_noise_to_components("all", 0, 1e-2)
+    wavefunction.add_noise("all", 0, 1e-2)
 
     with pytest.raises(AssertionError):
         cp.testing.assert_array_equal(
@@ -277,7 +277,7 @@ def test_adding_noise_all():
 def test_phase_all():
     """Tests that a phase applied to all components is applied correctly."""
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-    wavefunction.set_custom_components(
+    wavefunction.set_wavefunction(
         cp.ones((64, 64), dtype="complex128"),
         cp.ones((64, 64), dtype="complex128"),
         cp.ones((64, 64), dtype="complex128"),
@@ -298,7 +298,7 @@ def test_phase_all():
 def test_phase_multiple_components():
     """Tests that a phase is applied correctly to multiple components."""
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-    wavefunction.set_custom_components(
+    wavefunction.set_wavefunction(
         cp.ones((64, 64), dtype="complex128"),
         cp.ones((64, 64), dtype="complex128"),
         cp.ones((64, 64), dtype="complex128"),
@@ -316,7 +316,7 @@ def test_phase_multiple_components():
 def test_phase_single():
     """Tests that a phase is applied correctly to a single component."""
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-    wavefunction.set_custom_components(
+    wavefunction.set_wavefunction(
         cp.ones((64, 64), dtype="complex128"),
         cp.ones((64, 64), dtype="complex128"),
         cp.ones((64, 64), dtype="complex128"),
@@ -328,3 +328,13 @@ def test_phase_single():
     wavefunction.apply_phase(phase, "zero")
 
     cp.testing.assert_allclose(cp.angle(wavefunction.zero_component), phase)
+
+
+def test_density():
+    """Tests that the condensate density is calculated correctly."""
+    wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
+    wavefunction.set_ground_state("UN", {"n0": 1})
+
+    cp.testing.assert_allclose(
+        wavefunction.density(), cp.ones(wavefunction.grid.shape, dtype="float")
+    )

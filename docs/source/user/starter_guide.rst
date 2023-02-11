@@ -83,7 +83,7 @@ dimension and their respective grid spacings, then generate a Grid object::
 
 The above code generates a 3D grid with 64 points and a grid spacing of 0.5 in
 each dimension.
-To create grids of different dimensionality you only need change the grid_points
+To create grids of different dimensionality you only need to change the grid_points
 and grid_spacings to match the desired dimensionality.
 For example, to create a 2D grid we would instead have
 :code:`grid_points = (64, 64)` and :code:`grid_spacings = (0.5, 0.5)`.
@@ -129,12 +129,30 @@ Setting up the wavefunction
 Now that we have a grid class, we can use this to set up our wavefunction.
 Setting up the initial wavefunction class is easy, we just need to pass in the
 grid we have constructed.
+The name of the wavefunction class in the respective system is given in the
+table below:
+
+.. list-table::
+    :widths: 25 25
+    :header-rows: 1
+
+    * - System type
+      - Wavefunction Class
+    * - Scalar BEC
+      - :code:`ScalarWavefunction(grid)`
+    * - Two-component BEC
+      - :code:`SpinHalfWavefunction(grid)`
+    * - Spin-1 BEC
+      - :code:`SpinOneWavefunction(grid)`
+    * - Spin-2 BEC
+      - :code:`SpinTwoWavefunction(grid)`
+
 Then we can use the class methods to manipulate the wavefunction into the
 desired initial state::
 
-    wavefunction = gpe.Wavefunction(grid)
+    wavefunction = gpe.SpinOneWavefunction(grid)
     wavefunction.set_ground_state("polar")
-    wavefunction.add_noise_to_components(components="outer", mean=0., std=1e-2)
+    wavefunction.add_noise(components="outer", mean=0., std=1e-2)
 
 This first creates a wavefunction in a polar state :math:`\psi=(0,1,0)^T` then
 subsequently adds numerical noise drawn from a normal distribution with mean

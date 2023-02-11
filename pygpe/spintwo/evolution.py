@@ -1,8 +1,8 @@
 import cupy as cp
-from pygpe.spintwo.wavefunction import Wavefunction
+from pygpe.spintwo.wavefunction import SpinTwoWavefunction
 
 
-def step_wavefunction(wfn: Wavefunction, params: dict) -> None:
+def step_wavefunction(wfn: SpinTwoWavefunction, params: dict) -> None:
     """Propagates the wavefunction forward one time step.
 
     :param wfn: The wavefunction of the system.
@@ -19,7 +19,7 @@ def step_wavefunction(wfn: Wavefunction, params: dict) -> None:
         _renormalise_wavefunction(wfn)
 
 
-def _kinetic_step(wfn: Wavefunction, pm: dict) -> None:
+def _kinetic_step(wfn: SpinTwoWavefunction, pm: dict) -> None:
     """Computes the kinetic energy subsystem for half a time step.
 
     :param wfn: The wavefunction of the system.
@@ -42,7 +42,7 @@ def _kinetic_step(wfn: Wavefunction, pm: dict) -> None:
     )
 
 
-def _interaction_step(wfn: Wavefunction, pm: dict) -> None:
+def _interaction_step(wfn: SpinTwoWavefunction, pm: dict) -> None:
     # Calculate density and singlets
     n = _density(wfn)
     a20 = _singlet_duo(wfn)
@@ -95,7 +95,7 @@ def _interaction_step(wfn: Wavefunction, pm: dict) -> None:
     wfn.minus2_component = temp_wfn[4]
 
 
-def _density(wfn: Wavefunction) -> cp.ndarray:
+def _density(wfn: SpinTwoWavefunction) -> cp.ndarray:
     return (
         abs(wfn.plus2_component) ** 2
         + abs(wfn.plus1_component) ** 2
@@ -105,7 +105,7 @@ def _density(wfn: Wavefunction) -> cp.ndarray:
     )
 
 
-def _singlet_duo(wfn: Wavefunction) -> cp.ndarray:
+def _singlet_duo(wfn: SpinTwoWavefunction) -> cp.ndarray:
     return (
         1
         / cp.sqrt(5)
@@ -118,7 +118,7 @@ def _singlet_duo(wfn: Wavefunction) -> cp.ndarray:
 
 
 def _evolve_spin_singlet(
-    wfn: Wavefunction, dens: cp.ndarray, singlet: cp.ndarray, pm: dict
+    wfn: SpinTwoWavefunction, dens: cp.ndarray, singlet: cp.ndarray, pm: dict
 ) -> list[cp.ndarray]:
     s = cp.nan_to_num(cp.sqrt(dens**2 - abs(singlet) ** 2))
     cos_term = cp.cos(pm["c4"] * s * pm["dt"])
@@ -210,7 +210,7 @@ def _calc_qpsi(fz, fp, wfn):
     return qpsi
 
 
-def _renormalise_wavefunction(wfn: Wavefunction) -> None:
+def _renormalise_wavefunction(wfn: SpinTwoWavefunction) -> None:
     """Re-normalises the wavefunction to the correct atom number.
 
     :param wfn: The wavefunction of the system.
@@ -238,7 +238,9 @@ def _renormalise_wavefunction(wfn: Wavefunction) -> None:
     wfn.fft()
 
 
-def _calculate_atom_num(wfn: Wavefunction) -> tuple[int, int, int, int, int]:
+def _calculate_atom_num(
+    wfn: SpinTwoWavefunction,
+) -> tuple[int, int, int, int, int]:
     """Calculates the atom number of each wavefunction component.
 
     :param wfn: The wavefunction of the system.

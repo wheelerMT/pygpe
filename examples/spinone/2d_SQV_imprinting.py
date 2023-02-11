@@ -24,9 +24,9 @@ params = {
 }
 
 # Generate wavefunction object, set initial state and add noise
-psi = gpe.Wavefunction(grid)
+psi = gpe.SpinOneWavefunction(grid)
 psi.set_ground_state("polar", params)
-psi.add_noise_to_components("outer", 0.0, 1e-2)
+psi.add_noise("outer", 0.0, 1e-2)
 
 phase = cp.asarray(
     vort.vortex_phase_profile(grid, 100, 1)

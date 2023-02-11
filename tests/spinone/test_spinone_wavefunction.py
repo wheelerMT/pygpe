@@ -2,12 +2,12 @@ import pytest
 import cupy as cp
 from typing import Tuple
 from pygpe.shared.grid import Grid
-from pygpe.spinone.wavefunction import Wavefunction
+from pygpe.spinone.wavefunction import SpinOneWavefunction
 
 
 def generate_wavefunction2d(
     points: Tuple[int, int], grid_spacing: Tuple[float, float]
-) -> Wavefunction:
+) -> SpinOneWavefunction:
     """Generates and returns a Wavefunction2D object specified
 
     :param points: The number of grid points in the x and y dimension,
@@ -16,7 +16,7 @@ def generate_wavefunction2d(
         respectively.
     :return: The Wavefunction2D object.
     """
-    return Wavefunction(Grid(points, grid_spacing))
+    return SpinOneWavefunction(Grid(points, grid_spacing))
 
 
 def test_polar_initial_state():
@@ -90,7 +90,7 @@ def test_custom_wavefunction_components():
     zero_component = 1e4 * cp.ones((64, 64))
     minus_component = cp.zeros((64, 64))
 
-    wavefunction.set_custom_components(
+    wavefunction.set_wavefunction(
         plus_component, zero_component, minus_component
     )
 
@@ -114,10 +114,10 @@ def test_adding_noise_outer():
     """
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
     zeros = cp.zeros(wavefunction.grid.shape, dtype="complex128")
-    wavefunction.set_custom_components(
+    wavefunction.set_wavefunction(
         cp.zeros_like(zeros), cp.zeros_like(zeros), cp.zeros_like(zeros)
     )
-    wavefunction.add_noise_to_components("outer", 0, 1e-2)
+    wavefunction.add_noise("outer", 0, 1e-2)
 
     with pytest.raises(AssertionError):
         cp.testing.assert_array_equal(
@@ -135,10 +135,10 @@ def test_adding_noise_all():
     """
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
     zeros = cp.zeros(wavefunction.grid.shape, dtype="complex128")
-    wavefunction.set_custom_components(
+    wavefunction.set_wavefunction(
         cp.zeros_like(zeros), cp.zeros_like(zeros), cp.zeros_like(zeros)
     )
-    wavefunction.add_noise_to_components("all", 0, 1e-2)
+    wavefunction.add_noise("all", 0, 1e-2)
 
     with pytest.raises(AssertionError):
         cp.testing.assert_array_equal(
@@ -160,10 +160,10 @@ def test_adding_noise_zero():
     """
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
     zeros = cp.zeros(wavefunction.grid.shape, dtype="complex128")
-    wavefunction.set_custom_components(
+    wavefunction.set_wavefunction(
         cp.zeros_like(zeros), cp.zeros_like(zeros), cp.zeros_like(zeros)
     )
-    wavefunction.add_noise_to_components("zero", 0, 1e-2)
+    wavefunction.add_noise("zero", 0, 1e-2)
 
     with pytest.raises(AssertionError):
         cp.testing.assert_array_equal(
@@ -176,10 +176,10 @@ def test_adding_noise_list():
     correctly makes those components non-zero."""
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
     zeros = cp.zeros(wavefunction.grid.shape, dtype="complex128")
-    wavefunction.set_custom_components(
+    wavefunction.set_wavefunction(
         cp.zeros_like(zeros), cp.zeros_like(zeros), cp.zeros_like(zeros)
     )
-    wavefunction.add_noise_to_components(["plus", "zero"], 0, 1e-2)
+    wavefunction.add_noise(["plus", "zero"], 0, 1e-2)
 
     with pytest.raises(AssertionError):
         cp.testing.assert_array_equal(
@@ -194,7 +194,7 @@ def test_adding_noise_list():
 def test_phase_all():
     """Tests that a phase applied to all components is applied correctly."""
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-    wavefunction.set_custom_components(
+    wavefunction.set_wavefunction(
         cp.ones((64, 64), dtype="complex128"),
         cp.ones((64, 64), dtype="complex128"),
         cp.ones((64, 64), dtype="complex128"),
@@ -211,7 +211,7 @@ def test_phase_all():
 def test_phase_multiple_components():
     """Tests that a phase is applied correctly to multiple components."""
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-    wavefunction.set_custom_components(
+    wavefunction.set_wavefunction(
         cp.ones((64, 64), dtype="complex128"),
         cp.ones((64, 64), dtype="complex128"),
         cp.ones((64, 64), dtype="complex128"),
@@ -227,7 +227,7 @@ def test_phase_multiple_components():
 def test_phase_single():
     """Tests that a phase is applied correctly to a single component."""
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-    wavefunction.set_custom_components(
+    wavefunction.set_wavefunction(
         cp.ones((64, 64), dtype="complex128"),
         cp.ones((64, 64), dtype="complex128"),
         cp.ones((64, 64), dtype="complex128"),

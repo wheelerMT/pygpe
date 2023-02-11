@@ -1,8 +1,9 @@
 from pygpe.shared.grid import Grid
+from pygpe.shared.wavefunction import _Wavefunction
 import cupy as cp
 
 
-class Wavefunction:
+class SpinTwoWavefunction(_Wavefunction):
     """Represents the spin-2 BEC wavefunction.
     This class contains the wavefunction arrays, in addition to various useful
     functions for manipulating and using the wavefunction.
@@ -30,7 +31,7 @@ class Wavefunction:
 
     def __init__(self, grid: Grid):
         """Constructs the wavefunction object."""
-        self.grid = grid
+        super().__init__(grid)
 
         self.plus2_component = cp.empty(grid.shape, dtype="complex128")
         self.plus1_component = cp.empty(grid.shape, dtype="complex128")
@@ -75,7 +76,7 @@ class Wavefunction:
 
         self._update_atom_numbers()
 
-    def set_custom_components(
+    def set_wavefunction(
         self,
         plus2_component: cp.ndarray = None,
         plus1_component: cp.ndarray = None,
@@ -102,7 +103,7 @@ class Wavefunction:
         if minus2_component is not None:
             self.minus2_component = minus2_component
 
-    def add_noise_to_components(
+    def add_noise(
         self, components: str | list[str], mean: float, std_dev: float
     ) -> None:
         """Adds noise to the specified wavefunction components
@@ -143,39 +144,29 @@ class Wavefunction:
         """
         match component.lower():
             case "plus2":
-                self.plus2_component += self._generate_complex_normal_dist(
+                self.plus2_component += super()._generate_complex_normal_dist(
                     mean, std_dev
                 )
             case "plus1":
-                self.plus1_component += self._generate_complex_normal_dist(
+                self.plus1_component += super()._generate_complex_normal_dist(
                     mean, std_dev
                 )
             case "zero":
-                self.zero_component += self._generate_complex_normal_dist(
+                self.zero_component += super()._generate_complex_normal_dist(
                     mean, std_dev
                 )
             case "minus1":
-                self.minus1_component += self._generate_complex_normal_dist(
+                self.minus1_component += super()._generate_complex_normal_dist(
                     mean, std_dev
                 )
             case "minus2":
-                self.minus2_component += self._generate_complex_normal_dist(
+                self.minus2_component += super()._generate_complex_normal_dist(
                     mean, std_dev
                 )
             case _:
                 raise ValueError(
                     f"{component} is not a supported configuration"
                 )
-
-    def _generate_complex_normal_dist(
-        self, mean: float, std_dev: float
-    ) -> cp.ndarray:
-        """Returns a ndarray of complex values containing results from
-        a normal distribution.
-        """
-        return cp.random.normal(
-            mean, std_dev, size=self.grid.shape
-        ) + 1j * cp.random.normal(mean, std_dev, size=self.grid.shape)
 
     def apply_phase(
         self, phase: cp.ndarray, components: str | list[str] = "all"
@@ -262,8 +253,21 @@ class Wavefunction:
         self.minus1_component = cp.fft.ifftn(self.fourier_minus1_component)
         self.minus2_component = cp.fft.ifftn(self.fourier_minus2_component)
 
+    def density(self) -> cp.ndarray:
+        """Returns an array of the total condensate density.
 
-def _uniaxial_initial_state(wfn: Wavefunction, params: dict) -> None:
+        :return: Total condensate density.
+        """
+        return (
+            cp.abs(self.plus2_component) ** 2
+            + cp.abs(self.plus1_component) ** 2
+            + cp.abs(self.zero_component) ** 2
+            + cp.abs(self.minus1_component) ** 2
+            + cp.abs(self.minus2_component) ** 2
+        )
+
+
+def _uniaxial_initial_state(wfn: SpinTwoWavefunction, params: dict) -> None:
     """Sets wavefunction components to uniaxial nematic state."""
     wfn.plus2_component = cp.zeros(wfn.grid.shape, dtype="complex128")
     wfn.plus1_component = cp.zeros(wfn.grid.shape, dtype="complex128")
@@ -274,7 +278,7 @@ def _uniaxial_initial_state(wfn: Wavefunction, params: dict) -> None:
     wfn.minus2_component = cp.zeros(wfn.grid.shape, dtype="complex128")
 
 
-def _biaxial_initial_state(wfn: Wavefunction, params: dict) -> None:
+def _biaxial_initial_state(wfn: SpinTwoWavefunction, params: dict) -> None:
     """Sets wavefunction components to biaxial nematic polar state."""
     wfn.plus2_component = (
         cp.sqrt(params["n0"])
@@ -291,7 +295,9 @@ def _biaxial_initial_state(wfn: Wavefunction, params: dict) -> None:
     )
 
 
-def _ferromagnetic2p_initial_state(wfn: Wavefunction, params: dict) -> None:
+def _ferromagnetic2p_initial_state(
+    wfn: SpinTwoWavefunction, params: dict
+) -> None:
     """Sets wavefunction components to ferromagnetic (F=2) state, with atoms
     in the plus two component.
     """
@@ -304,7 +310,9 @@ def _ferromagnetic2p_initial_state(wfn: Wavefunction, params: dict) -> None:
     wfn.minus2_component = cp.zeros(wfn.grid.shape, dtype="complex128")
 
 
-def _ferromagnetic2m_initial_state(wfn: Wavefunction, params: dict) -> None:
+def _ferromagnetic2m_initial_state(
+    wfn: SpinTwoWavefunction, params: dict
+) -> None:
     """Sets wavefunction components to ferromagnetic (F=2) state, with atoms in
     the minus two component.
     """
@@ -317,7 +325,9 @@ def _ferromagnetic2m_initial_state(wfn: Wavefunction, params: dict) -> None:
     )
 
 
-def _ferromagnetic1p_initial_state(wfn: Wavefunction, params: dict) -> None:
+def _ferromagnetic1p_initial_state(
+    wfn: SpinTwoWavefunction, params: dict
+) -> None:
     """Sets wavefunction components to ferromagnetic (F=1) state, with atoms in
     the plus one component.
     """
@@ -330,7 +340,9 @@ def _ferromagnetic1p_initial_state(wfn: Wavefunction, params: dict) -> None:
     wfn.minus2_component = cp.zeros(wfn.grid.shape, dtype="complex128")
 
 
-def _ferromagnetic1m_initial_state(wfn: Wavefunction, params: dict) -> None:
+def _ferromagnetic1m_initial_state(
+    wfn: SpinTwoWavefunction, params: dict
+) -> None:
     """Sets wavefunction components to ferromagnetic (F=1) state, with atoms in
     the minus one component.
     """
@@ -343,7 +355,7 @@ def _ferromagnetic1m_initial_state(wfn: Wavefunction, params: dict) -> None:
     wfn.minus2_component = cp.zeros(wfn.grid.shape, dtype="complex128")
 
 
-def _cyclic_initial_state(wfn: Wavefunction, params: dict) -> None:
+def _cyclic_initial_state(wfn: SpinTwoWavefunction, params: dict) -> None:
     """Sets wavefunction components to (two-component) cyclic state,
     with atoms in the plus two and minus one components."""
     fz = params["p"] + params["q"] / (params["c2"] * params["n0"])

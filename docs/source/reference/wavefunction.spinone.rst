@@ -11,7 +11,7 @@ Constructing the Wavefunction object is done through the constructor
 .. autosummary::
     :toctree: generated/
 
-    Wavefunction
+    SpinOneWavefunction
 
 Here, the parameter `grid` is a :class:`Grid` object defined prior to instantiating the Wavefunction class.
 
@@ -25,10 +25,10 @@ Below are the methods associated with the initial state.
 .. autosummary::
    :toctree: generated/
 
-   Wavefunction.set_ground_state
-   Wavefunction.set_custom_components
-   Wavefunction.add_noise_to_components
-   Wavefunction.apply_phase
+   SpinOneWavefunction.set_ground_state
+   SpinOneWavefunction.set_wavefunction
+   SpinOneWavefunction.add_noise
+   SpinOneWavefunction.apply_phase
 
 The `set_ground_state` method is used to set the initial state to a specified ground state of the spin-1 system.
 It is typically the way we start shaping the condensate.
@@ -66,9 +66,9 @@ The broken-axisymmetry wavefunction components are
     \psi_0 = \sqrt{\frac{(q^2-p^2)(-p^2-q^2+2c_2nq)}{4c_2nq^3}}.
 
 
-If more flexibility is required, the `set_custom_components` method allows us to set specific components to specified
+If more flexibility is required, the `set_wavefunction` method allows us to set specific components to specified
 arrays.
-The `add_noise_to_components` method adds noise to each grid point of the wavefunction for the specified components.
+The `add_noise` method adds noise to each grid point of the wavefunction for the specified components.
 The noise is drawn from a uniform distribution with the mean and standard deviation specified in the function signature.
 Finally, `apply_phase` applies a user-defined phase to the specified wavefunction components as
 :math:`\psi_m\rightarrow\psi_m e^{i\phi}` for phase :math:`\phi` and component :math:`m \in \{+, 0, -\}`.
@@ -80,9 +80,10 @@ The methods below fall under the miscellaneous category and are self-explanatory
 .. autosummary::
    :toctree: generated/
 
-   Wavefunction.fft
-   Wavefunction.ifft
+   SpinOneWavefunction.fft
+   SpinOneWavefunction.ifft
+   SpinOneWavefunction.density
 
 Attributes
 ----------
-See :class:`Wavefunction` for list of class attributes (variables).
+See :class:`SpinOneWavefunction` for list of class attributes (variables).

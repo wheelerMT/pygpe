@@ -1,8 +1,8 @@
 import cupy as cp
-from pygpe.spinone.wavefunction import Wavefunction
+from pygpe.spinone.wavefunction import SpinOneWavefunction
 
 
-def step_wavefunction(wfn: Wavefunction, params: dict) -> None:
+def step_wavefunction(wfn: SpinOneWavefunction, params: dict) -> None:
     """Propagates the wavefunction forward one time step.
 
     :param wfn: The wavefunction of the system.
@@ -19,7 +19,7 @@ def step_wavefunction(wfn: Wavefunction, params: dict) -> None:
         _renormalise_wavefunction(wfn)
 
 
-def _kinetic_zeeman_step(wfn: Wavefunction, pm: dict) -> None:
+def _kinetic_zeeman_step(wfn: SpinOneWavefunction, pm: dict) -> None:
     """Computes the kinetic-zeeman subsystem for half a time step.
 
     :param wfn: The wavefunction of the system.
@@ -36,7 +36,7 @@ def _kinetic_zeeman_step(wfn: Wavefunction, pm: dict) -> None:
     )
 
 
-def _interaction_step(wfn: Wavefunction, pm: dict) -> None:
+def _interaction_step(wfn: SpinOneWavefunction, pm: dict) -> None:
     """Computes the interaction subsystem for a full time step.
 
     :param wfn: The wavefunction of the system.
@@ -74,7 +74,9 @@ def _interaction_step(wfn: Wavefunction, pm: dict) -> None:
     )
 
 
-def _calculate_spins(wfn: Wavefunction) -> tuple[cp.ndarray, cp.ndarray]:
+def _calculate_spins(
+    wfn: SpinOneWavefunction,
+) -> tuple[cp.ndarray, cp.ndarray]:
     """Calculates the perpendicular and longitudinal spins.
 
     :param wfn: The wavefunction of the system.
@@ -89,7 +91,7 @@ def _calculate_spins(wfn: Wavefunction) -> tuple[cp.ndarray, cp.ndarray]:
     return spin_perp, spin_z
 
 
-def _calculate_density(wfn: Wavefunction) -> cp.ndarray:
+def _calculate_density(wfn: SpinOneWavefunction) -> cp.ndarray:
     """Calculates the total condensate density.
 
     :param wfn: The wavefunction of the system.
@@ -102,7 +104,7 @@ def _calculate_density(wfn: Wavefunction) -> cp.ndarray:
     )
 
 
-def _renormalise_wavefunction(wfn: Wavefunction) -> None:
+def _renormalise_wavefunction(wfn: SpinOneWavefunction) -> None:
     """Re-normalises the wavefunction to the correct atom number.
 
     :param wfn: The wavefunction of the system.
@@ -124,7 +126,7 @@ def _renormalise_wavefunction(wfn: Wavefunction) -> None:
     wfn.fft()
 
 
-def _calculate_atom_num(wfn: Wavefunction) -> tuple[int, int, int]:
+def _calculate_atom_num(wfn: SpinOneWavefunction) -> tuple[int, int, int]:
     """Calculates the atom number of each wavefunction component.
 
     :param wfn: The wavefunction of the system.
