@@ -1,8 +1,8 @@
 import cupy as cp
-from pygpe.spinhalf.wavefunction import Wavefunction
+from pygpe.spinhalf.wavefunction import SpinHalfWavefunction
 
 
-def step_wavefunction(wfn: Wavefunction, params: dict) -> None:
+def step_wavefunction(wfn: SpinHalfWavefunction, params: dict) -> None:
     """Propagates the wavefunction forward one time step.
 
     :param wfn: The wavefunction of the system.
@@ -19,7 +19,7 @@ def step_wavefunction(wfn: Wavefunction, params: dict) -> None:
         _renormalise_wavefunction(wfn)
 
 
-def _kinetic_step(wfn: Wavefunction, pm: dict) -> None:
+def _kinetic_step(wfn: SpinHalfWavefunction, pm: dict) -> None:
     """Computes the kinetic energy subsystem for half a time step.
 
     :param wfn: The wavefunction of the system.
@@ -33,7 +33,7 @@ def _kinetic_step(wfn: Wavefunction, pm: dict) -> None:
     )
 
 
-def _potential_step(wfn: Wavefunction, pm: dict) -> None:
+def _potential_step(wfn: SpinHalfWavefunction, pm: dict) -> None:
     """Computes the potential subsystem for a full time step.
 
     :param wfn: The wavefunction of the system.
@@ -62,7 +62,7 @@ def _potential_step(wfn: Wavefunction, pm: dict) -> None:
     )
 
 
-def _renormalise_wavefunction(wfn: Wavefunction) -> None:
+def _renormalise_wavefunction(wfn: SpinHalfWavefunction) -> None:
     """Re-normalises the wavefunction to the correct atom number.
 
     :param wfn: The wavefunction of the system.
@@ -78,7 +78,7 @@ def _renormalise_wavefunction(wfn: Wavefunction) -> None:
     wfn.fft()
 
 
-def _calculate_atom_num(wfn: Wavefunction) -> tuple[int, int]:
+def _calculate_atom_num(wfn: SpinHalfWavefunction) -> tuple[int, int]:
     """Calculates the atom number of each wavefunction component.
 
     :param wfn: The wavefunction of the system.

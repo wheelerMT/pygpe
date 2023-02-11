@@ -1,11 +1,12 @@
 from pygpe.shared.grid import Grid
+from pygpe.shared.wavefunction import Wavefunction
 import cupy as cp
 
 
-class Wavefunction:
+class SpinHalfWavefunction(Wavefunction):
     def __init__(self, grid: Grid):
         """Constructs the wavefunction object."""
-        self.grid = grid
+        super().__init__(grid)
 
         self.plus_component = cp.empty(grid.shape, dtype="complex128")
         self.minus_component = cp.empty(grid.shape, dtype="complex128")
@@ -15,7 +16,7 @@ class Wavefunction:
         self.atom_num_plus = 0
         self.atom_num_minus = 0
 
-    def set_wavefunction_components(
+    def set_wavefunction(
         self, plus_component: cp.ndarray, minus_component: cp.ndarray
     ) -> None:
         """Set the wavefunction components to the specified arrays.
@@ -38,9 +39,7 @@ class Wavefunction:
             cp.abs(self.minus_component) ** 2
         )
 
-    def add_noise_to_components(
-        self, components: str, mean: float, std_dev: float
-    ) -> None:
+    def add_noise(self, components: str, mean: float, std_dev: float) -> None:
         """Adds noise to the specified wavefunction components
         using a normal distribution.
 
@@ -51,34 +50,24 @@ class Wavefunction:
         """
         match components.lower():
             case "plus":
-                self.plus_component += self._generate_complex_normal_dist(
+                self.plus_component += super()._generate_complex_normal_dist(
                     mean, std_dev
                 )
             case "minus":
-                self.minus_component += self._generate_complex_normal_dist(
+                self.minus_component += super()._generate_complex_normal_dist(
                     mean, std_dev
                 )
             case "all":
-                self.plus_component += self._generate_complex_normal_dist(
+                self.plus_component += super()._generate_complex_normal_dist(
                     mean, std_dev
                 )
-                self.minus_component += self._generate_complex_normal_dist(
+                self.minus_component += super()._generate_complex_normal_dist(
                     mean, std_dev
                 )
             case _:
                 raise ValueError(
                     f"{components} is not a supported configuration"
                 )
-
-    def _generate_complex_normal_dist(
-        self, mean: float, std_dev: float
-    ) -> cp.ndarray:
-        """Returns a ndarray of complex values containing results from
-        a normal distribution.
-        """
-        return cp.random.normal(
-            mean, std_dev, size=self.grid.shape
-        ) + 1j * cp.random.normal(mean, std_dev, size=self.grid.shape)
 
     def apply_phase(self, phase: cp.ndarray, components: str = "all") -> None:
         """Applies a given phase to the specified condensate components.
