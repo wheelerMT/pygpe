@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from grid import Grid
+from pygpe.shared.grid import Grid
 import cupy as cp
 
 

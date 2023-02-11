@@ -10,7 +10,7 @@ grid_spacings = (0.5, 0.5)
 grid = gpe.Grid(points, grid_spacings)
 
 # Set up initial wavefunction with uniform density
-psi = gpe.Wavefunction(grid)
+psi = gpe.ScalarWavefunction(grid)
 psi.set_wavefunction(cp.ones(grid.shape, dtype="complex128"))
 psi.add_noise(mean=0.0, std_dev=1e-2)  # Add noise to wavefunction
 

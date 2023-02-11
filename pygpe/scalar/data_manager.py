@@ -2,7 +2,7 @@ import h5py
 import cupy as cp
 from pygpe.shared.grid import Grid
 from pygpe.shared import data_manager_paths as dmp
-from pygpe.scalar.wavefunction import Wavefunction
+from pygpe.scalar.wavefunction import ScalarWavefunction
 
 
 class DataManager:
@@ -28,7 +28,7 @@ class DataManager:
         h5py.File(f"{self.data_path}/{self.filename}", "w")
 
     def save_initial_parameters(
-        self, grid: Grid, wfn: Wavefunction, parameters: dict
+        self, grid: Grid, wfn: ScalarWavefunction, parameters: dict
     ) -> None:
         """Saves the initial grid, wavefunction and parameters to a HDF5 file.
 
@@ -67,7 +67,7 @@ class DataManager:
                 file.create_dataset(dmp.GRID_DY, data=grid.grid_spacing_y)
                 file.create_dataset(dmp.GRID_DZ, data=grid.grid_spacing_z)
 
-    def _save_initial_wfn(self, wfn: Wavefunction) -> None:
+    def _save_initial_wfn(self, wfn: ScalarWavefunction) -> None:
         """Saves initial wavefunction to dataset."""
         with h5py.File(f"{self.data_path}/{self.filename}", "r+") as file:
             if wfn.grid.ndim == 1:
@@ -93,7 +93,7 @@ class DataManager:
                     f"{dmp.PARAMETERS}/{key}", data=parameters[key]
                 )
 
-    def save_wavefunction(self, wfn: Wavefunction) -> None:
+    def save_wavefunction(self, wfn: ScalarWavefunction) -> None:
         """Saves the current wavefunction data to the dataset.
 
         :param wfn: The wavefunction of the system.
