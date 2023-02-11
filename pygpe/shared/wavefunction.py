@@ -4,11 +4,16 @@ import cupy as cp
 
 
 class _Wavefunction(ABC):
+    """Defines the abstract Wavefunction base class.
+    Each system's wavefunction inherits from this class and provides overrides
+    for the abstract methods.
+    """
+
     def __init__(self, grid: Grid) -> None:
         """The default constructor for the abstract `Wavefunction` class, to be
         inherited by subclasses of `Wavefunction`.
 
-        :param grid: _description_
+        :param grid: Grid object of the system.
         :type grid: Grid
         """
         self.grid = grid
