@@ -3,7 +3,7 @@ from pygpe.shared.grid import Grid
 import cupy as cp
 
 
-class Wavefunction(ABC):
+class _Wavefunction(ABC):
     def __init__(self, grid: Grid) -> None:
         """The default constructor for the abstract `Wavefunction` class, to be
         inherited by subclasses of `Wavefunction`.

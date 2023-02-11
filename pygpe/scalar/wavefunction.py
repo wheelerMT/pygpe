@@ -1,9 +1,9 @@
 from pygpe.shared.grid import Grid
-from pygpe.shared.wavefunction import Wavefunction
+from pygpe.shared.wavefunction import _Wavefunction
 import cupy as cp
 
 
-class ScalarWavefunction(Wavefunction):
+class ScalarWavefunction(_Wavefunction):
     """Represents the scalar BEC wavefunction.
     This class contains the wavefunction array, in addition to various useful
     functions for manipulating and using the wavefunction.

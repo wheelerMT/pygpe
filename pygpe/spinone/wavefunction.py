@@ -1,9 +1,9 @@
 from pygpe.shared.grid import Grid
-from pygpe.shared.wavefunction import Wavefunction
+from pygpe.shared.wavefunction import _Wavefunction
 import cupy as cp
 
 
-class SpinOneWavefunction(Wavefunction):
+class SpinOneWavefunction(_Wavefunction):
     """Represents the spin-1 BEC wavefunction.
     This class contains the wavefunction arrays, in addition to various useful
     functions for manipulating and using the wavefunction.

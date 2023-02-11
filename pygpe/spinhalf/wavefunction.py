@@ -1,9 +1,9 @@
 from pygpe.shared.grid import Grid
-from pygpe.shared.wavefunction import Wavefunction
+from pygpe.shared.wavefunction import _Wavefunction
 import cupy as cp
 
 
-class SpinHalfWavefunction(Wavefunction):
+class SpinHalfWavefunction(_Wavefunction):
     def __init__(self, grid: Grid):
         """Constructs the wavefunction object."""
         super().__init__(grid)
