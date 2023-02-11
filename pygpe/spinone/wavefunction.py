@@ -1,8 +1,9 @@
 from pygpe.shared.grid import Grid
+from pygpe.shared.wavefunction import Wavefunction
 import cupy as cp
 
 
-class Wavefunction:
+class SpinOneWavefunction(Wavefunction):
     """Represents the spin-1 BEC wavefunction.
     This class contains the wavefunction arrays, in addition to various useful
     functions for manipulating and using the wavefunction.
@@ -24,7 +25,7 @@ class Wavefunction:
 
     def __init__(self, grid: Grid):
         """Constructs the wavefunction object."""
-        self.grid = grid
+        super().__init__(grid)
 
         self.plus_component = cp.empty(grid.shape, dtype="complex128")
         self.zero_component = cp.empty(grid.shape, dtype="complex128")
@@ -56,7 +57,7 @@ class Wavefunction:
 
         self._update_atom_numbers()
 
-    def set_custom_components(
+    def set_wavefunction(
         self,
         plus_component: cp.ndarray = None,
         zero_component: cp.ndarray = None,
@@ -75,7 +76,7 @@ class Wavefunction:
         if minus_component is not None:
             self.minus_component = minus_component
 
-    def add_noise_to_components(
+    def add_noise(
         self, components: str | list[str], mean: float, std_dev: float
     ) -> None:
         """Adds noise to the specified wavefunction components
@@ -113,31 +114,21 @@ class Wavefunction:
         """
         match component.lower():
             case "plus":
-                self.plus_component += self._generate_complex_normal_dist(
+                self.plus_component += super()._generate_complex_normal_dist(
                     mean, std_dev
                 )
             case "zero":
-                self.zero_component += self._generate_complex_normal_dist(
+                self.zero_component += super()._generate_complex_normal_dist(
                     mean, std_dev
                 )
             case "minus":
-                self.minus_component += self._generate_complex_normal_dist(
+                self.minus_component += super()._generate_complex_normal_dist(
                     mean, std_dev
                 )
             case _:
                 raise ValueError(
                     f"{component} is not a supported configuration"
                 )
-
-    def _generate_complex_normal_dist(
-        self, mean: float, std_dev: float
-    ) -> cp.ndarray:
-        """Returns a ndarray of complex values containing results from
-        a normal distribution.
-        """
-        return cp.random.normal(
-            mean, std_dev, size=self.grid.shape
-        ) + 1j * cp.random.normal(mean, std_dev, size=self.grid.shape)
 
     def apply_phase(
         self, phase: cp.ndarray, components: str | list[str] = "all"
@@ -215,7 +206,7 @@ class Wavefunction:
         )
 
 
-def _polar_initial_state(wfn: Wavefunction, params: dict) -> None:
+def _polar_initial_state(wfn: SpinOneWavefunction, params: dict) -> None:
     """Sets wavefunction components to (easy-axis) polar state."""
     wfn.plus_component = cp.zeros(wfn.grid.shape, dtype="complex128")
     wfn.zero_component = cp.sqrt(params["n0"]) * cp.ones(
@@ -224,7 +215,9 @@ def _polar_initial_state(wfn: Wavefunction, params: dict) -> None:
     wfn.minus_component = cp.zeros(wfn.grid.shape, dtype="complex128")
 
 
-def _ferromagnetic_initial_state(wfn: Wavefunction, params: dict) -> None:
+def _ferromagnetic_initial_state(
+    wfn: SpinOneWavefunction, params: dict
+) -> None:
     """Sets wavefunction components to ferromagnetic state."""
     wfn.plus_component = cp.sqrt(params["n0"]) * cp.ones(
         wfn.grid.shape, dtype="complex128"
@@ -233,7 +226,9 @@ def _ferromagnetic_initial_state(wfn: Wavefunction, params: dict) -> None:
     wfn.minus_component = cp.zeros(wfn.grid.shape, dtype="complex128")
 
 
-def _antiferromagnetic_initial_state(wfn: Wavefunction, params: dict) -> None:
+def _antiferromagnetic_initial_state(
+    wfn: SpinOneWavefunction, params: dict
+) -> None:
     """Sets wavefunction components to antiferromagnetic state."""
     p = params["p"]  # Linear Zeeman
     c2 = params["c2"]  # Spin-dependent interaction strength
@@ -252,7 +247,9 @@ def _antiferromagnetic_initial_state(wfn: Wavefunction, params: dict) -> None:
     )
 
 
-def _broken_axisymmetry_initial_state(wfn: Wavefunction, params: dict) -> None:
+def _broken_axisymmetry_initial_state(
+    wfn: SpinOneWavefunction, params: dict
+) -> None:
     """Sets wavefunction components to antiferromagnetic state."""
     p = params["p"]  # Linear Zeeman
     q = params["q"]  # Quadratic Zeeman
