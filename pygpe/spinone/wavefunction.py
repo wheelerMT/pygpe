@@ -137,7 +137,7 @@ class SpinOneWavefunction(Wavefunction):
 
         :param phase: The phase to be applied.
         :param components: "all", "plus", "zero", "minus" or a list of strings
-        specifying the required components.
+            specifying the required components.
         """
         match components:
             case [*_]:
