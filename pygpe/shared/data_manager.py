@@ -1,5 +1,4 @@
 import h5py
-import cupy as cp
 import pygpe.shared.data_manager_paths as dmp
 from abc import ABC, abstractmethod
 from pygpe.shared.grid import Grid
