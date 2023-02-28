@@ -76,6 +76,8 @@ class SpinOneWavefunction(_Wavefunction):
         if minus_component is not None:
             self.minus_component = minus_component
 
+        self._update_atom_numbers()
+
     def add_noise(
         self, components: str | list[str], mean: float, std_dev: float
     ) -> None:

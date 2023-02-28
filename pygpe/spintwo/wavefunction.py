@@ -103,6 +103,8 @@ class SpinTwoWavefunction(_Wavefunction):
         if minus2_component is not None:
             self.minus2_component = minus2_component
 
+        self._update_atom_numbers()
+
     def add_noise(
         self, components: str | list[str], mean: float, std_dev: float
     ) -> None:
