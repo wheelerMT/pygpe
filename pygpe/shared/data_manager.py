@@ -75,22 +75,3 @@ class _DataManager(ABC):
         :type wfn: _Wavefunction
         """
         pass
-
-    @staticmethod
-    def _create_dataset(
-        file: h5py.File, dataset_path: str, wfn: _Wavefunction
-    ) -> None:
-        if wfn.grid.ndim == 1:
-            file.create_dataset(
-                dataset_path,
-                (wfn.grid.shape, 1),
-                maxshape=(wfn.grid.shape, None),
-                dtype="complex128",
-            )
-        else:
-            file.create_dataset(
-                dataset_path,
-                (*wfn.grid.shape, 1),
-                maxshape=(wfn.grid.shape, None),
-                dtype="complex128",
-            )
