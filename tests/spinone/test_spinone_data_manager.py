@@ -1,18 +1,18 @@
 import cupy as cp
 import h5py
 from pygpe.shared.grid import Grid
-from pygpe.scalar.data_manager import DataManager
+from pygpe.spinone.data_manager import DataManager
 import pygpe.shared.data_manager_paths as dmp
-from pygpe.scalar.wavefunction import ScalarWavefunction
+from pygpe.spinone.wavefunction import SpinOneWavefunction
 
-FILENAME = "scalar_test.hdf5"
+FILENAME = "spinone_test.hdf5"
 FILE_PATH = "data"
 
 
 def generate_wavefunction(
     points: tuple[int, int] = (64, 64),
     grid_spacing: tuple[float, float] = (0.5, 0.5),
-) -> ScalarWavefunction:
+) -> SpinOneWavefunction:
     """Generates a 2D `Wavefunction` object for use in testing.
 
     :param points: Number of grid points in each dimension,
@@ -21,21 +21,30 @@ def generate_wavefunction(
     :param grid_spacing: Grid spacing in each dimension, defaults to
         (0.5, 0.5).
     :type grid_spacing: tuple[float, float], optional.
-    :return: `ScalarWavefunction` object.
-    :rtype: ScalarWavefunction.
+    :return: `SpinOneWavefunction` object.
+    :rtype: SpinOneWavefunction.
     """
-    return ScalarWavefunction(Grid(points, grid_spacing))
+    return SpinOneWavefunction(Grid(points, grid_spacing))
 
 
 def generate_parameters() -> dict:
-    """Generates the scalar BEC parameters dictionary for use in testing.
+    """Generates the spin-1 BEC parameters dictionary for use in testing.
 
     :return: The generated dictionary.
     :rtype: dict.
     """
-    scalar_parameter_types = ["g", "trap", "nt", "dt", "t"]
+    spinone_parameter_types = [
+        "c0",
+        "c2",
+        "p",
+        "q",
+        "n0",
+        "nt",
+        "dt",
+        "t",
+    ]
     params = {}
-    for key in scalar_parameter_types:
+    for key in spinone_parameter_types:
         params[key] = hash(key)
 
     return params
@@ -68,9 +77,21 @@ def test_correct_wavefunction():
     DataManager(FILENAME, FILE_PATH, wavefunction, params)
 
     with h5py.File(f"{FILE_PATH}/{FILENAME}", "r") as file:
-        saved_wavefunction = cp.asarray(
-            file[f"{dmp.SCALAR_WAVEFUNCTION}"][:, :, 0]
+        saved_wavefunction_plus = cp.asarray(
+            file[f"{dmp.SPIN1_WAVEFUNCTION_PLUS}"][:, :, 0]
         )
         cp.testing.assert_array_almost_equal(
-            wavefunction.component, saved_wavefunction
+            wavefunction.plus_component, saved_wavefunction_plus
+        )
+        saved_wavefunction_zero = cp.asarray(
+            file[f"{dmp.SPIN1_WAVEFUNCTION_ZERO}"][:, :, 0]
+        )
+        cp.testing.assert_array_almost_equal(
+            wavefunction.zero_component, saved_wavefunction_zero
+        )
+        saved_wavefunction_minus = cp.asarray(
+            file[f"{dmp.SPIN1_WAVEFUNCTION_MINUS}"][:, :, 0]
+        )
+        cp.testing.assert_array_almost_equal(
+            wavefunction.minus_component, saved_wavefunction_minus
         )
