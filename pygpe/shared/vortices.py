@@ -32,7 +32,7 @@ def _generate_positions(
 
     print(
         f"Successfully found {num_vortices} positions "
-        "in {iterations} iterations!"
+        f"in {iterations} iterations!"
     )
     return iter(vortex_positions)
 
