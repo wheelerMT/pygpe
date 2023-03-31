@@ -34,8 +34,7 @@ phase = cp.asarray(
 psi.apply_phase(phase)  # Apply phase to all spinor components
 
 # Generate DataManager to store data for simulation
-data = gpe.DataManager(filename="data.hdf5", data_path="../../data/")
-data.save_initial_parameters(grid, psi, params)
+data = gpe.DataManager("data.hdf5", "data/", psi, params)
 
 psi.fft()  # Ensures k-space wavefunction components are up-to-date before evolution
 start_time = time.time()
