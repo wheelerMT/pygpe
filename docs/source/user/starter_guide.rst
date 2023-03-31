@@ -163,16 +163,21 @@ Setting up the data manager
 ---------------------------
 
 PyGPE provides an easy way to save data throughout the simulation.
-Once the initial grid, wavefunction and condensate parameters have been defined we an instantiate a DataManager class,
+Once the initial grid, wavefunction and condensate parameters have been defined,
+we instantiate a DataManager class,
 which saves all the initial details of the system.
 To do this, we write::
 
-    data = gpe.DataManager(filename='data.hdf5', data_path='../../data/')
-    data.save_initial_parameters(grid, wavefunction, params)
+    data = gpe.DataManager(filename='data.hdf5', data_path='../../data/', wfn=wavefunction, params=params)
 
-The constructor takes two parameters: `filename` and the path where we want to save the data, `data_path`.
-We then call `data.save_initial_parameters` to save our initial grid, wavefunction and parameters to the dataset.
-Finally, to save the current wavefunction to the dataset we simply write::
+The constructor takes four parameters: `filename`, the path where we want to
+save the data, `data_path`, the wavefunction object, `wfn`, and the
+parameters' dictionary, `params`.
+Calling the constructor automatically generates the file and populates it with
+the parameters of our system.
+
+To save the current wavefunction object to the dataset (i.e., whilst a simulation
+is running), we simply write::
 
     data.save_wavefunction(wavefunction)
 
@@ -193,9 +198,10 @@ That's it! All the evolution happens behind the `step_wavefunction` method.
 Imaginary/complex time evolution
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Imaginary time evolution is an extremely useful way of computing ground states of Bose-Einstein condensate systems and
-PyGPE readily supports it.
-To use imaginary time evolution we simply have to define an imaginary time step in our parameters dictionary::
+Imaginary time evolution is an extremely useful way of computing ground states
+of Bose-Einstein condensate systems and PyGPE readily supports it.
+To use imaginary time evolution we simply have to define an imaginary time step
+in our parameters dictionary::
 
     params = {"dt": -1j * 1e-2}
 
