@@ -31,7 +31,7 @@ class DataManager(_DataManager):
 
     def _save_initial_wfn(self, wfn: ScalarWavefunction) -> None:
         """Saves initial wavefunction to dataset."""
-        with h5py.File(f"{self.data_path}/{self.filename}", "r+") as file:
+        with h5py.File(self.data_path_and_file, "r+") as file:
             if wfn.grid.ndim == 1:
                 file.create_dataset(
                     dmp.SCALAR_WAVEFUNCTION,
@@ -54,7 +54,7 @@ class DataManager(_DataManager):
         :type wfn: :class:`Wavefunction`
         """
         wfn.ifft()  # Update real-space wavefunction before saving
-        with h5py.File(f"{self.data_path}/{self.filename}", "r+") as data:
+        with h5py.File(self.data_path_and_file, "r+") as data:
             if wfn.grid.ndim == 1:
                 new_psi = data[dmp.SCALAR_WAVEFUNCTION]
                 new_psi.resize((wfn.grid.num_points_x, self._time_index + 1))
