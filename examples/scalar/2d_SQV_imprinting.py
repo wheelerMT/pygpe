@@ -22,7 +22,7 @@ psi.apply_phase(cp.asarray(phase))  # Apply phase to wavefunction
 params = {"g": 1, "trap": 0, "nt": 1000, "dt": -1j * 1e-2, "t": 0}
 
 # Create DataManager
-data = gpe.DataManager("scalar_data.hdf5", "data/", psi, params)
+data = gpe.DataManager("scalar_data.hdf5", "data", psi, params)
 
 psi.fft()  # FFT to ensure k-space wavefunction is up-to-date
 start_time = time.time()  # Start timer
