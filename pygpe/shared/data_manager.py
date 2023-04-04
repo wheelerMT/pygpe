@@ -3,6 +3,7 @@ import pygpe.shared.data_manager_paths as dmp
 from abc import ABC, abstractmethod
 from pygpe.shared.grid import Grid
 from pygpe.shared.wavefunction import _Wavefunction
+from pathlib import Path
 
 
 class _DataManager(ABC):
@@ -27,17 +28,18 @@ class _DataManager(ABC):
         :type params: dict
         """
         self.filename = filename
-        self.data_path = data_path
+        self.data_path = Path(f"./{data_path}")
+        self.data_path_and_file = self.data_path / self.filename
         self._time_index = 0
 
         # Create file and save initial parameters
-        h5py.File(f"{self.data_path}/{self.filename}", "w")
+        h5py.File(self.data_path_and_file, "w")
         self._save_grid_params(wfn.grid)
         self._save_params(params)
 
     def _save_grid_params(self, grid: Grid) -> None:
         """Saves grid parameters to dataset."""
-        with h5py.File(f"{self.data_path}/{self.filename}", "r+") as file:
+        with h5py.File(self.data_path_and_file, "r+") as file:
             if grid.ndim == 1:
                 file.create_dataset(dmp.GRID_NX, data=grid.num_points_x)
                 file.create_dataset(dmp.GRID_DX, data=grid.grid_spacing_x)
@@ -56,7 +58,7 @@ class _DataManager(ABC):
 
     def _save_params(self, parameters: dict) -> None:
         """Saves condensate parameters to dataset."""
-        with h5py.File(f"{self.data_path}/{self.filename}", "r+") as file:
+        with h5py.File(self.data_path / self.filename, "r+") as file:
             for key in parameters:
                 file.create_dataset(
                     f"{dmp.PARAMETERS}/{key}", data=parameters[key]

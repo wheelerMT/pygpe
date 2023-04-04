@@ -31,7 +31,7 @@ class DataManager(_DataManager):
 
     def _save_initial_wfn(self, wfn: SpinTwoWavefunction) -> None:
         """Creates new datasets in file for the wavefunction."""
-        with h5py.File(f"{self.data_path}/{self.filename}", "r+") as file:
+        with h5py.File(self.data_path_and_file, "r+") as file:
             if wfn.grid.ndim == 1:
                 file.create_dataset(
                     dmp.SPIN2_WAVEFUNCTION_PLUS_TWO,
@@ -102,7 +102,7 @@ class DataManager(_DataManager):
         :type wfn: :class:`Wavefunction`
         """
         wfn.ifft()  # Update real-space wavefunction before saving
-        with h5py.File(f"{self.data_path}/{self.filename}", "r+") as data:
+        with h5py.File(self.data_path_and_file, "r+") as data:
             if wfn.grid.ndim == 1:
                 new_psi_plus2 = data[dmp.SPIN2_WAVEFUNCTION_PLUS_TWO]
                 new_psi_plus2.resize(
