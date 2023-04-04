@@ -1,4 +1,4 @@
-import numpy as np
+import cupy as cp
 from pygpe.shared.grid import Grid
 
 
@@ -21,9 +21,9 @@ def _generate_positions(
             )
             return vortex_positions
 
-        position = np.random.uniform(
+        position = cp.random.uniform(
             -grid.length_x / 2, grid.length_x / 2
-        ), np.random.uniform(-grid.length_y / 2, grid.length_y / 2)
+        ), cp.random.uniform(-grid.length_y / 2, grid.length_y / 2)
 
         if _position_sufficiently_far(position, vortex_positions, threshold):
             vortex_positions.append(position)
@@ -54,16 +54,16 @@ def _position_sufficiently_far(
     return False
 
 
-def _heaviside(array: np.ndarray) -> np.ndarray:
+def _heaviside(array: cp.ndarray) -> cp.ndarray:
     """Computes the heaviside function on a given array and returns the
     result.
     """
-    return np.where(array < 0, np.zeros(array.shape), np.ones(array.shape))
+    return cp.where(array < 0, cp.zeros(array.shape), cp.ones(array.shape))
 
 
 def vortex_phase_profile(
     grid: Grid, num_vortices: int, threshold: float
-) -> np.ndarray:
+) -> cp.ndarray:
     """Constructs a 2D phase profile consisting of 2pi phase windings.
     This phase can be applied to a wavefunction to generate different types of
     vortices.
@@ -78,10 +78,10 @@ def vortex_phase_profile(
     """
     vortex_positions_iter = _generate_positions(grid, num_vortices, threshold)
 
-    phase = np.zeros((grid.num_points_x, grid.num_points_y), dtype="float32")
+    phase = cp.zeros((grid.num_points_x, grid.num_points_y), dtype="float32")
 
     for _ in range(num_vortices // 2):
-        phase_temp = np.zeros(
+        phase_temp = cp.zeros(
             (grid.num_points_x, grid.num_points_y), dtype="float32"
         )
         x_pos_minus, y_pos_minus = next(
@@ -92,29 +92,29 @@ def vortex_phase_profile(
         )  # Positive circulation vortex
 
         # Aux variables
-        y_minus = 2 * np.pi / grid.length_y * (grid.y_mesh - y_pos_minus)
-        x_minus = 2 * np.pi / grid.length_x * (grid.x_mesh - x_pos_minus)
-        y_plus = 2 * np.pi / grid.length_y * (grid.y_mesh - y_pos_plus)
-        x_plus = 2 * np.pi / grid.length_x * (grid.x_mesh - x_pos_plus)
+        y_minus = 2 * cp.pi / grid.length_y * (grid.y_mesh - y_pos_minus)
+        x_minus = 2 * cp.pi / grid.length_x * (grid.x_mesh - x_pos_minus)
+        y_plus = 2 * cp.pi / grid.length_y * (grid.y_mesh - y_pos_plus)
+        x_plus = 2 * cp.pi / grid.length_x * (grid.x_mesh - x_pos_plus)
 
         heaviside_x_plus = _heaviside(x_plus)
         heaviside_x_minus = _heaviside(x_minus)
 
-        for nn in np.arange(-5, 6):
+        for nn in cp.arange(-5, 6):
             phase_temp += (
-                np.arctan(
-                    np.tanh((y_minus + 2 * np.pi * nn) / 2)
-                    * np.tan((x_minus - np.pi) / 2)
+                cp.arctan(
+                    cp.tanh((y_minus + 2 * cp.pi * nn) / 2)
+                    * cp.tan((x_minus - cp.pi) / 2)
                 )
-                - np.arctan(
-                    np.tanh((y_plus + 2 * np.pi * nn) / 2)
-                    * np.tan((x_plus - np.pi) / 2)
+                - cp.arctan(
+                    cp.tanh((y_plus + 2 * cp.pi * nn) / 2)
+                    * cp.tan((x_plus - cp.pi) / 2)
                 )
-                + np.pi * (heaviside_x_plus - heaviside_x_minus)
+                + cp.pi * (heaviside_x_plus - heaviside_x_minus)
             )
         phase_temp -= (
             2
-            * np.pi
+            * cp.pi
             * (grid.y_mesh - grid.y_mesh.min())
             * (x_pos_plus - x_pos_minus)
             / (grid.length_y * grid.length_x)
