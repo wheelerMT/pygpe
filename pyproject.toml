@@ -1,48 +1,22 @@
-[build-system]
-requires = ["setuptools>=61.0.0", "wheel"]
-build-backend = "setuptools.build_meta"
-
-[project]
+[tool.poetry]
 name = "pygpe"
 version = "1.2.2"
 description = "A fast Gross-Pitaevskii equation solver for scalar, spin-1 and spin-2 BEC systems."
-readme = "docs/pypi.md"
-authors = [{ name = "Matt Wheeler", email = "mattwheeler15@hotmail.co.uk" }]
-license = { file = "LICENSE" }
-classifiers = [
-    "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3",
-]
+authors = ["Matt Wheeler <wheelermt@proton.me>"]
+license = "MIT"
+readme = "README.md"
+documentation = "https://wheelermt.github.io/pygpe-docs/"
+homepage = "https://github.com/wheelerMT/pygpe"
 keywords = ["Gross-Pitaevskii", "Bose-Einstein", "scientific computing", "numerical methods"]
-dependencies = [
-    "cupy-cuda11x",
-    "h5py"
-]
-requires-python = ">=3.10"
 
-[project.urls]
-Homepage = "https://github.com/wheelerMT/pygpe"
+[tool.poetry.dependencies]
+python = "^3.10"
+h5py = "^3.10.0"
+numpy = "^1.26.3"
 
-[tool.setuptools]
-packages = ["pygpe", "pygpe.shared", "pygpe.scalar", "pygpe.spinhalf", "pygpe.spinone", "pygpe.spintwo"]
+[tool.poetry.extras]
+gpu = ["cupy"]
 
-[tool.bumpver]
-current_version = "1.2.2"
-version_pattern = "MAJOR.MINOR.PATCH"
-commit_message = "bump version {old_version} -> {new_version}"
-commit = true
-tag = true
-push = true
-
-[tool.bumpver.file_patterns]
-"pyproject.toml" = [
-    'current_version = "{version}"',
-    'version = "{version}"'
-]
-"README.md" = [
-    "{version}",
-    "{pep440_version}",
-]
-"docs/source/conf.py" = ['release = "{version}"']
-
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
