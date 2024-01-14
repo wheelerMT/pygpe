@@ -1,4 +1,4 @@
-import cupy as cp
+import numpy as np
 import h5py
 from pygpe.shared.grid import Grid
 from pygpe.scalar.data_manager import DataManager
@@ -68,9 +68,9 @@ def test_correct_wavefunction():
     DataManager(FILENAME, FILE_PATH, wavefunction, params)
 
     with h5py.File(f"{FILE_PATH}/{FILENAME}", "r") as file:
-        saved_wavefunction = cp.asarray(
+        saved_wavefunction = np.asarray(
             file[f"{dmp.SCALAR_WAVEFUNCTION}"][:, :, 0]
         )
-        cp.testing.assert_array_almost_equal(
+        np.testing.assert_array_almost_equal(
             wavefunction.component, saved_wavefunction
         )

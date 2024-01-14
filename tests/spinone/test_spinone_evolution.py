@@ -1,4 +1,4 @@
-import cupy as cp
+import numpy as np
 from pygpe.shared.grid import Grid
 from pygpe.spinone.wavefunction import SpinOneWavefunction
 import pygpe.spinone.evolution as evo
@@ -13,10 +13,10 @@ def test_spin_vectors_polar():
 
     f_perp, f_z = evo._calculate_spins(wavefunction_polar)
 
-    cp.testing.assert_array_equal(
-        f_perp, cp.zeros(wavefunction_polar.grid.shape)
+    np.testing.assert_array_equal(
+        f_perp, np.zeros(wavefunction_polar.grid.shape)
     )
-    cp.testing.assert_array_equal(f_z, cp.zeros(wavefunction_polar.grid.shape))
+    np.testing.assert_array_equal(f_z, np.zeros(wavefunction_polar.grid.shape))
 
 
 def test_density():
@@ -24,8 +24,8 @@ def test_density():
     wavefunction = SpinOneWavefunction(Grid((64, 64), (0.5, 0.5)))
     wavefunction.set_ground_state("polar", params={"n0": 1.0})
 
-    cp.testing.assert_array_equal(
-        evo._calculate_density(wavefunction), cp.ones(wavefunction.grid.shape)
+    np.testing.assert_array_equal(
+        evo._calculate_density(wavefunction), np.ones(wavefunction.grid.shape)
     )
 
 
@@ -39,18 +39,18 @@ def test_renormalise():
     wavefunction_1.fft()
 
     wavefunction_2 = wavefunction_1
-    wavefunction_2.plus_component += cp.random.uniform(size=(64, 64))
-    wavefunction_2.zero_component += cp.random.uniform(size=(64, 64))
-    wavefunction_2.minus_component += cp.random.uniform(size=(64, 64))
+    wavefunction_2.plus_component += np.random.uniform(size=(64, 64))
+    wavefunction_2.zero_component += np.random.uniform(size=(64, 64))
+    wavefunction_2.minus_component += np.random.uniform(size=(64, 64))
     evo._renormalise_wavefunction(wavefunction_2)
 
-    cp.testing.assert_array_equal(
+    np.testing.assert_array_equal(
         wavefunction_2.plus_component, wavefunction_1.plus_component
     )
-    cp.testing.assert_array_equal(
+    np.testing.assert_array_equal(
         wavefunction_2.zero_component, wavefunction_1.zero_component
     )
-    cp.testing.assert_array_equal(
+    np.testing.assert_array_equal(
         wavefunction_2.minus_component, wavefunction_1.minus_component
     )
 
