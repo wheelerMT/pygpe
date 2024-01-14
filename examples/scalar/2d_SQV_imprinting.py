@@ -1,8 +1,10 @@
-import pygpe.scalar as gpe
+import time
+
 import cupy as cp
 import matplotlib.pyplot as plt
+
+import pygpe.scalar as gpe
 from pygpe.shared.vortices import vortex_phase_profile
-import time
 
 # Generate grid
 points = (512, 512)

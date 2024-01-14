@@ -1,5 +1,6 @@
-import pygpe.shared.grid as grid
 import pytest
+
+import pygpe.shared.grid as grid
 
 
 def test_correct_mesh_shape_1d():

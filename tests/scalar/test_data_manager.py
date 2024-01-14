@@ -1,9 +1,10 @@
-import numpy as np
 import h5py
-from pygpe.shared.grid import Grid
-from pygpe.scalar.data_manager import DataManager
+import numpy as np
+
 import pygpe.shared.data_manager_paths as dmp
+from pygpe.scalar.data_manager import DataManager
 from pygpe.scalar.wavefunction import ScalarWavefunction
+from pygpe.shared.grid import Grid
 
 FILENAME = "scalar_test.hdf5"
 FILE_PATH = "data"
@@ -68,9 +69,5 @@ def test_correct_wavefunction():
     DataManager(FILENAME, FILE_PATH, wavefunction, params)
 
     with h5py.File(f"{FILE_PATH}/{FILENAME}", "r") as file:
-        saved_wavefunction = np.asarray(
-            file[f"{dmp.SCALAR_WAVEFUNCTION}"][:, :, 0]
-        )
-        np.testing.assert_array_almost_equal(
-            wavefunction.component, saved_wavefunction
-        )
+        saved_wavefunction = np.asarray(file[f"{dmp.SCALAR_WAVEFUNCTION}"][:, :, 0])
+        np.testing.assert_array_almost_equal(wavefunction.component, saved_wavefunction)

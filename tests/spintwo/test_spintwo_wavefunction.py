@@ -1,5 +1,6 @@
 import numpy as np
 import pytest
+
 from pygpe.shared.grid import Grid
 from pygpe.spintwo.wavefunction import SpinTwoWavefunction
 
@@ -197,9 +198,7 @@ def test_custom_components():
     plus2_comp = np.ones(wavefunction.grid.shape, dtype="complex128")
     plus1_comp = np.zeros(wavefunction.grid.shape, dtype="complex128")
     zero_comp = np.zeros(wavefunction.grid.shape, dtype="complex128")
-    minus1_comp = np.sqrt(1 / 3) * np.ones(
-        wavefunction.grid.shape, dtype="complex128"
-    )
+    minus1_comp = np.sqrt(1 / 3) * np.ones(wavefunction.grid.shape, dtype="complex128")
     minus2_comp = 5 * np.ones(wavefunction.grid.shape, dtype="complex128")
     wavefunction.set_wavefunction(
         plus2_comp, plus1_comp, zero_comp, minus1_comp, minus2_comp

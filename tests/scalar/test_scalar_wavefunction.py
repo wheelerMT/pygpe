@@ -1,8 +1,10 @@
-import pytest
-import numpy as np
 from typing import Tuple
-from pygpe.shared.grid import Grid
+
+import numpy as np
+import pytest
+
 from pygpe.scalar.wavefunction import ScalarWavefunction
+from pygpe.shared.grid import Grid
 
 
 def generate_wavefunction2d(
@@ -61,9 +63,7 @@ def test_density():
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
     wavefunction.set_wavefunction(5 * np.ones((64, 64)))
 
-    np.testing.assert_array_equal(
-        wavefunction.density(), 25 * np.ones((64, 64))
-    )
+    np.testing.assert_array_equal(wavefunction.density(), 25 * np.ones((64, 64)))
 
 
 def test_phase():

@@ -28,9 +28,7 @@ def _kinetic_step(wfn: ScalarWavefunction, pm: dict) -> None:
     :param wfn: The wavefunction of the system.
     :param pm: The parameters' dictionary.
     """
-    wfn.fourier_component *= cp.exp(
-        -0.25 * 1j * pm["dt"] * wfn.grid.wave_number
-    )
+    wfn.fourier_component *= cp.exp(-0.25 * 1j * pm["dt"] * wfn.grid.wave_number)
 
 
 def _potential_step(wfn: ScalarWavefunction, pm: dict) -> None:

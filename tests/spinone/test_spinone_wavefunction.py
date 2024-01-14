@@ -1,6 +1,8 @@
-import pytest
-import numpy as np
 from typing import Tuple
+
+import numpy as np
+import pytest
+
 from pygpe.shared.grid import Grid
 from pygpe.spinone.wavefunction import SpinOneWavefunction
 
@@ -90,15 +92,11 @@ def test_custom_wavefunction_components():
     zero_component = 1e4 * np.ones((64, 64))
     minus_component = np.zeros((64, 64))
 
-    wavefunction.set_wavefunction(
-        plus_component, zero_component, minus_component
-    )
+    wavefunction.set_wavefunction(plus_component, zero_component, minus_component)
 
     np.testing.assert_array_equal(wavefunction.plus_component, plus_component)
     np.testing.assert_array_equal(wavefunction.zero_component, zero_component)
-    np.testing.assert_array_equal(
-        wavefunction.minus_component, minus_component
-    )
+    np.testing.assert_array_equal(wavefunction.minus_component, minus_component)
 
 
 def test_set_initial_state_raises_error():

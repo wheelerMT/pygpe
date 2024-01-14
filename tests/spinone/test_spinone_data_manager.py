@@ -1,8 +1,9 @@
-import numpy as np
 import h5py
+import numpy as np
+
+import pygpe.shared.data_manager_paths as dmp
 from pygpe.shared.grid import Grid
 from pygpe.spinone.data_manager import DataManager
-import pygpe.shared.data_manager_paths as dmp
 from pygpe.spinone.wavefunction import SpinOneWavefunction
 
 FILENAME = "spinone_test.hdf5"

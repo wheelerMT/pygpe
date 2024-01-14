@@ -1,8 +1,10 @@
-import pygpe.spinone as gpe
-import pygpe.shared.vortices as vort
-import matplotlib.pyplot as plt
-import cupy as cp
 import time
+
+import cupy as cp
+import matplotlib.pyplot as plt
+
+import pygpe.shared.vortices as vort
+import pygpe.spinone as gpe
 
 # Generate grid object
 points = (512, 512)

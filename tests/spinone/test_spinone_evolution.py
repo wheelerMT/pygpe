@@ -1,7 +1,8 @@
 import numpy as np
+
+import pygpe.spinone.evolution as evo
 from pygpe.shared.grid import Grid
 from pygpe.spinone.wavefunction import SpinOneWavefunction
-import pygpe.spinone.evolution as evo
 
 
 def test_spin_vectors_polar():
@@ -13,9 +14,7 @@ def test_spin_vectors_polar():
 
     f_perp, f_z = evo._calculate_spins(wavefunction_polar)
 
-    np.testing.assert_array_equal(
-        f_perp, np.zeros(wavefunction_polar.grid.shape)
-    )
+    np.testing.assert_array_equal(f_perp, np.zeros(wavefunction_polar.grid.shape))
     np.testing.assert_array_equal(f_z, np.zeros(wavefunction_polar.grid.shape))
 
 

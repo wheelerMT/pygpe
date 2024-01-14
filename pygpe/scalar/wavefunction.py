@@ -1,5 +1,6 @@
 from pygpe.shared.grid import Grid
 from pygpe.shared.wavefunction import _Wavefunction
+
 try:
     import cupy as cp
 except ImportError:

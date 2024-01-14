@@ -1,4 +1,5 @@
 import h5py
+
 try:
     import cupy as cp
 except ImportError:
@@ -87,45 +88,27 @@ class DataManager(_DataManager):
         with h5py.File(self.data_path_and_file, "r+") as data:
             if wfn.grid.ndim == 1:
                 new_psi_plus = data[dmp.SPIN1_WAVEFUNCTION_PLUS]
-                new_psi_plus.resize(
-                    (wfn.grid.num_points_x, self._time_index + 1)
-                )
-                new_psi_plus[:, self._time_index] = handle_array(
-                    wfn.plus_component
-                )
+                new_psi_plus.resize((wfn.grid.num_points_x, self._time_index + 1))
+                new_psi_plus[:, self._time_index] = handle_array(wfn.plus_component)
 
                 new_psi_zero = data[dmp.SPIN1_WAVEFUNCTION_ZERO]
-                new_psi_zero.resize(
-                    (wfn.grid.num_points_x, self._time_index + 1)
-                )
-                new_psi_zero[:, self._time_index] = handle_array(
-                    wfn.zero_component
-                )
+                new_psi_zero.resize((wfn.grid.num_points_x, self._time_index + 1))
+                new_psi_zero[:, self._time_index] = handle_array(wfn.zero_component)
 
                 new_psi_minus = data[dmp.SPIN1_WAVEFUNCTION_MINUS]
-                new_psi_minus.resize(
-                    (wfn.grid.num_points_x, self._time_index + 1)
-                )
-                new_psi_minus[:, self._time_index] = handle_array(
-                    wfn.minus_component
-                )
+                new_psi_minus.resize((wfn.grid.num_points_x, self._time_index + 1))
+                new_psi_minus[:, self._time_index] = handle_array(wfn.minus_component)
             else:
                 new_psi_plus = data[dmp.SPIN1_WAVEFUNCTION_PLUS]
                 new_psi_plus.resize((*wfn.grid.shape, self._time_index + 1))
-                new_psi_plus[..., self._time_index] = handle_array(
-                    wfn.plus_component
-                )
+                new_psi_plus[..., self._time_index] = handle_array(wfn.plus_component)
 
                 new_psi_zero = data[dmp.SPIN1_WAVEFUNCTION_ZERO]
                 new_psi_zero.resize((*wfn.grid.shape, self._time_index + 1))
-                new_psi_zero[..., self._time_index] = handle_array(
-                    wfn.zero_component
-                )
+                new_psi_zero[..., self._time_index] = handle_array(wfn.zero_component)
 
                 new_psi_minus = data[dmp.SPIN1_WAVEFUNCTION_MINUS]
                 new_psi_minus.resize((*wfn.grid.shape, self._time_index + 1))
-                new_psi_minus[..., self._time_index] = handle_array(
-                    wfn.minus_component
-                )
+                new_psi_minus[..., self._time_index] = handle_array(wfn.minus_component)
 
         self._time_index += 1

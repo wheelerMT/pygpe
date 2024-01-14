@@ -1,5 +1,6 @@
-import pytest
 import numpy as np
+import pytest
+
 from pygpe.shared.grid import Grid
 from pygpe.spinhalf.wavefunction import SpinHalfWavefunction
 
@@ -27,9 +28,7 @@ def test_set_wavefunction():
     wavefunction.set_wavefunction(plus_component, minus_component)
 
     np.testing.assert_array_equal(wavefunction.plus_component, plus_component)
-    np.testing.assert_array_equal(
-        wavefunction.minus_component, minus_component
-    )
+    np.testing.assert_array_equal(wavefunction.minus_component, minus_component)
 
 
 def test_update_atom_numbers():
@@ -183,20 +182,12 @@ def test_density():
 
     plus_density = wavefunction.density("plus")
     minus_density = wavefunction.density("minus")
-    np.testing.assert_allclose(
-        plus_density, 0.25 * np.ones(wavefunction.grid.shape)
-    )
-    np.testing.assert_allclose(
-        minus_density, 4 * np.ones(wavefunction.grid.shape)
-    )
+    np.testing.assert_allclose(plus_density, 0.25 * np.ones(wavefunction.grid.shape))
+    np.testing.assert_allclose(minus_density, 4 * np.ones(wavefunction.grid.shape))
 
     plus_density, minus_density = wavefunction.density("all")
-    np.testing.assert_allclose(
-        plus_density, 0.25 * np.ones(wavefunction.grid.shape)
-    )
-    np.testing.assert_allclose(
-        minus_density, 4 * np.ones(wavefunction.grid.shape)
-    )
+    np.testing.assert_allclose(plus_density, 0.25 * np.ones(wavefunction.grid.shape))
+    np.testing.assert_allclose(minus_density, 4 * np.ones(wavefunction.grid.shape))
 
 
 def test_density_handles_unknown():
