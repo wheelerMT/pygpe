@@ -1,11 +1,12 @@
-import cupy as cp
+try:
+    import cupy as cp
+except ImportError:
+    import numpy as cp
 
 
 def _check_valid_tuple(points: tuple, grid_spacings: tuple) -> None:
     if len(points) != len(grid_spacings):
-        raise ValueError(
-            f"{points} and {grid_spacings} are not of same length"
-        )
+        raise ValueError(f"{points} and {grid_spacings} are not of same length")
     if len(points) > 3:
         raise ValueError(f"{points} is not a valid dimensionality")
     for point in points:
@@ -98,9 +99,7 @@ class Grid:
             * self.grid_spacing_x
         )
 
-        self.fourier_spacing_x = cp.pi / (
-            self.num_points_x // 2 * self.grid_spacing_x
-        )
+        self.fourier_spacing_x = cp.pi / (self.num_points_x // 2 * self.grid_spacing_x)
         self.fourier_x_mesh = cp.fft.fftshift(
             cp.arange(-self.num_points_x // 2, self.num_points_x // 2)
             * self.fourier_spacing_x
@@ -131,12 +130,8 @@ class Grid:
         self.x_mesh, self.y_mesh = cp.meshgrid(x, y)
 
         # Generate Fourier space variables
-        self.fourier_spacing_x = cp.pi / (
-            self.num_points_x // 2 * self.grid_spacing_x
-        )
-        self.fourier_spacing_y = cp.pi / (
-            self.num_points_y // 2 * self.grid_spacing_y
-        )
+        self.fourier_spacing_x = cp.pi / (self.num_points_x // 2 * self.grid_spacing_x)
+        self.fourier_spacing_y = cp.pi / (self.num_points_y // 2 * self.grid_spacing_y)
 
         fourier_x = (
             cp.arange(-self.num_points_x // 2, self.num_points_x // 2)
@@ -147,9 +142,7 @@ class Grid:
             * self.fourier_spacing_y
         )
 
-        self.fourier_x_mesh, self.fourier_y_mesh = cp.meshgrid(
-            fourier_x, fourier_y
-        )
+        self.fourier_x_mesh, self.fourier_y_mesh = cp.meshgrid(fourier_x, fourier_y)
         self.fourier_x_mesh = cp.fft.fftshift(self.fourier_x_mesh)
         self.fourier_y_mesh = cp.fft.fftshift(self.fourier_y_mesh)
 
@@ -191,15 +184,9 @@ class Grid:
         self.x_mesh, self.y_mesh, self.z_mesh = cp.meshgrid(x, y, z)
 
         # Generate Fourier space variables
-        self.fourier_spacing_x = cp.pi / (
-            self.num_points_x // 2 * self.grid_spacing_x
-        )
-        self.fourier_spacing_y = cp.pi / (
-            self.num_points_y // 2 * self.grid_spacing_y
-        )
-        self.fourier_spacing_z = cp.pi / (
-            self.num_points_z // 2 * self.grid_spacing_z
-        )
+        self.fourier_spacing_x = cp.pi / (self.num_points_x // 2 * self.grid_spacing_x)
+        self.fourier_spacing_y = cp.pi / (self.num_points_y // 2 * self.grid_spacing_y)
+        self.fourier_spacing_z = cp.pi / (self.num_points_z // 2 * self.grid_spacing_z)
 
         fourier_x = (
             cp.arange(-self.num_points_x // 2, self.num_points_x // 2)

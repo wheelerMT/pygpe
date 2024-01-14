@@ -1,8 +1,10 @@
-import pytest
-import cupy as cp
 from typing import Tuple
-from pygpe.shared.grid import Grid
+
+import numpy as np
+import pytest
+
 from pygpe.scalar.wavefunction import ScalarWavefunction
+from pygpe.shared.grid import Grid
 
 
 def generate_wavefunction2d(
@@ -23,10 +25,10 @@ def test_set_wavefunction():
     """Tests whether the wavefunction array is set correctly."""
 
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-    array = cp.ones((64, 64))
+    array = np.ones((64, 64))
     wavefunction.set_wavefunction(array)
 
-    cp.testing.assert_array_equal(wavefunction.component, array)
+    np.testing.assert_array_equal(wavefunction.component, array)
 
 
 def test_adding_noise():
@@ -37,8 +39,8 @@ def test_adding_noise():
     wavefunction.add_noise(0, 1e-2)
 
     with pytest.raises(AssertionError):
-        cp.testing.assert_array_equal(
-            wavefunction.component, cp.zeros(wavefunction.grid.shape)
+        np.testing.assert_array_equal(
+            wavefunction.component, np.zeros(wavefunction.grid.shape)
         )
 
 
@@ -53,25 +55,23 @@ def test_fft():
     wavefunction.fft()
     wavefunction.ifft()
 
-    cp.testing.assert_allclose(wavefunction.component, before_fft)
+    np.testing.assert_allclose(wavefunction.component, before_fft)
 
 
 def test_density():
     """Tests whether the atomic density is calculated correctly."""
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-    wavefunction.set_wavefunction(5 * cp.ones((64, 64)))
+    wavefunction.set_wavefunction(5 * np.ones((64, 64)))
 
-    cp.testing.assert_array_equal(
-        wavefunction.density(), 25 * cp.ones((64, 64))
-    )
+    np.testing.assert_array_equal(wavefunction.density(), 25 * np.ones((64, 64)))
 
 
 def test_phase():
     """Tests whether the specified phase gets applied correctly."""
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-    wavefunction.set_wavefunction(5 * cp.ones((64, 64), dtype="complex128"))
+    wavefunction.set_wavefunction(5 * np.ones((64, 64), dtype="complex128"))
 
-    phase = cp.random.uniform(0, 1, size=(64, 64))
+    phase = np.random.uniform(0, 1, size=(64, 64))
     wavefunction.apply_phase(phase)
 
-    cp.testing.assert_allclose(phase, cp.angle(wavefunction.component))
+    np.testing.assert_allclose(phase, np.angle(wavefunction.component))

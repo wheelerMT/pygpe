@@ -1,6 +1,11 @@
 import h5py
-import cupy as cp
+
+try:
+    import cupy as cp
+except ImportError:
+    import numpy as cp
 from pygpe.shared import data_manager_paths as dmp
+from pygpe.shared.utils import handle_array
 from pygpe.shared.data_manager import _DataManager
 from pygpe.scalar.wavefunction import ScalarWavefunction
 
@@ -58,10 +63,10 @@ class DataManager(_DataManager):
             if wfn.grid.ndim == 1:
                 new_psi = data[dmp.SCALAR_WAVEFUNCTION]
                 new_psi.resize((wfn.grid.num_points_x, self._time_index + 1))
-                new_psi[:, self._time_index] = cp.asnumpy(wfn.component)
+                new_psi[:, self._time_index] = handle_array(wfn.component)
             else:
                 new_psi = data[dmp.SCALAR_WAVEFUNCTION]
                 new_psi.resize((*wfn.grid.shape, self._time_index + 1))
-                new_psi[..., self._time_index] = cp.asnumpy(wfn.component)
+                new_psi[..., self._time_index] = handle_array(wfn.component)
 
         self._time_index += 1

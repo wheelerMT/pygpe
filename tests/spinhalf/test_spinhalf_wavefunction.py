@@ -1,5 +1,6 @@
+import numpy as np
 import pytest
-import cupy as cp
+
 from pygpe.shared.grid import Grid
 from pygpe.spinhalf.wavefunction import SpinHalfWavefunction
 
@@ -22,14 +23,12 @@ def test_set_wavefunction():
     """Tests whether the wavefunction components are set correctly."""
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
 
-    plus_component = cp.ones((64, 64), dtype="complex128")
-    minus_component = 0.345 * cp.ones((64, 64), dtype="complex128")
+    plus_component = np.ones((64, 64), dtype="complex128")
+    minus_component = 0.345 * np.ones((64, 64), dtype="complex128")
     wavefunction.set_wavefunction(plus_component, minus_component)
 
-    cp.testing.assert_array_equal(wavefunction.plus_component, plus_component)
-    cp.testing.assert_array_equal(
-        wavefunction.minus_component, minus_component
-    )
+    np.testing.assert_array_equal(wavefunction.plus_component, plus_component)
+    np.testing.assert_array_equal(wavefunction.minus_component, minus_component)
 
 
 def test_update_atom_numbers():
@@ -38,12 +37,12 @@ def test_update_atom_numbers():
     """
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
 
-    plus_component = 0.5 * cp.ones((64, 64), dtype="complex128")
-    minus_component = 2 * cp.ones((64, 64), dtype="complex128")
+    plus_component = 0.5 * np.ones((64, 64), dtype="complex128")
+    minus_component = 2 * np.ones((64, 64), dtype="complex128")
     wavefunction.set_wavefunction(plus_component, minus_component)
 
-    assert wavefunction.atom_num_plus == 256.0 * cp.ones(1)
-    assert wavefunction.atom_num_minus == 4096.0 * cp.ones(1)
+    assert wavefunction.atom_num_plus == 256.0 * np.ones(1)
+    assert wavefunction.atom_num_minus == 4096.0 * np.ones(1)
 
 
 def test_adding_noise_plus():
@@ -52,17 +51,17 @@ def test_adding_noise_plus():
     """
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
 
-    plus_component = cp.zeros((64, 64), dtype="complex128")
-    minus_component = cp.zeros((64, 64), dtype="complex128")
+    plus_component = np.zeros((64, 64), dtype="complex128")
+    minus_component = np.zeros((64, 64), dtype="complex128")
     wavefunction.set_wavefunction(plus_component, minus_component)
     wavefunction.add_noise("plus", mean=0, std_dev=1e-2)
 
     with pytest.raises(AssertionError):
-        cp.testing.assert_array_equal(
-            wavefunction.plus_component, cp.zeros(wavefunction.grid.shape)
+        np.testing.assert_array_equal(
+            wavefunction.plus_component, np.zeros(wavefunction.grid.shape)
         )
-    cp.testing.assert_array_equal(
-        wavefunction.minus_component, cp.zeros(wavefunction.grid.shape)
+    np.testing.assert_array_equal(
+        wavefunction.minus_component, np.zeros(wavefunction.grid.shape)
     )
 
 
@@ -72,17 +71,17 @@ def test_adding_noise_minus():
     """
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
 
-    plus_component = cp.zeros((64, 64), dtype="complex128")
-    minus_component = cp.zeros((64, 64), dtype="complex128")
+    plus_component = np.zeros((64, 64), dtype="complex128")
+    minus_component = np.zeros((64, 64), dtype="complex128")
     wavefunction.set_wavefunction(plus_component, minus_component)
     wavefunction.add_noise("minus", mean=0, std_dev=1e-2)
 
     with pytest.raises(AssertionError):
-        cp.testing.assert_array_equal(
-            wavefunction.minus_component, cp.zeros(wavefunction.grid.shape)
+        np.testing.assert_array_equal(
+            wavefunction.minus_component, np.zeros(wavefunction.grid.shape)
         )
-    cp.testing.assert_array_equal(
-        wavefunction.plus_component, cp.zeros(wavefunction.grid.shape)
+    np.testing.assert_array_equal(
+        wavefunction.plus_component, np.zeros(wavefunction.grid.shape)
     )
 
 
@@ -92,18 +91,18 @@ def test_adding_noise_all():
     """
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
 
-    plus_component = cp.zeros((64, 64), dtype="complex128")
-    minus_component = cp.zeros((64, 64), dtype="complex128")
+    plus_component = np.zeros((64, 64), dtype="complex128")
+    minus_component = np.zeros((64, 64), dtype="complex128")
     wavefunction.set_wavefunction(plus_component, minus_component)
     wavefunction.add_noise("all", mean=0, std_dev=1e-2)
 
     with pytest.raises(AssertionError):
-        cp.testing.assert_array_equal(
-            wavefunction.plus_component, cp.zeros(wavefunction.grid.shape)
+        np.testing.assert_array_equal(
+            wavefunction.plus_component, np.zeros(wavefunction.grid.shape)
         )
     with pytest.raises(AssertionError):
-        cp.testing.assert_array_equal(
-            wavefunction.minus_component, cp.zeros(wavefunction.grid.shape)
+        np.testing.assert_array_equal(
+            wavefunction.minus_component, np.zeros(wavefunction.grid.shape)
         )
 
 
@@ -111,15 +110,15 @@ def test_phase_all():
     """Tests that a phase applied to all components is applied correctly."""
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
 
-    plus_component = cp.ones((64, 64), dtype="complex128")
-    minus_component = cp.ones((64, 64), dtype="complex128")
+    plus_component = np.ones((64, 64), dtype="complex128")
+    minus_component = np.ones((64, 64), dtype="complex128")
     wavefunction.set_wavefunction(plus_component, minus_component)
 
-    phase = cp.random.uniform(size=(64, 64), dtype=cp.float64)
+    phase = np.random.uniform(size=(64, 64))
     wavefunction.apply_phase(phase, components="all")
 
-    cp.testing.assert_allclose(cp.angle(wavefunction.plus_component), phase)
-    cp.testing.assert_allclose(cp.angle(wavefunction.minus_component), phase)
+    np.testing.assert_allclose(np.angle(wavefunction.plus_component), phase)
+    np.testing.assert_allclose(np.angle(wavefunction.minus_component), phase)
 
 
 def test_phase_plus():
@@ -128,17 +127,17 @@ def test_phase_plus():
     """
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
 
-    plus_component = cp.ones((64, 64), dtype="complex128")
-    minus_component = cp.ones((64, 64), dtype="complex128")
+    plus_component = np.ones((64, 64), dtype="complex128")
+    minus_component = np.ones((64, 64), dtype="complex128")
     wavefunction.set_wavefunction(plus_component, minus_component)
 
-    phase = cp.random.uniform(size=(64, 64), dtype=cp.float64)
+    phase = np.random.uniform(size=(64, 64))
     wavefunction.apply_phase(phase, components="plus")
 
-    cp.testing.assert_allclose(cp.angle(wavefunction.plus_component), phase)
-    cp.testing.assert_allclose(
-        cp.angle(wavefunction.minus_component),
-        cp.zeros(wavefunction.grid.shape),
+    np.testing.assert_allclose(np.angle(wavefunction.plus_component), phase)
+    np.testing.assert_allclose(
+        np.angle(wavefunction.minus_component),
+        np.zeros(wavefunction.grid.shape),
     )
 
 
@@ -148,17 +147,17 @@ def test_phase_minus():
     """
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
 
-    plus_component = cp.ones((64, 64), dtype="complex128")
-    minus_component = cp.ones((64, 64), dtype="complex128")
+    plus_component = np.ones((64, 64), dtype="complex128")
+    minus_component = np.ones((64, 64), dtype="complex128")
     wavefunction.set_wavefunction(plus_component, minus_component)
 
-    phase = cp.random.uniform(size=(64, 64), dtype=cp.float64)
+    phase = np.random.uniform(size=(64, 64))
     wavefunction.apply_phase(phase, components="minus")
 
-    cp.testing.assert_allclose(cp.angle(wavefunction.minus_component), phase)
-    cp.testing.assert_allclose(
-        cp.angle(wavefunction.plus_component),
-        cp.zeros(wavefunction.grid.shape),
+    np.testing.assert_allclose(np.angle(wavefunction.minus_component), phase)
+    np.testing.assert_allclose(
+        np.angle(wavefunction.plus_component),
+        np.zeros(wavefunction.grid.shape),
     )
 
 
@@ -167,7 +166,7 @@ def test_phase_handles_unknown():
     component.
     """
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-    phase = cp.random.uniform(size=(64, 64), dtype=cp.float64)
+    phase = np.random.uniform(size=(64, 64))
 
     with pytest.raises(ValueError):
         wavefunction.apply_phase(phase, components="garbage")
@@ -177,26 +176,18 @@ def test_density():
     """Tests whether the density function returns the correct density."""
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
 
-    plus_component = 0.5 * cp.ones((64, 64), dtype="complex128")
-    minus_component = 2 * cp.ones((64, 64), dtype="complex128")
+    plus_component = 0.5 * np.ones((64, 64), dtype="complex128")
+    minus_component = 2 * np.ones((64, 64), dtype="complex128")
     wavefunction.set_wavefunction(plus_component, minus_component)
 
     plus_density = wavefunction.density("plus")
     minus_density = wavefunction.density("minus")
-    cp.testing.assert_allclose(
-        plus_density, 0.25 * cp.ones(wavefunction.grid.shape)
-    )
-    cp.testing.assert_allclose(
-        minus_density, 4 * cp.ones(wavefunction.grid.shape)
-    )
+    np.testing.assert_allclose(plus_density, 0.25 * np.ones(wavefunction.grid.shape))
+    np.testing.assert_allclose(minus_density, 4 * np.ones(wavefunction.grid.shape))
 
     plus_density, minus_density = wavefunction.density("all")
-    cp.testing.assert_allclose(
-        plus_density, 0.25 * cp.ones(wavefunction.grid.shape)
-    )
-    cp.testing.assert_allclose(
-        minus_density, 4 * cp.ones(wavefunction.grid.shape)
-    )
+    np.testing.assert_allclose(plus_density, 0.25 * np.ones(wavefunction.grid.shape))
+    np.testing.assert_allclose(minus_density, 4 * np.ones(wavefunction.grid.shape))
 
 
 def test_density_handles_unknown():

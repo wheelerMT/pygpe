@@ -1,8 +1,9 @@
-import cupy as cp
 import h5py
+import numpy as np
+
+import pygpe.shared.data_manager_paths as dmp
 from pygpe.shared.grid import Grid
 from pygpe.spintwo.data_manager import DataManager
-import pygpe.shared.data_manager_paths as dmp
 from pygpe.spintwo.wavefunction import SpinTwoWavefunction
 
 FILENAME = "spintwo_test.hdf5"
@@ -78,33 +79,33 @@ def test_correct_wavefunction():
     DataManager(FILENAME, FILE_PATH, wavefunction, params)
 
     with h5py.File(f"{FILE_PATH}/{FILENAME}", "r") as file:
-        saved_wavefunction_plus2 = cp.asarray(
+        saved_wavefunction_plus2 = np.asarray(
             file[f"{dmp.SPIN2_WAVEFUNCTION_PLUS_TWO}"][:, :, 0]
         )
-        cp.testing.assert_array_almost_equal(
+        np.testing.assert_array_almost_equal(
             wavefunction.plus2_component, saved_wavefunction_plus2
         )
-        saved_wavefunction_plus1 = cp.asarray(
+        saved_wavefunction_plus1 = np.asarray(
             file[f"{dmp.SPIN2_WAVEFUNCTION_PLUS_ONE}"][:, :, 0]
         )
-        cp.testing.assert_array_almost_equal(
+        np.testing.assert_array_almost_equal(
             wavefunction.plus1_component, saved_wavefunction_plus1
         )
-        saved_wavefunction_zero = cp.asarray(
+        saved_wavefunction_zero = np.asarray(
             file[f"{dmp.SPIN2_WAVEFUNCTION_ZERO}"][:, :, 0]
         )
-        cp.testing.assert_array_almost_equal(
+        np.testing.assert_array_almost_equal(
             wavefunction.zero_component, saved_wavefunction_zero
         )
-        saved_wavefunction_minus1 = cp.asarray(
+        saved_wavefunction_minus1 = np.asarray(
             file[f"{dmp.SPIN2_WAVEFUNCTION_MINUS_ONE}"][:, :, 0]
         )
-        cp.testing.assert_array_almost_equal(
+        np.testing.assert_array_almost_equal(
             wavefunction.minus1_component, saved_wavefunction_minus1
         )
-        saved_wavefunction_minus2 = cp.asarray(
+        saved_wavefunction_minus2 = np.asarray(
             file[f"{dmp.SPIN2_WAVEFUNCTION_MINUS_TWO}"][:, :, 0]
         )
-        cp.testing.assert_array_almost_equal(
+        np.testing.assert_array_almost_equal(
             wavefunction.minus2_component, saved_wavefunction_minus2
         )

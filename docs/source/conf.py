@@ -2,9 +2,9 @@ import os
 import sys
 
 project = "PyGPE"
-copyright = "2023, Matt Wheeler"
+copyright = "2024, Matt Wheeler"
 author = "Matt Wheeler"
-release = "1.2.2"
+release = "2.0.0"
 
 sys.path.insert(0, os.path.abspath("../../"))
 

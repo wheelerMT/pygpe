@@ -1,6 +1,10 @@
 from pygpe.shared.grid import Grid
 from pygpe.shared.wavefunction import _Wavefunction
-import cupy as cp
+
+try:
+    import cupy as cp
+except ImportError:
+    import numpy as cp
 
 
 class SpinOneWavefunction(_Wavefunction):
@@ -27,12 +31,12 @@ class SpinOneWavefunction(_Wavefunction):
         """Constructs the wavefunction object."""
         super().__init__(grid)
 
-        self.plus_component = cp.empty(grid.shape, dtype="complex128")
-        self.zero_component = cp.empty(grid.shape, dtype="complex128")
-        self.minus_component = cp.empty(grid.shape, dtype="complex128")
-        self.fourier_plus_component = cp.empty(grid.shape, dtype="complex128")
-        self.fourier_zero_component = cp.empty(grid.shape, dtype="complex128")
-        self.fourier_minus_component = cp.empty(grid.shape, dtype="complex128")
+        self.plus_component = cp.zeros(grid.shape, dtype="complex128")
+        self.zero_component = cp.zeros(grid.shape, dtype="complex128")
+        self.minus_component = cp.zeros(grid.shape, dtype="complex128")
+        self.fourier_plus_component = cp.zeros(grid.shape, dtype="complex128")
+        self.fourier_zero_component = cp.zeros(grid.shape, dtype="complex128")
+        self.fourier_minus_component = cp.zeros(grid.shape, dtype="complex128")
 
         self.atom_num_plus = 0
         self.atom_num_zero = 0
@@ -102,9 +106,7 @@ class SpinOneWavefunction(_Wavefunction):
             case str(component):
                 self._add_noise_to_components(component, mean, std_dev)
             case _:
-                raise ValueError(
-                    f"{components} is not a supported configuration"
-                )
+                raise ValueError(f"{components} is not a supported configuration")
 
         self._update_atom_numbers()
 
@@ -128,9 +130,7 @@ class SpinOneWavefunction(_Wavefunction):
                     mean, std_dev
                 )
             case _:
-                raise ValueError(
-                    f"{component} is not a supported configuration"
-                )
+                raise ValueError(f"{component} is not a supported configuration")
 
     def apply_phase(
         self, phase: cp.ndarray, components: str | list[str] = "all"
@@ -151,13 +151,9 @@ class SpinOneWavefunction(_Wavefunction):
             case str(component):
                 self._apply_phase_to_component(phase, component)
             case _:
-                raise ValueError(
-                    f"Components type {components} is unsupported"
-                )
+                raise ValueError(f"Components type {components} is unsupported")
 
-    def _apply_phase_to_component(
-        self, phase: cp.ndarray, component: str
-    ) -> None:
+    def _apply_phase_to_component(self, phase: cp.ndarray, component: str) -> None:
         """Applies the specified phase to the specified component."""
         match component.lower():
             case "plus":
@@ -217,9 +213,7 @@ def _polar_initial_state(wfn: SpinOneWavefunction, params: dict) -> None:
     wfn.minus_component = cp.zeros(wfn.grid.shape, dtype="complex128")
 
 
-def _ferromagnetic_initial_state(
-    wfn: SpinOneWavefunction, params: dict
-) -> None:
+def _ferromagnetic_initial_state(wfn: SpinOneWavefunction, params: dict) -> None:
     """Sets wavefunction components to ferromagnetic state."""
     wfn.plus_component = cp.sqrt(params["n0"]) * cp.ones(
         wfn.grid.shape, dtype="complex128"
@@ -228,9 +222,7 @@ def _ferromagnetic_initial_state(
     wfn.minus_component = cp.zeros(wfn.grid.shape, dtype="complex128")
 
 
-def _antiferromagnetic_initial_state(
-    wfn: SpinOneWavefunction, params: dict
-) -> None:
+def _antiferromagnetic_initial_state(wfn: SpinOneWavefunction, params: dict) -> None:
     """Sets wavefunction components to antiferromagnetic state."""
     p = params["p"]  # Linear Zeeman
     c2 = params["c2"]  # Spin-dependent interaction strength
@@ -249,9 +241,7 @@ def _antiferromagnetic_initial_state(
     )
 
 
-def _broken_axisymmetry_initial_state(
-    wfn: SpinOneWavefunction, params: dict
-) -> None:
+def _broken_axisymmetry_initial_state(wfn: SpinOneWavefunction, params: dict) -> None:
     """Sets wavefunction components to antiferromagnetic state."""
     p = params["p"]  # Linear Zeeman
     q = params["q"]  # Quadratic Zeeman

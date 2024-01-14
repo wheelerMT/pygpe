@@ -9,12 +9,17 @@ equations for use in simulating Bose-Einstein condensate systems.
 
 - Scalar, two-component, spin-1, and spin-2 BEC systems.
 - 1D, 2D, and 3D grid lattices.
+- GPU support.
 - HDF5 data saving system.
 - Method for generating vortices within the system.
 
 ### Requirements
 
 - Python (3.10 and above),
-- [h5py](https://github.com/h5py/h5py) (>=3.6.0),
-- CUDA Toolkit (>=11.2)
-- [CuPy](https://github.com/cupy/cupy) (>=10.2.0).
+- [h5py](https://github.com/h5py/h5py) (^3.6.0),
+- [numpy](https://numpy.org/) (^1.26.3),
+- Matplotlib (^3.8.2)
+
+If using a GPU:
+  - CUDA Toolkit (>=11.2)
+  - [CuPy](https://github.com/cupy/cupy) (>=10.2.0).

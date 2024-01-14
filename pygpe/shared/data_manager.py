@@ -1,9 +1,11 @@
-import h5py
-import pygpe.shared.data_manager_paths as dmp
 from abc import ABC, abstractmethod
+from pathlib import Path
+
+import h5py
+
+import pygpe.shared.data_manager_paths as dmp
 from pygpe.shared.grid import Grid
 from pygpe.shared.wavefunction import _Wavefunction
-from pathlib import Path
 
 
 class _DataManager(ABC):
@@ -60,9 +62,7 @@ class _DataManager(ABC):
         """Saves condensate parameters to dataset."""
         with h5py.File(self.data_path / self.filename, "r+") as file:
             for key in parameters:
-                file.create_dataset(
-                    f"{dmp.PARAMETERS}/{key}", data=parameters[key]
-                )
+                file.create_dataset(f"{dmp.PARAMETERS}/{key}", data=parameters[key])
 
     @abstractmethod
     def _save_initial_wfn(self, wfn: _Wavefunction) -> None:

@@ -1,6 +1,10 @@
 from pygpe.shared.grid import Grid
 from pygpe.shared.wavefunction import _Wavefunction
-import cupy as cp
+
+try:
+    import cupy as cp
+except ImportError:
+    import numpy as cp
 
 
 class SpinTwoWavefunction(_Wavefunction):
@@ -33,20 +37,16 @@ class SpinTwoWavefunction(_Wavefunction):
         """Constructs the wavefunction object."""
         super().__init__(grid)
 
-        self.plus2_component = cp.empty(grid.shape, dtype="complex128")
-        self.plus1_component = cp.empty(grid.shape, dtype="complex128")
-        self.zero_component = cp.empty(grid.shape, dtype="complex128")
-        self.minus1_component = cp.empty(grid.shape, dtype="complex128")
-        self.minus2_component = cp.empty(grid.shape, dtype="complex128")
-        self.fourier_plus2_component = cp.empty(grid.shape, dtype="complex128")
-        self.fourier_plus1_component = cp.empty(grid.shape, dtype="complex128")
-        self.fourier_zero_component = cp.empty(grid.shape, dtype="complex128")
-        self.fourier_minus1_component = cp.empty(
-            grid.shape, dtype="complex128"
-        )
-        self.fourier_minus2_component = cp.empty(
-            grid.shape, dtype="complex128"
-        )
+        self.plus2_component = cp.zeros(grid.shape, dtype="complex128")
+        self.plus1_component = cp.zeros(grid.shape, dtype="complex128")
+        self.zero_component = cp.zeros(grid.shape, dtype="complex128")
+        self.minus1_component = cp.zeros(grid.shape, dtype="complex128")
+        self.minus2_component = cp.zeros(grid.shape, dtype="complex128")
+        self.fourier_plus2_component = cp.zeros(grid.shape, dtype="complex128")
+        self.fourier_plus1_component = cp.zeros(grid.shape, dtype="complex128")
+        self.fourier_zero_component = cp.zeros(grid.shape, dtype="complex128")
+        self.fourier_minus1_component = cp.zeros(grid.shape, dtype="complex128")
+        self.fourier_minus2_component = cp.zeros(grid.shape, dtype="complex128")
 
         self.atom_num_plus2 = 0
         self.atom_num_plus1 = 0
@@ -132,9 +132,7 @@ class SpinTwoWavefunction(_Wavefunction):
             case str(component):
                 self._add_noise_to_components(component, mean, std_dev)
             case _:
-                raise ValueError(
-                    f"{components} is not a supported configuration"
-                )
+                raise ValueError(f"{components} is not a supported configuration")
 
         self._update_atom_numbers()
 
@@ -166,9 +164,7 @@ class SpinTwoWavefunction(_Wavefunction):
                     mean, std_dev
                 )
             case _:
-                raise ValueError(
-                    f"{component} is not a supported configuration"
-                )
+                raise ValueError(f"{component} is not a supported configuration")
 
     def apply_phase(
         self, phase: cp.ndarray, components: str | list[str] = "all"
@@ -195,13 +191,9 @@ class SpinTwoWavefunction(_Wavefunction):
             case str(component):
                 self._apply_phase_to_component(phase, component)
             case _:
-                raise ValueError(
-                    f"Components type {components} is unsupported"
-                )
+                raise ValueError(f"Components type {components} is unsupported")
 
-    def _apply_phase_to_component(
-        self, phase: cp.ndarray, component: str
-    ) -> None:
+    def _apply_phase_to_component(self, phase: cp.ndarray, component: str) -> None:
         """Applies the specified phase to the specified component."""
         match component.lower():
             case "plus2":
@@ -297,9 +289,7 @@ def _biaxial_initial_state(wfn: SpinTwoWavefunction, params: dict) -> None:
     )
 
 
-def _ferromagnetic2p_initial_state(
-    wfn: SpinTwoWavefunction, params: dict
-) -> None:
+def _ferromagnetic2p_initial_state(wfn: SpinTwoWavefunction, params: dict) -> None:
     """Sets wavefunction components to ferromagnetic (F=2) state, with atoms
     in the plus two component.
     """
@@ -312,9 +302,7 @@ def _ferromagnetic2p_initial_state(
     wfn.minus2_component = cp.zeros(wfn.grid.shape, dtype="complex128")
 
 
-def _ferromagnetic2m_initial_state(
-    wfn: SpinTwoWavefunction, params: dict
-) -> None:
+def _ferromagnetic2m_initial_state(wfn: SpinTwoWavefunction, params: dict) -> None:
     """Sets wavefunction components to ferromagnetic (F=2) state, with atoms in
     the minus two component.
     """
@@ -327,9 +315,7 @@ def _ferromagnetic2m_initial_state(
     )
 
 
-def _ferromagnetic1p_initial_state(
-    wfn: SpinTwoWavefunction, params: dict
-) -> None:
+def _ferromagnetic1p_initial_state(wfn: SpinTwoWavefunction, params: dict) -> None:
     """Sets wavefunction components to ferromagnetic (F=1) state, with atoms in
     the plus one component.
     """
@@ -342,9 +328,7 @@ def _ferromagnetic1p_initial_state(
     wfn.minus2_component = cp.zeros(wfn.grid.shape, dtype="complex128")
 
 
-def _ferromagnetic1m_initial_state(
-    wfn: SpinTwoWavefunction, params: dict
-) -> None:
+def _ferromagnetic1m_initial_state(wfn: SpinTwoWavefunction, params: dict) -> None:
     """Sets wavefunction components to ferromagnetic (F=1) state, with atoms in
     the minus one component.
     """

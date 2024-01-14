@@ -1,8 +1,9 @@
-import cupy as cp
 import h5py
+import numpy as np
+
+import pygpe.shared.data_manager_paths as dmp
 from pygpe.shared.grid import Grid
 from pygpe.spinone.data_manager import DataManager
-import pygpe.shared.data_manager_paths as dmp
 from pygpe.spinone.wavefunction import SpinOneWavefunction
 
 FILENAME = "spinone_test.hdf5"
@@ -77,21 +78,21 @@ def test_correct_wavefunction():
     DataManager(FILENAME, FILE_PATH, wavefunction, params)
 
     with h5py.File(f"{FILE_PATH}/{FILENAME}", "r") as file:
-        saved_wavefunction_plus = cp.asarray(
+        saved_wavefunction_plus = np.asarray(
             file[f"{dmp.SPIN1_WAVEFUNCTION_PLUS}"][:, :, 0]
         )
-        cp.testing.assert_array_almost_equal(
+        np.testing.assert_array_almost_equal(
             wavefunction.plus_component, saved_wavefunction_plus
         )
-        saved_wavefunction_zero = cp.asarray(
+        saved_wavefunction_zero = np.asarray(
             file[f"{dmp.SPIN1_WAVEFUNCTION_ZERO}"][:, :, 0]
         )
-        cp.testing.assert_array_almost_equal(
+        np.testing.assert_array_almost_equal(
             wavefunction.zero_component, saved_wavefunction_zero
         )
-        saved_wavefunction_minus = cp.asarray(
+        saved_wavefunction_minus = np.asarray(
             file[f"{dmp.SPIN1_WAVEFUNCTION_MINUS}"][:, :, 0]
         )
-        cp.testing.assert_array_almost_equal(
+        np.testing.assert_array_almost_equal(
             wavefunction.minus_component, saved_wavefunction_minus
         )
