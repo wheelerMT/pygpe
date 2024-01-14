@@ -30,12 +30,12 @@ class SpinOneWavefunction(_Wavefunction):
         """Constructs the wavefunction object."""
         super().__init__(grid)
 
-        self.plus_component = cp.empty(grid.shape, dtype="complex128")
-        self.zero_component = cp.empty(grid.shape, dtype="complex128")
-        self.minus_component = cp.empty(grid.shape, dtype="complex128")
-        self.fourier_plus_component = cp.empty(grid.shape, dtype="complex128")
-        self.fourier_zero_component = cp.empty(grid.shape, dtype="complex128")
-        self.fourier_minus_component = cp.empty(grid.shape, dtype="complex128")
+        self.plus_component = cp.zeros(grid.shape, dtype="complex128")
+        self.zero_component = cp.zeros(grid.shape, dtype="complex128")
+        self.minus_component = cp.zeros(grid.shape, dtype="complex128")
+        self.fourier_plus_component = cp.zeros(grid.shape, dtype="complex128")
+        self.fourier_zero_component = cp.zeros(grid.shape, dtype="complex128")
+        self.fourier_minus_component = cp.zeros(grid.shape, dtype="complex128")
 
         self.atom_num_plus = 0
         self.atom_num_zero = 0

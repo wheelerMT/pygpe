@@ -36,18 +36,18 @@ class SpinTwoWavefunction(_Wavefunction):
         """Constructs the wavefunction object."""
         super().__init__(grid)
 
-        self.plus2_component = cp.empty(grid.shape, dtype="complex128")
-        self.plus1_component = cp.empty(grid.shape, dtype="complex128")
-        self.zero_component = cp.empty(grid.shape, dtype="complex128")
-        self.minus1_component = cp.empty(grid.shape, dtype="complex128")
-        self.minus2_component = cp.empty(grid.shape, dtype="complex128")
-        self.fourier_plus2_component = cp.empty(grid.shape, dtype="complex128")
-        self.fourier_plus1_component = cp.empty(grid.shape, dtype="complex128")
-        self.fourier_zero_component = cp.empty(grid.shape, dtype="complex128")
-        self.fourier_minus1_component = cp.empty(
+        self.plus2_component = cp.zeros(grid.shape, dtype="complex128")
+        self.plus1_component = cp.zeros(grid.shape, dtype="complex128")
+        self.zero_component = cp.zeros(grid.shape, dtype="complex128")
+        self.minus1_component = cp.zeros(grid.shape, dtype="complex128")
+        self.minus2_component = cp.zeros(grid.shape, dtype="complex128")
+        self.fourier_plus2_component = cp.zeros(grid.shape, dtype="complex128")
+        self.fourier_plus1_component = cp.zeros(grid.shape, dtype="complex128")
+        self.fourier_zero_component = cp.zeros(grid.shape, dtype="complex128")
+        self.fourier_minus1_component = cp.zeros(
             grid.shape, dtype="complex128"
         )
-        self.fourier_minus2_component = cp.empty(
+        self.fourier_minus2_component = cp.zeros(
             grid.shape, dtype="complex128"
         )
 
