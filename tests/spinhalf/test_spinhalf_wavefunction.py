@@ -115,7 +115,7 @@ def test_phase_all():
     minus_component = np.ones((64, 64), dtype="complex128")
     wavefunction.set_wavefunction(plus_component, minus_component)
 
-    phase = np.random.uniform(size=(64, 64), dtype=np.float64)
+    phase = np.random.uniform(size=(64, 64))
     wavefunction.apply_phase(phase, components="all")
 
     np.testing.assert_allclose(np.angle(wavefunction.plus_component), phase)
@@ -132,7 +132,7 @@ def test_phase_plus():
     minus_component = np.ones((64, 64), dtype="complex128")
     wavefunction.set_wavefunction(plus_component, minus_component)
 
-    phase = np.random.uniform(size=(64, 64), dtype=np.float64)
+    phase = np.random.uniform(size=(64, 64))
     wavefunction.apply_phase(phase, components="plus")
 
     np.testing.assert_allclose(np.angle(wavefunction.plus_component), phase)
@@ -152,7 +152,7 @@ def test_phase_minus():
     minus_component = np.ones((64, 64), dtype="complex128")
     wavefunction.set_wavefunction(plus_component, minus_component)
 
-    phase = np.random.uniform(size=(64, 64), dtype=np.float64)
+    phase = np.random.uniform(size=(64, 64))
     wavefunction.apply_phase(phase, components="minus")
 
     np.testing.assert_allclose(np.angle(wavefunction.minus_component), phase)
@@ -167,7 +167,7 @@ def test_phase_handles_unknown():
     component.
     """
     wavefunction = generate_wavefunction2d((64, 64), (0.5, 0.5))
-    phase = np.random.uniform(size=(64, 64), dtype=np.float64)
+    phase = np.random.uniform(size=(64, 64))
 
     with pytest.raises(ValueError):
         wavefunction.apply_phase(phase, components="garbage")

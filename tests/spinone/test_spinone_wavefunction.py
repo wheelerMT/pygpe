@@ -200,7 +200,7 @@ def test_phase_all():
         np.ones((64, 64), dtype="complex128"),
     )
 
-    phase = np.random.uniform(size=(64, 64), dtype=np.float64)
+    phase = np.random.uniform(size=(64, 64))
     wavefunction.apply_phase(phase, "all")
 
     np.testing.assert_allclose(np.angle(wavefunction.plus_component), phase)
@@ -217,7 +217,7 @@ def test_phase_multiple_components():
         np.ones((64, 64), dtype="complex128"),
     )
 
-    phase = np.random.uniform(size=(64, 64), dtype=np.float64)
+    phase = np.random.uniform(size=(64, 64))
     wavefunction.apply_phase(phase, ["plus", "minus"])
 
     np.testing.assert_allclose(np.angle(wavefunction.plus_component), phase)
@@ -233,7 +233,7 @@ def test_phase_single():
         np.ones((64, 64), dtype="complex128"),
     )
 
-    phase = np.random.uniform(size=(64, 64), dtype=np.float64)
+    phase = np.random.uniform(size=(64, 64))
     wavefunction.apply_phase(phase, "zero")
 
     np.testing.assert_allclose(np.angle(wavefunction.zero_component), phase)
