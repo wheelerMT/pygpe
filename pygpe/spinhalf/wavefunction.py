@@ -1,6 +1,9 @@
 from pygpe.shared.grid import Grid
 from pygpe.shared.wavefunction import _Wavefunction
-import cupy as cp
+try:
+    import cupy as cp
+except ImportError:
+    import numpy as cp
 
 
 class SpinHalfWavefunction(_Wavefunction):

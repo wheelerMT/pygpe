@@ -1,6 +1,9 @@
 from pygpe.shared.grid import Grid
 from pygpe.shared.wavefunction import _Wavefunction
-import cupy as cp
+try:
+    import cupy as cp
+except ImportError:
+    import numpy as cp
 
 
 class ScalarWavefunction(_Wavefunction):
@@ -21,8 +24,8 @@ class ScalarWavefunction(_Wavefunction):
         """Constructs the wavefunction object."""
         super().__init__(grid)
 
-        self.component = cp.empty(grid.shape, dtype="complex128")
-        self.fourier_component = cp.empty(
+        self.component = cp.zeros(grid.shape, dtype="complex128")
+        self.fourier_component = cp.zeros(
             grid.shape, dtype="complex128"
         )  # Fourier component
 
@@ -48,7 +51,7 @@ class ScalarWavefunction(_Wavefunction):
         self.component += super()._generate_complex_normal_dist(mean, std_dev)
         self._update_atom_number()
 
-    def apply_phase(self, phase: cp.ndarray) -> None:
+    def apply_phase(self, phase: cp.ndarray, **kwargs) -> None:
         """Applies a phase to the wavefunction.
 
         :param phase: The phase to apply.
@@ -77,6 +80,6 @@ class ScalarWavefunction(_Wavefunction):
         """
 
         :return: An array of the condensate density.
-        :rtype: `cupy.ndarray`
+        :rtype: `ndarray`
         """
         return cp.abs(self.component) ** 2

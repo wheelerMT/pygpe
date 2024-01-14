@@ -1,6 +1,10 @@
 import h5py
-import cupy as cp
+try:
+    import cupy as cp
+except ImportError:
+    import numpy as cp
 from pygpe.shared import data_manager_paths as dmp
+from pygpe.shared.utils import handle_array
 from pygpe.shared.data_manager import _DataManager
 from pygpe.spinhalf.wavefunction import SpinHalfWavefunction
 
@@ -74,7 +78,7 @@ class DataManager(_DataManager):
                 new_psi_plus.resize(
                     (wfn.grid.num_points_x, self._time_index + 1)
                 )
-                new_psi_plus[:, self._time_index] = cp.asnumpy(
+                new_psi_plus[:, self._time_index] = handle_array(
                     wfn.plus_component
                 )
 
@@ -82,19 +86,19 @@ class DataManager(_DataManager):
                 new_psi_minus.resize(
                     (wfn.grid.num_points_x, self._time_index + 1)
                 )
-                new_psi_minus[:, self._time_index] = cp.asnumpy(
+                new_psi_minus[:, self._time_index] = handle_array(
                     wfn.minus_component
                 )
             else:
                 new_psi_plus = data[dmp.SPINHALF_WAVEFUNCTION_PLUS]
                 new_psi_plus.resize((*wfn.grid.shape, self._time_index + 1))
-                new_psi_plus[..., self._time_index] = cp.asnumpy(
+                new_psi_plus[..., self._time_index] = handle_array(
                     wfn.plus_component
                 )
 
                 new_psi_minus = data[dmp.SPINHALF_WAVEFUNCTION_MINUS]
                 new_psi_minus.resize((*wfn.grid.shape, self._time_index + 1))
-                new_psi_minus[..., self._time_index] = cp.asnumpy(
+                new_psi_minus[..., self._time_index] = handle_array(
                     wfn.minus_component
                 )
 

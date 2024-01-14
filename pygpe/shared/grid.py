@@ -1,4 +1,7 @@
-import cupy as cp
+try:
+    import cupy as cp
+except ImportError:
+    import numpy as cp
 
 
 def _check_valid_tuple(points: tuple, grid_spacings: tuple) -> None:

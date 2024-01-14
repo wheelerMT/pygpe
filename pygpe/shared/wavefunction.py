@@ -1,6 +1,9 @@
 from abc import ABC, abstractmethod
 from pygpe.shared.grid import Grid
-import cupy as cp
+try:
+    import cupy as cp
+except ImportError:
+    import numpy as cp
 
 
 class _Wavefunction(ABC):
@@ -19,7 +22,7 @@ class _Wavefunction(ABC):
         self.grid = grid
 
     @abstractmethod
-    def set_wavefunction(self) -> None:
+    def set_wavefunction(self, wfn: cp.ndarray) -> None:
         """Sets the components of the wavefunction to the specified
         array(s).
         """

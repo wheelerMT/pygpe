@@ -1,4 +1,4 @@
-import cupy as cp
+try:
 from pygpe.shared.grid import Grid
 
 
