@@ -1,10 +1,11 @@
 try:
+    import cupy as cp
+except ImportError:
+    import numpy as cp
 from pygpe.shared.grid import Grid
 
 
-def _generate_positions(
-    grid: Grid, num_vortices: int, threshold: float
-) -> iter:
+def _generate_positions(grid: Grid, num_vortices: int, threshold: float) -> iter:
     """Generates and returns a list of positions that are separated by at least
     `threshold`.
     """
@@ -31,8 +32,7 @@ def _generate_positions(
         iterations += 1
 
     print(
-        f"Successfully found {num_vortices} positions "
-        f"in {iterations} iterations!"
+        f"Successfully found {num_vortices} positions " f"in {iterations} iterations!"
     )
     return iter(vortex_positions)
 
@@ -61,9 +61,7 @@ def _heaviside(array: cp.ndarray) -> cp.ndarray:
     return cp.where(array < 0, cp.zeros(array.shape), cp.ones(array.shape))
 
 
-def vortex_phase_profile(
-    grid: Grid, num_vortices: int, threshold: float
-) -> cp.ndarray:
+def vortex_phase_profile(grid: Grid, num_vortices: int, threshold: float) -> cp.ndarray:
     """Constructs a 2D phase profile consisting of 2pi phase windings.
     This phase can be applied to a wavefunction to generate different types of
     vortices.
@@ -81,9 +79,7 @@ def vortex_phase_profile(
     phase = cp.zeros((grid.num_points_x, grid.num_points_y), dtype="float32")
 
     for _ in range(num_vortices // 2):
-        phase_temp = cp.zeros(
-            (grid.num_points_x, grid.num_points_y), dtype="float32"
-        )
+        phase_temp = cp.zeros((grid.num_points_x, grid.num_points_y), dtype="float32")
         x_pos_minus, y_pos_minus = next(
             vortex_positions_iter
         )  # Negative circulation vortex

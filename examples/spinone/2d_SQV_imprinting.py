@@ -1,6 +1,10 @@
 import time
 
-import cupy as cp
+try:
+    import cupy as cp
+except ImportError:
+    import numpy as cp
+from pygpe.shared.utils import handle_array
 import matplotlib.pyplot as plt
 
 import pygpe.shared.vortices as vort
@@ -53,14 +57,14 @@ print(f'Evolution of {params["nt"]} steps took {time.time() - start_time}!')
 # Plot density and phase of zero component
 fig, ax = plt.subplots(1, 2, figsize=(10, 6))
 ax[0].pcolormesh(
-    cp.asnumpy(grid.x_mesh),
-    cp.asnumpy(grid.y_mesh),
-    abs(cp.asnumpy(psi.zero_component)) ** 2,
+    handle_array(grid.x_mesh),
+    handle_array(grid.y_mesh),
+    abs(handle_array(psi.zero_component)) ** 2,
 )
 ax[1].pcolormesh(
-    cp.asnumpy(grid.x_mesh),
-    cp.asnumpy(grid.y_mesh),
-    cp.asnumpy(cp.angle(psi.zero_component)),
+    handle_array(grid.x_mesh),
+    handle_array(grid.y_mesh),
+    handle_array(cp.angle(psi.zero_component)),
     cmap="jet",
 )
 plt.show()

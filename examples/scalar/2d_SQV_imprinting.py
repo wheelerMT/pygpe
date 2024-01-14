@@ -1,7 +1,11 @@
 import time
 
-import cupy as cp
+try:
+    import cupy as cp
+except ImportError:
+    import numpy as cp
 import matplotlib.pyplot as plt
+from pygpe.shared.utils import handle_array
 
 import pygpe.scalar as gpe
 from pygpe.shared.vortices import vortex_phase_profile
@@ -39,5 +43,5 @@ for i in range(params["nt"]):
 print(f'Evolution of {params["nt"]} steps took {time.time() - start_time}!')
 
 # Plot the density
-plt.imshow(cp.asnumpy(psi.density()), vmin=0, vmax=1)
+plt.imshow(handle_array(psi.density()), vmin=0, vmax=1)
 plt.show()
