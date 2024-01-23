@@ -1,9 +1,5 @@
 import h5py
 
-try:
-    import cupy as cp
-except ImportError:
-    import numpy as cp
 from pygpe.shared.data_manager import _DataManager
 from pygpe.shared.utils import handle_array
 from pygpe.shared import data_manager_paths as dmp
