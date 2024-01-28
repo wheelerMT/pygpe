@@ -1,0 +1,12 @@
+cff-version: 1.0.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: Wheeler
+    given-names: Matthew Thomas
+    orcid: https://orcid.org/0000-0002-0405-5805
+title: "PyGPE"
+version: 2.0.0
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.10578040
+date-released: 2021-08-11
