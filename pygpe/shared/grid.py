@@ -127,7 +127,7 @@ class Grid:
             cp.arange(-self.num_points_y // 2, self.num_points_y // 2)
             * self.grid_spacing_y
         )
-        self.x_mesh, self.y_mesh = cp.meshgrid(x, y)
+        self.x_mesh, self.y_mesh = cp.meshgrid(x, y, indexing="ij")
 
         # Generate Fourier space variables
         self.fourier_spacing_x = cp.pi / (self.num_points_x // 2 * self.grid_spacing_x)
@@ -142,7 +142,9 @@ class Grid:
             * self.fourier_spacing_y
         )
 
-        self.fourier_x_mesh, self.fourier_y_mesh = cp.meshgrid(fourier_x, fourier_y)
+        self.fourier_x_mesh, self.fourier_y_mesh = cp.meshgrid(
+            fourier_x, fourier_y, indexing="ij"
+        )
         self.fourier_x_mesh = cp.fft.fftshift(self.fourier_x_mesh)
         self.fourier_y_mesh = cp.fft.fftshift(self.fourier_y_mesh)
 
@@ -181,7 +183,7 @@ class Grid:
             cp.arange(-self.num_points_z // 2, self.num_points_z // 2)
             * self.grid_spacing_z
         )
-        self.x_mesh, self.y_mesh, self.z_mesh = cp.meshgrid(x, y, z)
+        self.x_mesh, self.y_mesh, self.z_mesh = cp.meshgrid(x, y, z, indexing="ij")
 
         # Generate Fourier space variables
         self.fourier_spacing_x = cp.pi / (self.num_points_x // 2 * self.grid_spacing_x)
@@ -205,7 +207,7 @@ class Grid:
             self.fourier_x_mesh,
             self.fourier_y_mesh,
             self.fourier_z_mesh,
-        ) = cp.meshgrid(fourier_x, fourier_y, fourier_z)
+        ) = cp.meshgrid(fourier_x, fourier_y, fourier_z, indexing="ij")
         self.fourier_x_mesh = cp.fft.fftshift(self.fourier_x_mesh)
         self.fourier_y_mesh = cp.fft.fftshift(self.fourier_y_mesh)
         self.fourier_z_mesh = cp.fft.fftshift(self.fourier_z_mesh)
