@@ -1,5 +1,6 @@
 import h5py
 import numpy as np
+from pathlib import Path
 
 import pygpe.shared.data_manager_paths as dmp
 from pygpe.shared.grid import Grid
@@ -7,7 +8,7 @@ from pygpe.spinone.data_manager import DataManager
 from pygpe.spinone.wavefunction import SpinOneWavefunction
 
 FILENAME = "spinone_test.hdf5"
-FILE_PATH = "data"
+FILE_PATH = "."
 
 
 def generate_wavefunction(
@@ -58,6 +59,8 @@ def test_data_manager_creation():
     params = generate_parameters()
     DataManager(FILENAME, FILE_PATH, wavefunction, params)
 
+    Path.unlink(Path(f"{FILE_PATH}/{FILENAME}"))
+
 
 def test_correct_parameters():
     """Tests whether condensate parameters are correctly saved to file."""
@@ -69,6 +72,8 @@ def test_correct_parameters():
     with h5py.File(f"{FILE_PATH}/{FILENAME}", "r") as file:
         for key, value in params.items():
             assert value == file[f"{dmp.PARAMETERS}/{key}"][...]
+
+    Path.unlink(Path(f"{FILE_PATH}/{FILENAME}"))
 
 
 def test_correct_wavefunction():
@@ -96,3 +101,5 @@ def test_correct_wavefunction():
         np.testing.assert_array_almost_equal(
             wavefunction.minus_component, saved_wavefunction_minus
         )
+
+    Path.unlink(Path(f"{FILE_PATH}/{FILENAME}"))
