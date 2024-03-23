@@ -59,9 +59,9 @@ def test_correct_fourier_shift_2d():
 
     grid2d = grid.Grid((64, 64), (0.5, 0.5))
 
-    for element in grid2d.fourier_x_mesh[:, 0]:
+    for element in grid2d.fourier_x_mesh[0, :]:
         assert element == 0
-    for element in grid2d.fourier_y_mesh[0, :]:
+    for element in grid2d.fourier_y_mesh[:, 0]:
         assert element == 0
 
 
