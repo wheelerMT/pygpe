@@ -1,5 +1,6 @@
 import h5py
 import numpy as np
+from pathlib import Path
 
 import pygpe.shared.data_manager_paths as dmp
 from pygpe.scalar.data_manager import DataManager
@@ -7,7 +8,7 @@ from pygpe.scalar.wavefunction import ScalarWavefunction
 from pygpe.shared.grid import Grid
 
 FILENAME = "scalar_test.hdf5"
-FILE_PATH = "data"
+FILE_PATH = "."
 
 
 def generate_wavefunction(
@@ -49,6 +50,8 @@ def test_data_manager_creation():
     params = generate_parameters()
     DataManager(FILENAME, FILE_PATH, wavefunction, params)
 
+    Path.unlink(Path(f"{FILE_PATH}/{FILENAME}"))
+
 
 def test_correct_parameters():
     """Tests whether condensate parameters are correctly saved to file."""
@@ -61,6 +64,8 @@ def test_correct_parameters():
         for key, value in params.items():
             assert value == file[f"{dmp.PARAMETERS}/{key}"][...]
 
+    Path.unlink(Path(f"{FILE_PATH}/{FILENAME}"))
+
 
 def test_correct_wavefunction():
     """Tests whether the condensate wavefunction is correctly saved to file."""
@@ -71,3 +76,5 @@ def test_correct_wavefunction():
     with h5py.File(f"{FILE_PATH}/{FILENAME}", "r") as file:
         saved_wavefunction = np.asarray(file[f"{dmp.SCALAR_WAVEFUNCTION}"][:, :, 0])
         np.testing.assert_array_almost_equal(wavefunction.component, saved_wavefunction)
+
+    Path.unlink(Path(f"{FILE_PATH}/{FILENAME}"))
