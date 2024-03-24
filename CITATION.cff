@@ -5,7 +5,7 @@ authors:
     given-names: Matthew Thomas
     orcid: https://orcid.org/0000-0002-0405-5805
 title: "PyGPE"
-version: 2.0.0
+version: 2.0.1
 identifiers:
   - type: doi
     value: 10.5281/zenodo.10578040
