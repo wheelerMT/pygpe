@@ -60,6 +60,23 @@ def _heaviside(array: cp.ndarray) -> cp.ndarray:
     """
     return cp.where(array < 0, cp.zeros(array.shape), cp.ones(array.shape))
 
+def _calculate_vortex_contribution(grid, x_pos, y_pos, circulation):
+    """Calculates the phase contribution from a single vortex at specified position.
+
+    :param grid: The grid on which the phase is calculated.
+    :param x_pos: x position of the vortex.
+    :param y_pos: y position of the vortex.
+    :param circulation: Circulation of the vortex, +1 or -1.
+    """
+    y = 2 * cp.pi / grid.length_y * (grid.y_mesh - y_pos)
+    x = 2 * cp.pi / grid.length_x * (grid.x_mesh - x_pos)
+    phase_contribution = cp.arctan2(y, x)
+
+    if circulation == -1:
+        phase_contribution = -phase_contribution
+
+    return phase_contribution
+
 
 def vortex_phase_profile(grid: Grid, num_vortices: int, threshold: float) -> cp.ndarray:
     """Constructs a 2D phase profile consisting of 2pi phase windings.
@@ -118,3 +135,30 @@ def vortex_phase_profile(grid: Grid, num_vortices: int, threshold: float) -> cp.
         phase += phase_temp
 
     return phase
+
+
+def add_dipole_pair(grid: Grid, threshold: float) -> cp.ndarray:
+    """Creates a phase profile with a central dipole pair separated along the y-axis by the specified threshold.
+
+    :param grid: The 2D grid of the system.
+    :type grid: :class:`Grid`
+    :param threshold: The distance between the two vortices.
+    :type threshold: float
+    """
+    # Central position along x and specific positions along y
+    x_pos = 0  # Central along the x-axis
+    y_pos = 0  # Central along the y-axis
+
+    # Calculate positions for negative and positive circulation vortices
+    y_pos_minus = y_pos - threshold / 2
+    y_pos_plus = y_pos + threshold / 2
+
+    phase = cp.zeros((grid.num_points_x, grid.num_points_y), dtype="float32")
+
+    # Calculate phase contributions from both vortices
+    phase += _calculate_vortex_contribution(grid, x_pos, y_pos_minus, -1)  # Negative circulation
+    phase += _calculate_vortex_contribution(grid, x_pos, y_pos_plus, 1)  # Positive circulation
+
+    return phase
+
+
