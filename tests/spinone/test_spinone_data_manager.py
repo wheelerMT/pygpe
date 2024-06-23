@@ -83,21 +83,15 @@ def test_correct_wavefunction():
     DataManager(FILENAME, FILE_PATH, wavefunction, params)
 
     with h5py.File(f"{FILE_PATH}/{FILENAME}", "r") as file:
-        saved_wavefunction_plus = np.asarray(
-            file[f"{dmp.SPIN1_WAVEFUNCTION_PLUS}"][:, :, 0]
-        )
+        saved_wavefunction_plus = file[f"{dmp.SPIN1_WAVEFUNCTION_PLUS}"][:, :, 0]
         np.testing.assert_array_almost_equal(
             wavefunction.plus_component, saved_wavefunction_plus
         )
-        saved_wavefunction_zero = np.asarray(
-            file[f"{dmp.SPIN1_WAVEFUNCTION_ZERO}"][:, :, 0]
-        )
+        saved_wavefunction_zero = file[f"{dmp.SPIN1_WAVEFUNCTION_ZERO}"][:, :, 0]
         np.testing.assert_array_almost_equal(
             wavefunction.zero_component, saved_wavefunction_zero
         )
-        saved_wavefunction_minus = np.asarray(
-            file[f"{dmp.SPIN1_WAVEFUNCTION_MINUS}"][:, :, 0]
-        )
+        saved_wavefunction_minus = file[f"{dmp.SPIN1_WAVEFUNCTION_MINUS}"][:, :, 0]
         np.testing.assert_array_almost_equal(
             wavefunction.minus_component, saved_wavefunction_minus
         )

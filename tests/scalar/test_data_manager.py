@@ -74,7 +74,7 @@ def test_correct_wavefunction():
     DataManager(FILENAME, FILE_PATH, wavefunction, params)
 
     with h5py.File(f"{FILE_PATH}/{FILENAME}", "r") as file:
-        saved_wavefunction = np.asarray(file[f"{dmp.SCALAR_WAVEFUNCTION}"][:, :, 0])
+        saved_wavefunction = file[f"{dmp.SCALAR_WAVEFUNCTION}"][:, :, 0]
         np.testing.assert_array_almost_equal(wavefunction.component, saved_wavefunction)
 
     Path.unlink(Path(f"{FILE_PATH}/{FILENAME}"))

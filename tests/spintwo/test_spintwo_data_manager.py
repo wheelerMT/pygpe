@@ -84,33 +84,23 @@ def test_correct_wavefunction():
     DataManager(FILENAME, FILE_PATH, wavefunction, params)
 
     with h5py.File(f"{FILE_PATH}/{FILENAME}", "r") as file:
-        saved_wavefunction_plus2 = np.asarray(
-            file[f"{dmp.SPIN2_WAVEFUNCTION_PLUS_TWO}"][:, :, 0]
-        )
+        saved_wavefunction_plus2 = file[f"{dmp.SPIN2_WAVEFUNCTION_PLUS_TWO}"][:, :, 0]
         np.testing.assert_array_almost_equal(
             wavefunction.plus2_component, saved_wavefunction_plus2
         )
-        saved_wavefunction_plus1 = np.asarray(
-            file[f"{dmp.SPIN2_WAVEFUNCTION_PLUS_ONE}"][:, :, 0]
-        )
+        saved_wavefunction_plus1 = file[f"{dmp.SPIN2_WAVEFUNCTION_PLUS_ONE}"][:, :, 0]
         np.testing.assert_array_almost_equal(
             wavefunction.plus1_component, saved_wavefunction_plus1
         )
-        saved_wavefunction_zero = np.asarray(
-            file[f"{dmp.SPIN2_WAVEFUNCTION_ZERO}"][:, :, 0]
-        )
+        saved_wavefunction_zero = file[f"{dmp.SPIN2_WAVEFUNCTION_ZERO}"][:, :, 0]
         np.testing.assert_array_almost_equal(
             wavefunction.zero_component, saved_wavefunction_zero
         )
-        saved_wavefunction_minus1 = np.asarray(
-            file[f"{dmp.SPIN2_WAVEFUNCTION_MINUS_ONE}"][:, :, 0]
-        )
+        saved_wavefunction_minus1 = file[f"{dmp.SPIN2_WAVEFUNCTION_MINUS_ONE}"][:, :, 0]
         np.testing.assert_array_almost_equal(
             wavefunction.minus1_component, saved_wavefunction_minus1
         )
-        saved_wavefunction_minus2 = np.asarray(
-            file[f"{dmp.SPIN2_WAVEFUNCTION_MINUS_TWO}"][:, :, 0]
-        )
+        saved_wavefunction_minus2 = file[f"{dmp.SPIN2_WAVEFUNCTION_MINUS_TWO}"][:, :, 0]
         np.testing.assert_array_almost_equal(
             wavefunction.minus2_component, saved_wavefunction_minus2
         )
