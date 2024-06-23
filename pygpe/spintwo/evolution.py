@@ -1,5 +1,5 @@
 try:
-    import cupy as cp
+    import cupy as cp  # type: ignore
 except ImportError:
     import numpy as cp
 from pygpe.spintwo.wavefunction import SpinTwoWavefunction

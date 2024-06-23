@@ -2,7 +2,7 @@ from pygpe.shared.grid import Grid
 from pygpe.shared.wavefunction import _Wavefunction
 
 try:
-    import cupy as cp
+    import cupy as cp  # type: ignore
 except ImportError:
     import numpy as cp
 
@@ -258,9 +258,7 @@ def _broken_axisymmetry_initial_state(wfn: SpinOneWavefunction, params: dict) ->
     wfn.zero_component = (
         cp.sqrt(n)
         * cp.sqrt(
-            (q**2 - p**2)
-            * (-(p**2) - q**2 + 2 * c2 * n * q)
-            / (4 * c2 * n * q**3)
+            (q**2 - p**2) * (-(p**2) - q**2 + 2 * c2 * n * q) / (4 * c2 * n * q**3)
         )
         * cp.ones(wfn.grid.shape, dtype="complex128")
     )

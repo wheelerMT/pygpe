@@ -1,5 +1,5 @@
 try:
-    import cupy as cp
+    import cupy as cp  # type: ignore
 except ImportError:
     import numpy as cp
 from pygpe.scalar.wavefunction import ScalarWavefunction
@@ -21,14 +21,18 @@ def step_wavefunction(wfn: ScalarWavefunction, params: dict) -> None:
     if isinstance(params["dt"], complex) or (params.get("gamma", 0) != 0):
         _renormalise_wavefunction(wfn)
 
+
 def _kinetic_step(wfn: ScalarWavefunction, pm: dict) -> None:
     """Computes the kinetic energy subsystem for half a time step, including dissipation.
 
     :param wfn: The wavefunction of the system.
     :param pm: The parameters' dictionary.
     """
-    gamma = pm.get('gamma', 0)  # Dissipation coefficient, default to 0 if unspecified
-    wfn.fourier_component *= cp.exp(-0.25 * (1 - 1j * gamma) * 1j * pm["dt"] * wfn.grid.wave_number)
+    gamma = pm.get("gamma", 0)  # Dissipation coefficient, default to 0 if unspecified
+    wfn.fourier_component *= cp.exp(
+        -0.25 * (1 - 1j * gamma) * 1j * pm["dt"] * wfn.grid.wave_number
+    )
+
 
 def _potential_step(wfn: ScalarWavefunction, pm: dict) -> None:
     """Computes the potential subsystem for a full time step, including dissipation.
@@ -36,9 +40,12 @@ def _potential_step(wfn: ScalarWavefunction, pm: dict) -> None:
     :param wfn: The wavefunction of the system.
     :param pm: The parameters' dictionary.
     """
-    gamma = pm.get('gamma', 0)  # Dissipation coefficient, default to 0 if unspecified
+    gamma = pm.get("gamma", 0)  # Dissipation coefficient, default to 0 if unspecified
     wfn.component *= cp.exp(
-        -1j * pm["dt"] * (1 - 1j * gamma) * (pm["trap"] + pm["g"] * cp.abs(wfn.component) ** 2)
+        -1j
+        * pm["dt"]
+        * (1 - 1j * gamma)
+        * (pm["trap"] + pm["g"] * cp.abs(wfn.component) ** 2)
     )
 
 

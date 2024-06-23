@@ -1,5 +1,5 @@
 try:
-    import cupy as cp
+    import cupy as cp  # type: ignore
 except ImportError:
     import numpy as cp
 from pygpe.shared.grid import Grid
@@ -59,6 +59,7 @@ def _heaviside(array: cp.ndarray) -> cp.ndarray:
     result.
     """
     return cp.where(array < 0, cp.zeros(array.shape), cp.ones(array.shape))
+
 
 def _calculate_vortex_contribution(grid, x_pos, y_pos, circulation):
     """Calculates the phase contribution from a single vortex at specified position.
@@ -156,9 +157,11 @@ def add_dipole_pair(grid: Grid, threshold: float) -> cp.ndarray:
     phase = cp.zeros((grid.num_points_x, grid.num_points_y), dtype="float32")
 
     # Calculate phase contributions from both vortices
-    phase += _calculate_vortex_contribution(grid, x_pos, y_pos_minus, -1)  # Negative circulation
-    phase += _calculate_vortex_contribution(grid, x_pos, y_pos_plus, 1)  # Positive circulation
+    phase += _calculate_vortex_contribution(
+        grid, x_pos, y_pos_minus, -1
+    )  # Negative circulation
+    phase += _calculate_vortex_contribution(
+        grid, x_pos, y_pos_plus, 1
+    )  # Positive circulation
 
     return phase
-
-

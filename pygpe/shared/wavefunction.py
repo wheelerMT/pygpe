@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from pygpe.shared.grid import Grid
 
 try:
-    import cupy as cp
+    import cupy as cp  # type: ignore
 except ImportError:
     import numpy as cp
 

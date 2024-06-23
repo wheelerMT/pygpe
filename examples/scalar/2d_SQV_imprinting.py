@@ -1,7 +1,7 @@
 import time
 
 try:
-    import cupy as cp
+    import cupy as cp  # type: ignore
 except ImportError:
     import numpy as cp
 import matplotlib.pyplot as plt
