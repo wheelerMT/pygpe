@@ -105,8 +105,7 @@ class Grid:
             * self.fourier_spacing_x
         )
 
-        # Defined on device for use in evolution
-        self.wave_number = cp.asarray(self.fourier_x_mesh**2)
+        self.wave_number = self.fourier_x_mesh**2
 
     def _generate_2d_grids(
         self, points: tuple[int, ...], grid_spacings: tuple[float, ...]
@@ -148,10 +147,7 @@ class Grid:
         self.fourier_x_mesh = cp.fft.fftshift(self.fourier_x_mesh)
         self.fourier_y_mesh = cp.fft.fftshift(self.fourier_y_mesh)
 
-        # Defined on device for use in evolution
-        self.wave_number = cp.asarray(
-            self.fourier_x_mesh**2 + self.fourier_y_mesh**2
-        )
+        self.wave_number = self.fourier_x_mesh**2 + self.fourier_y_mesh**2
 
     def _generate_3d_grids(
         self, points: tuple[int, ...], grid_spacings: tuple[float, ...]
@@ -212,9 +208,6 @@ class Grid:
         self.fourier_y_mesh = cp.fft.fftshift(self.fourier_y_mesh)
         self.fourier_z_mesh = cp.fft.fftshift(self.fourier_z_mesh)
 
-        # Defined on device for use in evolution
-        self.wave_number = cp.asarray(
-            self.fourier_x_mesh**2
-            + self.fourier_y_mesh**2
-            + self.fourier_z_mesh**2
+        self.wave_number = (
+            self.fourier_x_mesh**2 + self.fourier_y_mesh**2 + self.fourier_z_mesh**2
         )
