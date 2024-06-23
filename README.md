@@ -21,7 +21,7 @@ Bose-Einstein condensate systems.
 
 - Python (3.10 and above),
 - [h5py](https://github.com/h5py/h5py) (^3.6.0),
-- [numpy](https://numpy.org/) (^1.26.3),
+- [numpy](https://numpy.org/) (^2.0.0),
 - Matplotlib (^3.8.2)
 
 If using a GPU:
