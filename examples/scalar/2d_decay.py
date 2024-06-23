@@ -23,7 +23,7 @@ psi.add_noise(mean=0.0, std_dev=1e-2)  # Add noise to wavefunction
 
 # Generate phase with a dipole pair seperated 2.0 unuts apart
 phase = add_dipole_pair(grid, 2.0)
-psi.apply_phase(cp.asarray(phase))  # Apply phase to wavefunction
+psi.apply_phase(phase)  # Apply phase to wavefunction
 
 # Define condensate parameters (small disspation added)
 params = {"g": 1, "trap": 0, "nt": 10000, "dt": 1e-2, "t": 0, "gamma": 0.01}
@@ -58,17 +58,17 @@ for i in range(params["nt"]):
 print(f'Evolution of {params["nt"]} steps took {time.time() - start_time} seconds!')
 
 # Create movie using imageio
-with imageio.get_writer('wavefunction_evolution.mp4', fps=10) as writer:
+with imageio.get_writer("wavefunction_evolution.mp4", fps=10) as writer:
     for filename in frame_files:
         image = imageio.imread(filename)
         writer.append_data(image)
 
 # Clean up frames
 import shutil
+
 shutil.rmtree(frames_dir)
 
 # Show the last frame
 plt.imshow(cp.asnumpy(psi.density()), vmin=0, vmax=1)
 plt.colorbar()
 plt.show()
-
