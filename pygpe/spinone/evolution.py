@@ -109,28 +109,19 @@ def _renormalise_wavefunction(wfn: SpinOneWavefunction) -> None:
     :param wfn: The wavefunction of the system.
     """
     wfn.ifft()
-    correct_atom_plus, correct_atom_zero, correct_atom_minus = (
-        wfn.atom_num_plus,
-        wfn.atom_num_zero,
-        wfn.atom_num_minus,
-    )
-    (
-        current_atom_plus,
-        current_atom_zero,
-        current_atom_minus,
-    ) = _calculate_atom_num(wfn)
-    wfn.plus_component *= cp.sqrt(correct_atom_plus / current_atom_plus)
-    wfn.zero_component *= cp.sqrt(correct_atom_zero / current_atom_zero)
-    wfn.minus_component *= cp.sqrt(correct_atom_minus / current_atom_minus)
+    correct_atom_num = wfn.atom_num_plus + wfn.atom_num_zero + wfn.atom_num_minus
+    current_atom_num = _calculate_atom_num(wfn)
+    wfn.plus_component *= cp.sqrt(correct_atom_num / current_atom_num)
+    wfn.zero_component *= cp.sqrt(correct_atom_num / current_atom_num)
+    wfn.minus_component *= cp.sqrt(correct_atom_num / current_atom_num)
     wfn.fft()
 
 
-def _calculate_atom_num(wfn: SpinOneWavefunction) -> tuple[int, int, int]:
-    """Calculates the atom number of each wavefunction component.
+def _calculate_atom_num(wfn: SpinOneWavefunction) -> float:
+    """Calculates the total atom number of the system.
 
     :param wfn: The wavefunction of the system.
-    :return: The atom numbers of the plus, zero, and minus components,
-        respectively.
+    :return: The total atom number.
     """
     atom_num_plus = wfn.grid.grid_spacing_product * cp.sum(
         cp.abs(wfn.plus_component) ** 2
@@ -142,4 +133,4 @@ def _calculate_atom_num(wfn: SpinOneWavefunction) -> tuple[int, int, int]:
         cp.abs(wfn.minus_component) ** 2
     )
 
-    return atom_num_plus, atom_num_zero, atom_num_minus
+    return atom_num_plus + atom_num_zero + atom_num_minus
