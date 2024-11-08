@@ -59,4 +59,4 @@ def test_atom_number():
     wavefunction = SpinOneWavefunction(Grid((64, 64), (0.5, 0.5)))
     wavefunction.set_ground_state("polar", params={"n0": 1.0})
 
-    assert sum(evo._calculate_atom_num(wavefunction)) == 1024
+    assert evo._calculate_atom_num(wavefunction) == 1024
