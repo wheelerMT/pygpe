@@ -193,36 +193,31 @@ def _renormalise_wavefunction(wfn: SpinTwoWavefunction) -> None:
     :param wfn: The wavefunction of the system.
     """
     wfn.ifft()
-    correct_atom_plus2 = wfn.atom_num_plus2
-    correct_atom_plus1 = wfn.atom_num_plus1
-    correct_atom_zero = wfn.atom_num_zero
-    correct_atom_minus1 = wfn.atom_num_minus1
-    correct_atom_minus2 = wfn.atom_num_minus2
+    correct_atom_num = (
+        wfn.atom_num_plus2
+        + wfn.atom_num_plus1
+        + wfn.atom_num_zero
+        + wfn.atom_num_minus1
+        + wfn.atom_num_minus2
+    )
 
-    (
-        current_atom_plus2,
-        current_atom_plus1,
-        current_atom_zero,
-        current_atom_minus1,
-        current_atom_minus2,
-    ) = _calculate_atom_num(wfn)
+    current_atom_num = _calculate_atom_num(wfn)
 
-    wfn.plus2_component *= cp.sqrt(correct_atom_plus2 / current_atom_plus2)
-    wfn.plus1_component *= cp.sqrt(correct_atom_plus1 / current_atom_plus1)
-    wfn.zero_component *= cp.sqrt(correct_atom_zero / current_atom_zero)
-    wfn.minus1_component *= cp.sqrt(correct_atom_minus1 / current_atom_minus1)
-    wfn.minus2_component *= cp.sqrt(correct_atom_minus2 / current_atom_minus2)
+    wfn.plus2_component *= cp.sqrt(correct_atom_num / current_atom_num)
+    wfn.plus1_component *= cp.sqrt(correct_atom_num / current_atom_num)
+    wfn.zero_component *= cp.sqrt(correct_atom_num / current_atom_num)
+    wfn.minus1_component *= cp.sqrt(correct_atom_num / current_atom_num)
+    wfn.minus2_component *= cp.sqrt(correct_atom_num / current_atom_num)
     wfn.fft()
 
 
 def _calculate_atom_num(
     wfn: SpinTwoWavefunction,
-) -> tuple[int, int, int, int, int]:
-    """Calculates the atom number of each wavefunction component.
+) -> float:
+    """Calculates the total atom number of the system.
 
     :param wfn: The wavefunction of the system.
-    :return: The atom numbers of the plus two, plus one, zero, minus one, and
-        minus two components, respectively.
+    :return: The total atom number.
     """
     atom_num_plus2 = wfn.grid.grid_spacing_product * cp.sum(
         cp.abs(wfn.plus2_component) ** 2
@@ -241,9 +236,9 @@ def _calculate_atom_num(
     )
 
     return (
-        atom_num_plus2,
-        atom_num_plus1,
-        atom_num_zero,
-        atom_num_minus1,
-        atom_num_minus2,
+        atom_num_plus2
+        + atom_num_plus1
+        + atom_num_zero
+        + atom_num_minus1
+        + atom_num_minus2
     )
