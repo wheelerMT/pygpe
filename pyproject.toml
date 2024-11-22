@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pygpe"
-version = "2.0.1"
+version = "2.0.3"
 description = "A fast Gross-Pitaevskii equation solver for scalar, spin-1 and spin-2 BEC systems."
 authors = ["Matt Wheeler <wheelermt@proton.me>"]
 license = "MIT"
