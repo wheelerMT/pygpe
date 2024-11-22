@@ -49,7 +49,7 @@ def _interaction_step(wfn: SpinOneWavefunction, pm: dict) -> None:
 
     # Trig terms needed in solution
     cos_term = cp.cos(pm["c2"] * spin_mag * pm["dt"])
-    sin_term = cp.nan_to_num(1j * cp.sin(pm["c2"] * spin_mag * pm["dt"]))
+    sin_term = cp.nan_to_num(1j * cp.sin(pm["c2"] * spin_mag * pm["dt"]) / spin_mag)
 
     plus_comp_temp = cos_term * wfn.plus_component - sin_term * (
         spin_z * wfn.plus_component
