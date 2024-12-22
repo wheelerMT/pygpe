@@ -1,7 +1,8 @@
 try:
     import cupy as cp  # type: ignore
 except ImportError:
-    import numpy as np
+    pass
+import numpy as np
 
 
 def handle_array(arr):
